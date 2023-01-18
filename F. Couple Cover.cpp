@@ -86,58 +86,68 @@ typedef vector<ll>      vll;
 // find_by_order kth largest  order_of_key <
 //mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 200010;
+const int tam = 3000001;
 const int MOD = 1000000007;
 const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-struct unionFind {
-  vi p;
-  unionFind(int n) : p(n, -1) {}
-  int findParent(int v) {
-    if (p[v] == -1) return v;
-    return p[v] = findParent(p[v]);
-  }
-  bool join(int a, int b) {
-    a = findParent(a);
-    b = findParent(b);
-    if (a == b) return false;
-    p[a] = b;
-    return true;
-  }
-};
+
 signed main()
 {
-	// ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, m;
-	cin>>n>>m;
-	vi ar(n);
-	fore(i, 0, n) cin>>ar[i];
-	unionFind uni(n);
-	fore(i, 0, m)
-	{
-		int a, b;
-		cin>>a>>b;
-		a--;
-		b--;
-		uni.join(a, b);
-	}
-	vi neo(n);
-	vector<vi> gru(n), pos(n);
-	fore(i, 0, n)
-		gru[uni.findParent(i)].pb(ar[i]), pos[uni.findParent(i)].pb(i);
-	fore(i, 0, n)
-	{
-		sort(all(gru[i]));
-		reverse(all(gru[i]));
-		fore(j, 0, sz(gru[i]))
-			neo[pos[i][j]] = gru[i][j];
-	}
-	fore(i, 0, n)
-		cout<<neo[i]<<' ';
+	int n;
+    cin>>n;
+    vi nums(tam);
+    fore(i, 0, n)
+    {
+        int x;
+        cin>>x;
+        nums[x]++;
+    }
+    vi suf(tam);
+    suf[tam - 1] = nums[tam - 1];
+    for(int i = tam - 2; i > 0; i--)
+        suf[i] = nums[i] + suf[i + 1];
+    int mayo = 0;
+    vi molo(tam);
+    fore(i, 1, tam)
+    {
+        for(int j = 1; true; j++)
+        {
+            if(i * j >= tam)
+            {
+                mayo += nums[i] * suf[j]; 
+                if(j <= i)
+                    mayo -= nums[i] * nums[i],
+                    mayo += nums[i] * (nums[i] - 1);
+                break;}
+            if(j == i)
+                molo[i * i] += nums[i] * (nums[i] - 1);
+            else
+            {
+                molo[i * j] += nums[i] * nums[j];
+                // cout<<i * j<<' '<<i<<' '<<j<<' '<<nums[i] * nums[j]<<'\n';
+            }
+        }
+    }
+    // fore(i, 0, 31)
+    // {
+    //     cout<<i<<' '<<molo[i]<<'\n';
+    // }
+    suf[tam - 1] = molo[tam - 1] + mayo;
+    for(int i = tam - 2; i > 0; i--)
+        suf[i] = molo[i] + suf[i + 1];
+    int m;
+    cin>>m;
+    while(m--)
+    {
+        int x;
+        cin>>x;
+        cout<<suf[x]<<'\n';
+    }
 	return 0;
 }
 

@@ -2,7 +2,7 @@
 // #include <ext/pb_ds/assoc_container.hpp>
 // #include <ext/pb_ds/tree_policy.hpp>
 // #include <ext/rope>
-// #define int ll
+#define int ll
 #define mp				make_pair
 #define pb				push_back
 #define all(a)			(a).begin(), (a).end()
@@ -45,43 +45,39 @@ typedef vector<ll>      vll;
 //mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
 const int tam = 100010;
-const int MOD = 1000000007;
-const int MOD1 = 998244353;
+const int MOD1 = 1000000007;
+const int MOD = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-void solve()
-{
 
-        int n, m, k;
-        cin>>n>>m>>k;
-        vi a(k);
-        set<int> st;
-        fore(i, 0, k) cin>>a[i];
-        int cur = k;
-        fore(i, 0, k)
-        {
-            st.insert(a[i]);
-            while(cur>=1&&st.find(cur) != st.end())cur--;
-            if(cur==0)break;
-            if(i + 1 - (k - cur) >= n * m - 3){
-                cout<<"TIDAK\n";
-                return;
-            }
-        }
-        cout<<"YA\n";
-}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int t;
-    cin>>t;
-    while(t--)
-    {
-        solve();
+    // U(k, size)= { local u; u= vector(size, x, 0); u[1]=1;
+    // for (i = 1, length(u)-1, if(i%2==1, u[i+1]=k*u[i], u[i+1]=k*u[i]-u[i\2+1]));
+    // return(u); }
+    // u = U(2, 101);
+    // p = vector(length(u), x, 0); p[1]=1;
+    // for(n=1, length(u)-1, p[n+1]=sum(i=1, n, u[i+1]*p[n-i+1]));
+    int n, m;
+    cin>>n>>m;
+    vi u(n + 1);
+    u[1] = 1;
+    fore(i, 1, n){
+        if(i % 2 == 1) u[i + 1] = m * u[i] % MOD;
+        else u[i + 1] = (m * u[i] - u[i / 2 + 1]) % MOD;
     }
+    vi p(n + 1); p[1] = 1;
+    fore(i, 1, n){
+        fore(j, 1, i + 1){
+            p[i + 1] += u[j + 1] * p[i - j + 1];
+            p[i + 1] %= MOD;
+        }
+    }
+    cout<<(p[n - 1] + MOD) % MOD<<endl;
 	return 0;
 }
 

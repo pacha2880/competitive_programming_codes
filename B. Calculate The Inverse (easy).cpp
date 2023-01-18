@@ -2,7 +2,7 @@
 // #include <ext/pb_ds/assoc_container.hpp>
 // #include <ext/pb_ds/tree_policy.hpp>
 // #include <ext/rope>
-// #define int ll
+#define int ll
 #define mp				make_pair
 #define pb				push_back
 #define all(a)			(a).begin(), (a).end()
@@ -50,38 +50,32 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-void solve()
-{
+int mu[tam], is_prime [tam];
+    
 
-        int n, m, k;
-        cin>>n>>m>>k;
-        vi a(k);
-        set<int> st;
-        fore(i, 0, k) cin>>a[i];
-        int cur = k;
-        fore(i, 0, k)
-        {
-            st.insert(a[i]);
-            while(cur>=1&&st.find(cur) != st.end())cur--;
-            if(cur==0)break;
-            if(i + 1 - (k - cur) >= n * m - 3){
-                cout<<"TIDAK\n";
-                return;
-            }
-        }
-        cout<<"YA\n";
-}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int t;
-    cin>>t;
-    while(t--)
-    {
-        solve();
+	fore(i, 0, tam) mu[i]=is_prime[i]=1;
+    fore(i, 2, tam) if(is_prime[i]) {
+        forg(j, i, tam, i) {
+            if(j > i) is_prime[j] = 0;
+            if(j / i % i == 0) mu[j]=0;
+            mu[j] = -mu[j];
+        }
     }
+    int m;
+    cin>>m;
+    vi f(m + 1), g(m + 1);
+    fore(i, 1, m + 1)
+        f[i] = i * i - 3 * i + 2;
+    fore(i, 1, m + 1)
+        forg(j, i, m + 1, i)
+            g[j] += f[i] * mu[j / i];
+    fore(i, 1, m + 1)
+        cout<<g[i]<<' ';
 	return 0;
 }
 

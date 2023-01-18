@@ -2,7 +2,7 @@
 // #include <ext/pb_ds/assoc_container.hpp>
 // #include <ext/pb_ds/tree_policy.hpp>
 // #include <ext/rope>
-// #define int ll
+#define int ll
 #define mp				make_pair
 #define pb				push_back
 #define all(a)			(a).begin(), (a).end()
@@ -50,38 +50,58 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-void solve()
-{
 
-        int n, m, k;
-        cin>>n>>m>>k;
-        vi a(k);
-        set<int> st;
-        fore(i, 0, k) cin>>a[i];
-        int cur = k;
-        fore(i, 0, k)
-        {
-            st.insert(a[i]);
-            while(cur>=1&&st.find(cur) != st.end())cur--;
-            if(cur==0)break;
-            if(i + 1 - (k - cur) >= n * m - 3){
-                cout<<"TIDAK\n";
-                return;
-            }
-        }
-        cout<<"YA\n";
-}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int t;
-    cin>>t;
-    while(t--)
+	int n;
+    cin>>n;
+    int res = 0;
+    vi ar({0, 1, 2, 3, 11, 22, 12, 21, 13, 23, 121, 212, 123, 213, 122, 211});
+    vector<vi> dp(2, vi(10000)), su(2, vi(10000));
+    int ind = 0;
+    while(n--)
     {
-        solve();
+        int a = ind, b = !ind;
+        int x;
+        cin>>x;
+        for(int x : ar)
+            su[b][x] = dp[b][x] = 0;
+        // RAYA;
+        for(int y : ar)
+        {
+            if(x == 0)
+            {
+                su[b][y] += su[a][y] + dp[a][y];
+                dp[b][y] += dp[a][y];
+                continue;
+            }
+            int ax = y, ux = 0, des = 1;
+            while(ax && ((ax % 10) & x) == 0) ux = ux * 10 + ax % 10, ax /= 10, des *= 10;
+            // cout<<y<<' '<<ax<<' '<<ux<<'\n';
+            if(ax == 0)
+                ux = ux + x * des;
+            else
+            {
+                ux = (ax - ax % 10 + x) * des + ux;
+                su[b][ux] -= dp[a][y];
+            }
+            dp[b][ux] += dp[a][y];
+            su[b][ux] += su[a][y] + dp[a][y];
+        }
+        dp[b][x]++;
+        su[b][x]++;
+        // cout<<"   ---<   "<<x<<'\n';
+        for(int x : ar)
+        {
+            res += su[b][x];
+            // cout<<x<<' '<<dp[b][x]<<' '<<su[b][x]<<'\n';
+        }
+        ind = !ind;
     }
+    cout<<res<<'\n';
 	return 0;
 }
 
@@ -89,3 +109,5 @@ signed main()
 // cada día es un poco más fácil, pero tienes que hacerlo cada día,
 // es la parte difícil, pero se vuelve más fácil.
 // Crecer duele.
+// La única manera de pasar esa barrera es pasandola.
+// efe no más

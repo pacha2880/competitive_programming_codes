@@ -2,7 +2,7 @@
 // #include <ext/pb_ds/assoc_container.hpp>
 // #include <ext/pb_ds/tree_policy.hpp>
 // #include <ext/rope>
-// #define int ll
+#define int ll
 #define mp				make_pair
 #define pb				push_back
 #define all(a)			(a).begin(), (a).end()
@@ -50,37 +50,49 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-void solve()
-{
 
-        int n, m, k;
-        cin>>n>>m>>k;
-        vi a(k);
-        set<int> st;
-        fore(i, 0, k) cin>>a[i];
-        int cur = k;
-        fore(i, 0, k)
-        {
-            st.insert(a[i]);
-            while(cur>=1&&st.find(cur) != st.end())cur--;
-            if(cur==0)break;
-            if(i + 1 - (k - cur) >= n * m - 3){
-                cout<<"TIDAK\n";
-                return;
-            }
-        }
-        cout<<"YA\n";
-}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int t;
-    cin>>t;
-    while(t--)
+	int n, k;
+    cin>>n>>k;
+    vi fac(n + 1), facin(n + 1);
+    fac[0] = facin[0] = 1;
+    auto pot = [&](int a, int b) {
+        int r = 1;
+        while (b) {
+            if (b & 1) r = (r * 1ll * a) % MOD;
+            a = (a * 1ll * a) % MOD;
+            b >>= 1;
+        }
+        return r;
+    };
+    fore(i, 1, n + 1)
+        fac[i] = (fac[i - 1] * 1ll * i) % MOD, facin[i] = pot(fac[i], MOD - 2);
+    auto bino = [&](int n, int k) {
+        if (k < 0 || k > n) return 0ll;
+        return (fac[n] * 1ll * facin[k] % MOD * facin[n - k]) % MOD;
+    };
+    if(k == 0)
+        cout<<pot(3, n)<<'\n';
+    else
     {
-        solve();
+        // ll res = pot(3, k - 1) * pot(3, n - k) % MOD;
+        ll res = 0;
+        fore(i, 0, k)
+        {
+            // cout<<n - k<<' '<<i + 1<<' '<<k - 1<<' '<<i<<'\n';
+            // cout<<pot(3, n - k - i - 1)<<' '<<bino(n - k - 1, n - k - i - 1)<<' '<<bino(k - 1, i)<<' '<<pot(3, k - i - 1)<<'\n';
+            if(i <= n - k)
+                res = (res + pot(3, n - k - i) * bino(n - k, i) % MOD * pot(3, k - 1 - i) % MOD * bino(k - 1, i)) % MOD;
+            // cout<<res<<' ';
+            if(i + 1 <= n - k)
+                res = (res + pot(3 , n - k - i - 1) * bino(n - k, i + 1) % MOD * pot(3, k - 1 - i) % MOD * bino(k - 1, i)) % MOD;
+            // cout<<res<<'\n';
+        }
+        cout<<res<<'\n';
     }
 	return 0;
 }

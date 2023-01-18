@@ -92,52 +92,64 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-struct unionFind {
-  vi p;
-  unionFind(int n) : p(n, -1) {}
-  int findParent(int v) {
-    if (p[v] == -1) return v;
-    return p[v] = findParent(p[v]);
-  }
-  bool join(int a, int b) {
-    a = findParent(a);
-    b = findParent(b);
-    if (a == b) return false;
-    p[a] = b;
-    return true;
-  }
-};
+int toto[tam];
+vi g[tam];
+int x, y;
+ii dfs(int node, int par)
+{
+    int res = 0, yas = node == y ? 1 : toto[node] ? 0 : -1;
+    for(int x : g[node])
+    {
+        if(x != par)
+        {
+            ii cat = dfs(x, node);
+            if(cat.s >= 0)
+            {
+                if(cat.s == 0)
+                {
+                    res += 2;
+                    if(yas == -1)
+                        yas = 0;
+                }
+                else
+                    res++, yas = 1;
+                res += cat.f;
+            }
+        }
+    }
+    // cout<<node<<' '<<res<<' '<<yas<<'\n';
+    return {res, yas};
+}
 signed main()
 {
-	// ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, m;
-	cin>>n>>m;
-	vi ar(n);
-	fore(i, 0, n) cin>>ar[i];
-	unionFind uni(n);
-	fore(i, 0, m)
-	{
-		int a, b;
-		cin>>a>>b;
-		a--;
-		b--;
-		uni.join(a, b);
-	}
-	vi neo(n);
-	vector<vi> gru(n), pos(n);
-	fore(i, 0, n)
-		gru[uni.findParent(i)].pb(ar[i]), pos[uni.findParent(i)].pb(i);
-	fore(i, 0, n)
-	{
-		sort(all(gru[i]));
-		reverse(all(gru[i]));
-		fore(j, 0, sz(gru[i]))
-			neo[pos[i][j]] = gru[i][j];
-	}
-	fore(i, 0, n)
-		cout<<neo[i]<<' ';
+	int t;
+    cin>>t;
+    while(t--)
+    {
+        int n, k;
+        cin>>n>>k;
+        cin>>x>>y;
+        x--, y--;
+        fore(i, 0, k)
+        {
+            int x;
+            cin>>x;
+            toto[x - 1] = 1;
+        }
+        forn(i, n - 1)
+        {
+            int a, b;
+            cin>>a>>b;
+            a--, b--;
+            g[a].pb(b);
+            g[b].pb(a);
+        }
+        cout<<dfs(x, -1).f<<'\n';
+        fore(i, 0, n) toto[i] = 0, g[i].clear();
+    }
 	return 0;
 }
 
@@ -147,6 +159,7 @@ signed main()
 // Crecer duele.
 // La única manera de pasar esa barrera es pasandola.
 // efe no más.
-// si no vá por todo, andá pa' allá bobo.
-// no sirve de nada hacer sacrificios si no tienes disciplina.
+// Si no vá por todo, andá pa' allá bobo.
+// No sirve de nada hacer sacrificios si no tienes disciplina.
+// Cae 7 veces, levántate 8.
 // Ale perdóname por favor :,v

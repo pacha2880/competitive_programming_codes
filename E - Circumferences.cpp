@@ -2,7 +2,7 @@
 // #include <ext/pb_ds/assoc_container.hpp>
 // #include <ext/pb_ds/tree_policy.hpp>
 // #include <ext/rope>
-// #define int ll
+#define int ll
 #define mp				make_pair
 #define pb				push_back
 #define all(a)			(a).begin(), (a).end()
@@ -50,38 +50,54 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-void solve()
+vi g[tam];
+int vis[tam];
+void dfs(int node)
 {
-
-        int n, m, k;
-        cin>>n>>m>>k;
-        vi a(k);
-        set<int> st;
-        fore(i, 0, k) cin>>a[i];
-        int cur = k;
-        fore(i, 0, k)
-        {
-            st.insert(a[i]);
-            while(cur>=1&&st.find(cur) != st.end())cur--;
-            if(cur==0)break;
-            if(i + 1 - (k - cur) >= n * m - 3){
-                cout<<"TIDAK\n";
-                return;
-            }
-        }
-        cout<<"YA\n";
+    vis[node] = 1;
+    for(auto i : g[node])
+    {
+        if(!vis[i])
+            dfs(i);
+    }
 }
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int t;
-    cin>>t;
-    while(t--)
+	int n, sx, sy, tx, ty;
+    cin>>n>>sx>>sy>>tx>>ty;
+    vector<pair<pair<int, int>, int>> ar(n);
+    fore(i, 0, n)
     {
-        solve();
+        cin>>ar[i].f.f>>ar[i].f.s>>ar[i].s;
     }
+    fore(i, 0, n)
+        fore(j, i + 1, n)
+        {
+            int x = ar[i].f.f - ar[j].f.f;
+            int y = ar[i].f.s - ar[j].f.s;
+            int dis = x * x + y * y;
+            if(dis <= (ar[i].s + ar[j].s) * (ar[i].s + ar[j].s) && sqrt(dis) + min(ar[i].s, ar[j].s) > max(ar[i].s, ar[j].s) - EPS)
+            {
+                g[i].pb(j);
+                g[j].pb(i);
+            }
+        }
+    auto discover = [&](int x, int y)
+    {
+        fore(i, 0, n)
+        {
+            if((x - ar[i].f.f) * (x - ar[i].f.f) + (y - ar[i].f.s) * (y - ar[i].f.s) <= ar[i].s * ar[i].s)
+                return i;
+        }
+    };
+    dfs(discover(sx, sy));
+    if(vis[discover(tx, ty)])
+        cout<<"Yes\n";
+    else
+        cout<<"No\n";
 	return 0;
 }
 

@@ -50,38 +50,40 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-void solve()
+vector<int> kmp(string s)
 {
-
-        int n, m, k;
-        cin>>n>>m>>k;
-        vi a(k);
-        set<int> st;
-        fore(i, 0, k) cin>>a[i];
-        int cur = k;
-        fore(i, 0, k)
-        {
-            st.insert(a[i]);
-            while(cur>=1&&st.find(cur) != st.end())cur--;
-            if(cur==0)break;
-            if(i + 1 - (k - cur) >= n * m - 3){
-                cout<<"TIDAK\n";
-                return;
-            }
-        }
-        cout<<"YA\n";
+	int n = s.size();
+	vector<int> pi(n, 0);
+	for(int i = 1; i < n; i++)
+	{
+		int j = pi[i-1];
+		while(j > 0 && s[j] != s[i])
+			j = pi[j-1];
+		if(s[j] == s[i])
+			j++;
+		pi[i] = j;
+    }
+    return pi;
 }
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int t;
-    cin>>t;
-    while(t--)
-    {
-        solve();
-    }
+	string s, t;
+    cin>>s>>t;
+    int po = s.size();
+    s += '#';
+    s += t;
+    vi pi = kmp(s);
+    int n = sz(s) - 1;
+    int res = 0;
+    while(pi[n] > 0)
+        n = n - pi[n], res++;
+    if(n == po)
+        cout<<res<<'\n';
+    else
+        cout<<-1<<'\n';
 	return 0;
 }
 

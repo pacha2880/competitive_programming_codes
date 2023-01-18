@@ -2,7 +2,7 @@
 // #include <ext/pb_ds/assoc_container.hpp>
 // #include <ext/pb_ds/tree_policy.hpp>
 // #include <ext/rope>
-// #define int ll
+#define int ll
 #define mp				make_pair
 #define pb				push_back
 #define all(a)			(a).begin(), (a).end()
@@ -45,43 +45,29 @@ typedef vector<ll>      vll;
 //mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
 const int tam = 100010;
-const int MOD = 1000000007;
-const int MOD1 = 998244353;
+const int MOD1 = 1000000007;
+const int MOD = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-void solve()
-{
 
-        int n, m, k;
-        cin>>n>>m>>k;
-        vi a(k);
-        set<int> st;
-        fore(i, 0, k) cin>>a[i];
-        int cur = k;
-        fore(i, 0, k)
-        {
-            st.insert(a[i]);
-            while(cur>=1&&st.find(cur) != st.end())cur--;
-            if(cur==0)break;
-            if(i + 1 - (k - cur) >= n * m - 3){
-                cout<<"TIDAK\n";
-                return;
-            }
-        }
-        cout<<"YA\n";
-}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int t;
-    cin>>t;
-    while(t--)
+    int n, m, k;
+    cin>>n>>m>>k;
+    vi dp(m + 1);
+    fore(i, 1, m + 1) dp[i] = dp[i - 1] + 1;
+    fore(i, 1, n)
     {
-        solve();
+        vi ax(m + 1);
+        fore(i, 1, m + 1)
+            ax[i] = (ax[i - 1] + (k == 0 ? dp[m] : dp[max(0ll, i - k)] + dp[m] - dp[min(m, i + k - 1)])) % MOD;
+        swap(ax, dp);
     }
+    cout<<(dp[m] + MOD) % MOD<<'\n';
 	return 0;
 }
 

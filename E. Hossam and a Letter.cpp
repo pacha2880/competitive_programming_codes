@@ -44,7 +44,7 @@
 // #include <ext/pb_ds/assoc_container.hpp>
 // #include <ext/pb_ds/tree_policy.hpp>
 // #include <ext/rope>
-#define int ll
+// #define int ll
 #define mp				make_pair
 #define pb				push_back
 #define all(a)			(a).begin(), (a).end()
@@ -84,60 +84,131 @@ typedef vector<ii>      vii;
 typedef vector<ll>      vll;
 // typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_update> ordered_set;
 // find_by_order kth largest  order_of_key <
-//mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 200010;
+const int tam = 100010;
 const int MOD = 1000000007;
 const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-struct unionFind {
-  vi p;
-  unionFind(int n) : p(n, -1) {}
-  int findParent(int v) {
-    if (p[v] == -1) return v;
-    return p[v] = findParent(p[v]);
-  }
-  bool join(int a, int b) {
-    a = findParent(a);
-    b = findParent(b);
-    if (a == b) return false;
-    p[a] = b;
-    return true;
-  }
-};
+
+int grid[400][400], pre[400][400], cols[400][400][400], lon[2][400][400];
 signed main()
 {
-	// ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, m;
-	cin>>n>>m;
-	vi ar(n);
-	fore(i, 0, n) cin>>ar[i];
-	unionFind uni(n);
-	fore(i, 0, m)
-	{
-		int a, b;
-		cin>>a>>b;
-		a--;
-		b--;
-		uni.join(a, b);
-	}
-	vi neo(n);
-	vector<vi> gru(n), pos(n);
-	fore(i, 0, n)
-		gru[uni.findParent(i)].pb(ar[i]), pos[uni.findParent(i)].pb(i);
-	fore(i, 0, n)
-	{
-		sort(all(gru[i]));
-		reverse(all(gru[i]));
-		fore(j, 0, sz(gru[i]))
-			neo[pos[i][j]] = gru[i][j];
-	}
-	fore(i, 0, n)
-		cout<<neo[i]<<' ';
+    int n, m;
+    cin>>n>>m;
+    fore(i, 0, n)
+    {
+        string s;
+        cin>>s;
+        fore(j, 0, m)
+        {
+            if(s[j] == 'm')
+                grid[i][j] = 1;
+            if(s[j] == '#')
+                grid[i][j] = 2;
+            pre[i][j] = grid[i][j];
+            if(j > 0)
+                pre[i][j] += pre[i][j - 1];
+        }
+    }
+    fore(i, 0, m)
+        fore(j, i + 2, m)
+        {
+            int sua = 0, sub = 0;
+            fore(k, 0, n)
+            {
+                int x = pre[k][j - 1] - pre[k][i];
+                sua += x == 0;
+                sub += x <= 1;
+                cols[i][j][k] = (sua<<15) + sub;
+                if(k > 0)
+                    cols[i][j][k] += cols[i][j][k - 1];
+            }
+        }
+    fore(i, 0, n)
+        fore(j, 0, m)
+        {
+            fore(k, i, n)
+            {
+                if(grid[k][j] == 0)
+                    lon[0][i][j]++;
+                else if(grid[k][j] == 1)
+                {
+                    lon[1][i][j] = lon[0][i][j] + 1;
+                    fore(l, k + 1, n)
+                    {
+                        if(grid[l][j] == 0)
+                            lon[1][i][j]++;
+                        else
+                            break;
+                    }
+                    break;
+                }
+                else
+                    break;
+            }
+            lon[1][i][j] = max(lon[1][i][j], lon[0][i][j]);
+        }
+    int res = 0;
+    fore(i, 0, n)
+        fore(j, 0, m)
+            fore(k, j + 2, m)
+            {
+                // cout<<i<<' '<<j<<' '<<k<<'\n';
+                // imprimir los lon
+                // cout<<lon[0][i][j]<<' '<<lon[0][i][k]<<'\n';
+                // cout<<lon[1][i][j]<<' '<<lon[1][i][k]<<'\n';
+                // cout<<'\n';
+                int a = min(lon[0][i][j], lon[0][i][k]);
+                int b = min(lon[0][i][j], lon[1][i][k]);
+                int c = min(lon[1][i][j], lon[0][i][k]);
+                // cout<<cols[j][k][i + a - 1]<<' '<<cols[j][k][i]<<'\n';
+                if(a >= 3 && ((cols[j][k][i + a - 2] - cols[j][k][i]) & 1023) > 0)
+                {
+                    // int val = a * 2 + k - j - 1;
+                    // if(val > res)
+                    // {
+                    //     cout<<val<<' '<<i<<' '<<j<<' '<<k<<' '<<'a'<<'\n';
+                    // }
+                    res = max(res, a * 2 + k - j - 1);
+                }
+                if(b >= 3 && ((cols[j][k][i + b - 2] - cols[j][k][i]) >> 15) > 0)
+                {
+                    // int val = b * 2 + k - j - 1;
+                    // if(val > res)
+                    // {
+                    //     cout<<val<<' '<<i<<' '<<j<<' '<<k<<' '<<'b'<<'\n';
+                    // }
+                    res = max(res, b * 2 + k - j - 1);
+                }
+                if(c >= 3 && ((cols[j][k][i + c - 2] - cols[j][k][i]) >> 15) > 0)
+                {
+                    // int val = c * 2 + k - j - 1;;
+                    // if(val > res)
+                    // {
+                    //     cout<<val<<' '<<i<<' '<<j<<' '<<k<<' '<<'c'<<'\n';
+                    // }
+                    res = max(res, c * 2 + k - j - 1);
+                }
+                if(res == 1198)
+                {
+                    int x = rng();
+                    if(x & 1)
+                    {
+                        cout<<x<<'\n';
+
+                    cout<<i<<' '<<j<<' '<<k<<' '<<lon[0][i][j]<<' '<<lon[0][i][k]<<' '<<lon[1][i][j]<<' '<<lon[1][i][k]<<'\n';
+                    }
+                    cout<<res<<'\n';
+                    return 0;
+                }
+            }
+    cout<<res<<'\n';
 	return 0;
 }
 
@@ -146,7 +217,4 @@ signed main()
 // es la parte difícil, pero se vuelve más fácil.
 // Crecer duele.
 // La única manera de pasar esa barrera es pasandola.
-// efe no más.
-// si no vá por todo, andá pa' allá bobo.
-// no sirve de nada hacer sacrificios si no tienes disciplina.
-// Ale perdóname por favor :,v
+// efe no más

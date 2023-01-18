@@ -2,7 +2,7 @@
 // #include <ext/pb_ds/assoc_container.hpp>
 // #include <ext/pb_ds/tree_policy.hpp>
 // #include <ext/rope>
-// #define int ll
+#define int ll
 #define mp				make_pair
 #define pb				push_back
 #define all(a)			(a).begin(), (a).end()
@@ -45,43 +45,80 @@ typedef vector<ll>      vll;
 //mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
 const int tam = 100010;
-const int MOD = 1000000007;
-const int MOD1 = 998244353;
+const int MOD1 = 1000000007;
+const int MOD = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-void solve()
-{
 
-        int n, m, k;
-        cin>>n>>m>>k;
-        vi a(k);
-        set<int> st;
-        fore(i, 0, k) cin>>a[i];
-        int cur = k;
-        fore(i, 0, k)
-        {
-            st.insert(a[i]);
-            while(cur>=1&&st.find(cur) != st.end())cur--;
-            if(cur==0)break;
-            if(i + 1 - (k - cur) >= n * m - 3){
-                cout<<"TIDAK\n";
-                return;
-            }
-        }
-        cout<<"YA\n";
-}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int t;
-    cin>>t;
-    while(t--)
+	int n, k;
+    cin>>n>>k;
+    vector<pair<ii, int>> ar(n);
+    fore(i, 0, n)
+        cin>>ar[i].f.s;
+    auto pot = [&](int a, int b){
+        int r = 1;
+        while(b){
+            if(b & 1)
+                r = r * a % MOD;
+            a = a * a % MOD;
+            b >>= 1;
+        }
+        return r;
+    };
+    fore(i, 0, n)
     {
-        solve();
+        fore(j, 0, 6)
+        {
+            int x;
+            cin>>x;
+            ar[i].f.f += x;
+        }
     }
+    sort(all(ar));
+    reverse(all(ar));
+    fore(i, 0, k)
+    {
+        ar[i].s = ar[i].f.f * ar[i].f.f - ar[i].f.s;
+        fore(j, 0, k)
+            if(i != j)
+                ar[i].s += 2 * ar[i].f.f * ar[j].f.f;
+    }
+    fore(i, 0, 10)
+    fore(i, k, n)
+    {
+        int ind = 0;
+        ar[i].s = ar[i].f.f * ar[i].f.f - ar[i].f.s;
+        fore(j, 0, k)
+            ar[i].s += 2 * ar[i].f.f * ar[j].f.f;
+        ii swas = {0, -1};
+        fore(j, 1, k)
+            if(ar[i].s - 2 * ar[i].f.f * ar[j].f.f > ar[j].s)
+                swas = max(swas, {ar[i].s - 2 * ar[i].f.f * ar[j].f.f - ar[j].s, j});
+        if(swas.s != -1)
+        {
+            int ind = swas.s;
+            fore(j, 0, k)
+                if(j != ind)
+                    ar[j].s += 2 * ar[i].f.f * ar[j].f.f - 2 * ar[ind].f.f * ar[j].f.f;
+            ar[i].s -= 2 * ar[i].f.f * ar[ind].f.f;
+            swap(ar[i], ar[ind]);
+        }
+    }
+    int nega = 0, res = 0;
+    fore(i, 0, k)
+    {
+        res = (res + ar[i].f.f) % MOD, nega = (nega + MOD - ar[i].f.s) % MOD;
+    }
+    cout<<res<<' '<<MOD - nega<<'\n';
+    cout<<pot(6, MOD - 2)<<'\n';
+    cout<<res * res % MOD * pot(6, MOD - 2) % MOD * pot(6, MOD - 2) % MOD<<'\n';
+    cout<<(res * res % MOD * pot(6, MOD - 2) % MOD * pot(6, MOD - 2) + nega)% MOD<<'\n';
 	return 0;
 }
 

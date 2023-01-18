@@ -50,38 +50,75 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-void solve()
-{
 
-        int n, m, k;
-        cin>>n>>m>>k;
-        vi a(k);
-        set<int> st;
-        fore(i, 0, k) cin>>a[i];
-        int cur = k;
-        fore(i, 0, k)
-        {
-            st.insert(a[i]);
-            while(cur>=1&&st.find(cur) != st.end())cur--;
-            if(cur==0)break;
-            if(i + 1 - (k - cur) >= n * m - 3){
-                cout<<"TIDAK\n";
-                return;
-            }
-        }
-        cout<<"YA\n";
-}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int t;
-    cin>>t;
-    while(t--)
+    int b;
+    cin>>b;
+    int p;
+    cin>>p;
+    vector<pair<int, string>> ps(p);
+    fore(i, 0, p) cin>>ps[i].s>>ps[i].f;
+    int g;
+    cin>>g;
+    vector<pair<int, string>> gs(g);
+    fore(i, 0, g) cin>>gs[i].s>>gs[i].f;
+    int s;
+    cin>>s;
+    vector<pair<int, string>> ss(s);
+    fore(i, 0, s) cin>>ss[i].s>>ss[i].f;
+    int f;
+    cin>>f;
+    vector<pair<int, string>> fs(f);
+    fore(i, 0, f) cin>>fs[i].s>>fs[i].f;
+    int c;
+    cin>>c;
+    vector<pair<int, string>> cs(c);
+    fore(i, 0, c) cin>>cs[i].s>>cs[i].f;
+    vector<pair<int, vector<string>>> team1;
+    vector<pair<int, vector<string>>> team2;
+    fore(i, 0, p)
     {
-        solve();
+        fore(j, 0, g)
+        {
+            team1.pb({ps[i].f + gs[j].f, {ps[i].s, gs[j].s}});
+        }
     }
+    // team2 with the remaining
+    fore(i, 0, s)
+    {
+        fore(j, 0, f)
+        {
+            fore(k, 0, c)
+            {
+                team2.pb({ss[i].f + fs[j].f + cs[k].f, {ss[i].s, fs[j].s, cs[k].s}});
+            }
+        }
+    }
+    sort(all(team2));
+    sort(all(team1));
+    pair<int, vector<string>> ans = {0, {}};
+    fore(i, 0, sz(team1))
+    {
+        int l = 0, r = sz(team2) - 1;
+        while(l <= r)
+        {
+            int mid = (l + r) / 2;
+            if(team1[i].f + team2[mid].f <= b)
+            {
+                if(-team1[i].f - team2[mid].f <= ans.f)
+                {
+                    ans = min(ans, {-team1[i].f - team2[mid].f, {team1[i].s[0], team1[i].s[1], team2[mid].s[0], team2[mid].s[1], team2[mid].s[2]}});
+                }
+                l = mid + 1;
+            }
+            else r = mid - 1;
+        }
+    }
+    for(auto x : ans.s) cout<<x<<'\n';
 	return 0;
 }
 

@@ -50,37 +50,55 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-void solve()
-{
 
-        int n, m, k;
-        cin>>n>>m>>k;
-        vi a(k);
-        set<int> st;
-        fore(i, 0, k) cin>>a[i];
-        int cur = k;
-        fore(i, 0, k)
-        {
-            st.insert(a[i]);
-            while(cur>=1&&st.find(cur) != st.end())cur--;
-            if(cur==0)break;
-            if(i + 1 - (k - cur) >= n * m - 3){
-                cout<<"TIDAK\n";
-                return;
-            }
-        }
-        cout<<"YA\n";
-}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int t;
-    cin>>t;
-    while(t--)
+	int n, m;
+    cin>>n>>m;
+    vector<vi> g(n);
+    while(m--)
     {
-        solve();
+        int a, b;
+        cin>>a>>b;
+        a--; b--;
+        g[a].pb(b);
+        g[b].pb(a);
+    }
+    int q;
+    cin>>q;
+    vi vis(n);
+    while(q--)
+    {
+        // cout<<q<<'\n';
+        int x, k;
+        vi vas;
+        cin>>x>>k;
+        x--;
+        queue<ii> que;
+        que.push({x, 0});
+        vis[x] = 1;
+        ll res = 0;
+        while(!que.empty())
+        {
+            ii u = que.front();
+            que.pop();
+            res += 1 + u.f;
+            vas.pb(u.f);
+            if(u.s == k) continue;
+            for(int v : g[u.f])
+            {
+                if(!vis[v])
+                {
+                    vis[v] = 1;
+                    que.push({v, u.s + 1});
+                }
+            }
+        }
+        for(int x : vas) vis[x] = 0;
+        cout<<res<<'\n';
     }
 	return 0;
 }

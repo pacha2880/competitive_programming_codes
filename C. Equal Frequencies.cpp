@@ -92,52 +92,91 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-struct unionFind {
-  vi p;
-  unionFind(int n) : p(n, -1) {}
-  int findParent(int v) {
-    if (p[v] == -1) return v;
-    return p[v] = findParent(p[v]);
-  }
-  bool join(int a, int b) {
-    a = findParent(a);
-    b = findParent(b);
-    if (a == b) return false;
-    p[a] = b;
-    return true;
-  }
-};
+
 signed main()
 {
-	// ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, m;
-	cin>>n>>m;
-	vi ar(n);
-	fore(i, 0, n) cin>>ar[i];
-	unionFind uni(n);
-	fore(i, 0, m)
-	{
-		int a, b;
-		cin>>a>>b;
-		a--;
-		b--;
-		uni.join(a, b);
-	}
-	vi neo(n);
-	vector<vi> gru(n), pos(n);
-	fore(i, 0, n)
-		gru[uni.findParent(i)].pb(ar[i]), pos[uni.findParent(i)].pb(i);
-	fore(i, 0, n)
-	{
-		sort(all(gru[i]));
-		reverse(all(gru[i]));
-		fore(j, 0, sz(gru[i]))
-			neo[pos[i][j]] = gru[i][j];
-	}
-	fore(i, 0, n)
-		cout<<neo[i]<<' ';
+	int t;
+    cin>>t;
+    while(t--)
+    {
+        int n;
+        cin>>n;
+        string s;
+        cin>>s;
+        vi frec(26);
+        for(char ch : s)
+            frec[ch - 'a']++;
+        vii frac;
+        fore(i, 0, 26)
+        {
+            if(frec[i])
+                frac.pb({frec[i], i});
+        }
+        sort(all(frac));
+        reverse(all(frac));
+        ii maxus = {0, 0};
+        fore(i, 1, 27)
+        {
+            if(n % i == 0)
+            {
+                int can = 0;
+                int con = i;
+                for(ii cat : frac)
+                {
+                    can += min(n / i, cat.f);
+                    con--;
+                    if(con == 0) break;
+                }
+                maxus = max(maxus, {can, i});
+            }
+        }
+        // cout<<maxus.f<<' '<<maxus.s<<'\n';
+        cout<<n - maxus.f<<'\n';
+        vector<vi> let(26);
+        vector<int> letr(maxus.s, n / maxus.s);
+        vi lets;
+        vi us(26);
+        int con = 0;
+        string dis;
+        for(ii cat : frac)
+        {
+            lets.pb(cat.s);
+            us[cat.s] = 1;
+            letr[con] -= min(n / maxus.s, cat.f);
+            fore(i, 0, letr[con]) dis += (char)(cat.s + 'a');
+            fore(i, letr[con], n / maxus.s)
+                let[cat.s].pb(cat.s);
+            con++;
+            if(con == maxus.s) break;
+        }
+        // cout<<sz(lets)<<'\n';
+        while(sz(lets) < maxus.s)
+        {
+            fore(i, 0, 26)
+                if(!us[i])
+                {
+                    // cout<<(char)(i + 'a')<<'\n';
+                    us[i] = 1;
+                    lets.pb(i);
+                    fore(j, 0, n / maxus.s)
+                        dis += (char) (i + 'a');
+                    break;
+                }
+        }
+        // cout<<dis<<'\n';
+        string res;
+        for(char ch : s)
+        {
+            if(let[ch - 'a'].empty())
+                res += dis.back(), dis.pop_back();
+            else
+                res += (char)(let[ch - 'a'].back() + 'a'), let[ch - 'a'].pop_back();
+        }
+        cout<<res<<'\n';
+    }
 	return 0;
 }
 
@@ -147,6 +186,7 @@ signed main()
 // Crecer duele.
 // La única manera de pasar esa barrera es pasandola.
 // efe no más.
-// si no vá por todo, andá pa' allá bobo.
-// no sirve de nada hacer sacrificios si no tienes disciplina.
+// Si no vá por todo, andá pa' allá bobo.
+// No sirve de nada hacer sacrificios si no tienes disciplina.
+// Cae 7 veces, levántate 8.
 // Ale perdóname por favor :,v

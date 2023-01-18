@@ -92,52 +92,196 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-struct unionFind {
-  vi p;
-  unionFind(int n) : p(n, -1) {}
-  int findParent(int v) {
-    if (p[v] == -1) return v;
-    return p[v] = findParent(p[v]);
-  }
-  bool join(int a, int b) {
-    a = findParent(a);
-    b = findParent(b);
-    if (a == b) return false;
-    p[a] = b;
-    return true;
-  }
-};
+
 signed main()
 {
-	// ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, m;
-	cin>>n>>m;
-	vi ar(n);
-	fore(i, 0, n) cin>>ar[i];
-	unionFind uni(n);
-	fore(i, 0, m)
-	{
-		int a, b;
-		cin>>a>>b;
-		a--;
-		b--;
-		uni.join(a, b);
-	}
-	vi neo(n);
-	vector<vi> gru(n), pos(n);
-	fore(i, 0, n)
-		gru[uni.findParent(i)].pb(ar[i]), pos[uni.findParent(i)].pb(i);
-	fore(i, 0, n)
-	{
-		sort(all(gru[i]));
-		reverse(all(gru[i]));
-		fore(j, 0, sz(gru[i]))
-			neo[pos[i][j]] = gru[i][j];
-	}
-	fore(i, 0, n)
-		cout<<neo[i]<<' ';
+    int t;
+    cin>>t;
+    while(t--)
+    {
+        int n;
+        cin>>n;
+        vector<vi> ar(n, vi(4)), res(n, vi(4)), papu(3);
+        fore(i, 0, n)
+        {
+            fore(j, 0, 4) cin>>ar[i][j];
+            if(ar[i][0] < ar[i][2])
+                papu[0].pb(i);
+            else if(ar[i][0] == 1)
+                papu[1].pb(i);
+            else
+                papu[2].pb(i);
+        }
+        auto clean = [&](int po)
+        {
+            vi neo;
+            vector<pair<ii, int>> sweep;
+            fore(i, 0, sz(papu[po]))
+            {
+                int j = papu[po][i];
+                sweep.pb({{ar[j][1], -ar[j][3]}, j});
+            }
+            sort(all(sweep));
+            set<int> us;
+            for(auto cat : sweep)
+            {
+                if(us.lower_bound(-cat.f.s) == us.end())
+                {
+                    neo.pb(cat.s);
+                    us.insert(-cat.f.s);
+                }
+                else
+                    fore(i, 0, 4) res[cat.s][i] = 0;
+            }
+            swap(papu[po], neo);
+        };
+        auto clun = [&](int po)
+        {
+            vi neo, naa;
+            vector<pair<ii, int>> sweep;
+            fore(i, 0, sz(papu[0]))
+            {
+                int j = papu[0][i];
+                sweep.pb({{ar[j][1], -ar[j][3]}, j});
+            }
+            for(int x : papu[po])
+            {
+                sweep.pb({{ar[x][1], -ar[x][3]}, -x - 1});
+            }
+            sort(all(sweep));
+            set<int> us;
+            for(auto cat : sweep)
+            {
+                // cout<<cat.f.f<<' '<<cat.f.s<<' '<<cat.s<<'\n';
+                if(us.lower_bound(-cat.f.s) == us.end())
+                {
+                    if(cat.s >= 0)
+                        neo.pb(cat.s);
+                    else
+                        naa.pb(-cat.s - 1);
+                    us.insert(-cat.f.s);
+                }
+                else if(cat.s >= 0)
+                {
+                    if(po == 1) papu[2].pb(cat.s), ar[cat.s][0] = 2;
+                    else papu[1].pb(cat.s), ar[cat.s][2] = 1;
+                }
+                else
+                    fore(i, 0, 4) res[-cat.s - 1][i] = 0;
+            }
+            swap(papu[po], naa);
+            swap(papu[0], neo);
+            if(po == 1) clean(2);
+            else clean(1);
+        };
+        fore(i, 0, 3)
+        {
+            clean(i);
+            // cout<<'$'<<i<<'\n';
+            // for(int x : papu[i]) cout<<x<<' ';
+            // cout<<'\n';
+        }
+        clun(1);
+        clun(2);
+        // fore(i, 0, 3)
+        // {
+        //     // clean(i);
+        //     cout<<'$'<<i<<'\n';
+        //     for(int x : papu[i]) cout<<x<<' ';
+        //     cout<<'\n';
+        // }
+        set<int> fini, ini;
+        for(int x : papu[0])
+        {
+            auto it = fini.upper_bound(ar[x][3]);
+            auto it1 = ini.lower_bound(ar[x][1]);
+            int le = ar[x][1], ri = ar[x][3];
+            if(it != fini.begin())
+            {
+                it--;
+                int a = *it;
+                if(a >= ar[x][1] && a <= ar[x][3])
+                    le = a + 1;
+            }
+            if(it1 != ini.end())
+            {
+                int b = *it1;
+                if(b >= ar[x][1] && b <= ar[x][3])
+                    ri = b - 1;
+            }
+            if(le > ri)
+            {
+                fore(i, 0, 4) res[x][i] = 0;
+            }
+            else
+            {
+                fore(i, 0, 4) res[x][i] = ar[x][i];
+                res[x][1] = le;
+                res[x][3] = ri;
+                // cout<<x<<' '<<le<<' '<<ri<<'\n';
+                // cout<<"---------------\n";
+                ini.insert(ar[x][1]);
+                fini.insert(ar[x][3]);
+            }
+        }
+        set<int> ini1 = ini, fini1 = fini;
+        // for(int x : ini) cout<<x<<' ';
+        // cout<<'\n';
+        // for(int x : fini) cout<<x<<' ';
+        // cout<<'\n';
+        fore(i, 1, 3)
+        {
+            set<int> ini = ini1, fini = fini1;
+            for(int x : papu[i])
+            {
+                auto it = fini.upper_bound(ar[x][3]);
+                auto it1 = ini.lower_bound(ar[x][1]);
+                int le = ar[x][1], ri = ar[x][3];
+                // cout<<'^'<<x<<' '<<le<<' '<<ri<<'\n';
+                if(it != fini.begin())
+                {
+                    it--;
+                    int a = *it;
+                    // cout<<'@'<<a<<'\n';
+                    if(a >= ar[x][1] && a <= ar[x][3])
+                        le = a + 1;
+                }
+                if(it1 != ini.end())
+                {
+                    int b = *it1;
+                    // cout<<'%'<<b<<'\n';
+                    if(b >= ar[x][1] && b <= ar[x][3])
+                        ri = b - 1;
+                }
+                // cout<<le<<' '<<ri<<'\n';
+                if(le > ri)
+                {
+                    fore(i, 0, 4) res[x][i] = 0;
+                }
+                else
+                {
+                    fore(i, 0, 4) res[x][i] = ar[x][i];
+                    res[x][1] = le;
+                    res[x][3] = ri;
+                    ini.insert(ar[x][1]);
+                    fini.insert(ar[x][3]);
+                }
+                
+            }
+        }
+        int su = 0;
+        fore(i, 0, n)
+        {
+            if(res[i][0] == 0) continue;
+            su += (1 + res[i][2] - res[i][0]) * (1 + res[i][3] - res[i][1]);
+        }
+        cout<<su<<'\n';
+        fore(i, 0, n)
+            cout<<res[i][0]<<" "<<res[i][1]<<" "<<res[i][2]<<" "<<res[i][3]<<'\n';
+    }
 	return 0;
 }
 
@@ -147,6 +291,7 @@ signed main()
 // Crecer duele.
 // La única manera de pasar esa barrera es pasandola.
 // efe no más.
-// si no vá por todo, andá pa' allá bobo.
-// no sirve de nada hacer sacrificios si no tienes disciplina.
+// Si no vá por todo, andá pa' allá bobo.
+// No sirve de nada hacer sacrificios si no tienes disciplina.
+// Cae 7 veces, levántate 8.
 // Ale perdóname por favor :,v

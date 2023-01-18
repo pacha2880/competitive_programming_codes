@@ -87,57 +87,85 @@ typedef vector<ll>      vll;
 //mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
 const int tam = 200010;
-const int MOD = 1000000007;
-const int MOD1 = 998244353;
+const int MOD1 = 1000000007;
+const int MOD = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-struct unionFind {
-  vi p;
-  unionFind(int n) : p(n, -1) {}
-  int findParent(int v) {
-    if (p[v] == -1) return v;
-    return p[v] = findParent(p[v]);
-  }
-  bool join(int a, int b) {
-    a = findParent(a);
-    b = findParent(b);
-    if (a == b) return false;
-    p[a] = b;
-    return true;
-  }
+struct point{
+    double x, y;
+    point() {}
+    point(double x, double y) : x(x), y(y) {}
+    point operator + (const point &p) const { return point(x + p.x, y + p.y); }
+    point operator - (const point &p) const { return point(x - p.x, y - p.y); }
+    point operator * (double c) const { return point(x * c, y * c); }
+    point operator / (double c) const { return point(x / c, y / c); }
+    double operator ^(point p) { return x * p.y - y * p.x; }
+    bool operator < (const point &p) const { return x < p.x || (fabs(x - p.x) < EPS && y < p.y); }
+    bool left(point a, point b) { return ((b - a) ^ (*this - a)) >= 0; }
 };
+vector<point> hull(vector<point> p)
+{
+	int n = p.size();
+	vector<point> h;
+	sort(all(p));
+	fore(i, 0, n)
+	{
+		while(h.size() >= 2 && p[i].left(h[sz(h) - 2], h.back())) h.pop_back();
+		h.push_back(p[i]);
+	}
+	h.pop_back();
+	int k = h.size();
+	for(int i = n-1; i > -1; i--)
+	{
+		while(h.size() >= k + 2 && p[i].left(h[sz(h) - 2], h.back())) h.pop_back();
+		h.pb(p[i]);
+	}
+	h.pop_back();
+	return h;
+}
+
+pair<double, double> merge(double h, double p, double H, double P)
+{
+    double x = -(h * (P - p) + p * (H - h)) / (2 * (H - h) * (P - p));
+    if(x >= 0 && x <= 1)
+        H = H * x + h - h * x, P = P * x + p - p * x;
+    else if(h * p > H * P)
+        H = h, P = p;
+    return {H, P};
+}
 signed main()
 {
-	// ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, m;
-	cin>>n>>m;
-	vi ar(n);
-	fore(i, 0, n) cin>>ar[i];
-	unionFind uni(n);
-	fore(i, 0, m)
-	{
-		int a, b;
-		cin>>a>>b;
-		a--;
-		b--;
-		uni.join(a, b);
-	}
-	vi neo(n);
-	vector<vi> gru(n), pos(n);
-	fore(i, 0, n)
-		gru[uni.findParent(i)].pb(ar[i]), pos[uni.findParent(i)].pb(i);
-	fore(i, 0, n)
-	{
-		sort(all(gru[i]));
-		reverse(all(gru[i]));
-		fore(j, 0, sz(gru[i]))
-			neo[pos[i][j]] = gru[i][j];
-	}
-	fore(i, 0, n)
-		cout<<neo[i]<<' ';
+	int n, C;
+	cin>>n>>C;
+    vector<point> pop;
+    fore(i, 0, n)
+    {
+        double c, h, p;
+        cin>>c>>h>>p;
+        h = h / c * C;
+        p = p / c * C;
+        if(n == 1)
+        {
+            cout<<fixed<<setprecision(2)<<h * p<<'\n';
+            return 0;
+        }
+        pop.pb({h, p});
+        // if(h > p)
+        //     vl.pb(i);
+        // else vr.pb(i);
+    }
+    pop = hull(pop);
+    double res = 0;
+    fore(i, 0, sz(pop))
+    {
+        auto cat = merge(pop[i].x, pop[i].y, pop[(i + 1) % sz(pop)].x, pop[(i + 1) % sz(pop)].y);
+        res = max(res, cat.first * cat.second);
+    }
+    cout<<fixed<<setprecision(2)<<res<<'\n';
 	return 0;
 }
 
@@ -149,4 +177,3 @@ signed main()
 // efe no más.
 // si no vá por todo, andá pa' allá bobo.
 // no sirve de nada hacer sacrificios si no tienes disciplina.
-// Ale perdóname por favor :,v

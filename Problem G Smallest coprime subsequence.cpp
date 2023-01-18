@@ -2,7 +2,7 @@
 // #include <ext/pb_ds/assoc_container.hpp>
 // #include <ext/pb_ds/tree_policy.hpp>
 // #include <ext/rope>
-// #define int ll
+#define int ll
 #define mp				make_pair
 #define pb				push_back
 #define all(a)			(a).begin(), (a).end()
@@ -44,44 +44,80 @@ typedef vector<ll>      vll;
 // find_by_order kth largest  order_of_key <
 //mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 100010;
+const int tam = 1000010;
 const int MOD = 1000000007;
 const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-void solve()
-{
+//f(n)=sum(d|n,g(d))=>g(n)=sum(d|n,f(d)*mu(n/d))
+// f(n)=sum(i->inf,f(i*n)*mu(i));f(n)=#f(a)->n;g(n)=#f(a)->xn
+int  mu[tam], is_prime[tam], con[tam];
 
-        int n, m, k;
-        cin>>n>>m>>k;
-        vi a(k);
-        set<int> st;
-        fore(i, 0, k) cin>>a[i];
-        int cur = k;
-        fore(i, 0, k)
-        {
-            st.insert(a[i]);
-            while(cur>=1&&st.find(cur) != st.end())cur--;
-            if(cur==0)break;
-            if(i + 1 - (k - cur) >= n * m - 3){
-                cout<<"TIDAK\n";
-                return;
-            }
-        }
-        cout<<"YA\n";
-}
+
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int t;
-    cin>>t;
-    while(t--)
-    {
-        solve();
+    fore(i, 0, tam) mu[i]=is_prime[i]=1;
+    fore(i, 2, tam) if(is_prime[i]) {
+        forg(j, i, tam, i) {
+            if(j > i) is_prime[j] = 0;
+            if(j / i % i == 0) mu[j]=0;
+            mu[j] = -mu[j];
+        }
     }
+    int n;
+    cin>>n;
+    int x;
+    fore(i, 0, n)
+    {
+        cin>>x;
+        con[x]++;
+    }
+    fore(i, 1, tam)
+        forg(j, i + i, tam, i)
+            con[i] += con[j];
+    vi g(tam);
+    vi fac(tam), facin(tam);
+    fac[0] = facin[0] = 1;
+    auto pot = [&](int a, int b)
+    {
+        int r = 1;
+        while(b)
+        {
+            if(b & 1) r = (r * 1ll * a) % MOD;
+            a = (a * 1ll * a) % MOD;
+            b >>= 1;
+        }
+        return r;
+    };
+    fore(i, 1, tam)
+    {
+        fac[i] = fac[i - 1] * i % MOD;
+        facin[i] = pot(fac[i], MOD - 2);
+    }
+    auto bino = [&](int a, int b)
+    {
+        if(a < b) return 0ll;
+        return fac[a] * facin[b] % MOD * facin[a - b] % MOD;
+    };
+    int b = 1, e = n, mid, res = -1;
+    while(b <= e)
+    {
+        mid = (b + e) / 2;
+        fore(i, 1, tam)
+            g[i] = bino(con[i], mid);
+        int can = 0;
+        fore(i, 1, tam)
+            can = (can + g[i] * mu[i]) % MOD;
+        if(can)
+            res = mid, e = mid - 1;
+        else
+            b = mid + 1;
+    }
+    cout<<res<<'\n';
 	return 0;
 }
 

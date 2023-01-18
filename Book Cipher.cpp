@@ -50,37 +50,89 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-void solve()
-{
-
-        int n, m, k;
-        cin>>n>>m>>k;
-        vi a(k);
-        set<int> st;
-        fore(i, 0, k) cin>>a[i];
-        int cur = k;
-        fore(i, 0, k)
-        {
-            st.insert(a[i]);
-            while(cur>=1&&st.find(cur) != st.end())cur--;
-            if(cur==0)break;
-            if(i + 1 - (k - cur) >= n * m - 3){
-                cout<<"TIDAK\n";
-                return;
-            }
-        }
-        cout<<"YA\n";
-}
+char tab[2020][2020];
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int t;
-    cin>>t;
-    while(t--)
+    int n, m, a, b;
+    char ch;
+    cin>>n>>m>>a>>ch>>b;
+    cin>>ch;
+    vector<string> ar(n);
+    cin.ignore();
+    fore(i, 0, n)
+        getline(cin, ar[i]);
+    vector<ii> cip(500);
+    bool bus = false;
+    string s;
+    int i = 1, j = 1;
+    while(m--)
     {
-        solve();
+        getline(cin, s);
+        for(char cha : s)
+        {
+            if(!bus)
+            {
+                if(cha == '<')
+                    bus = true;
+                else if(i <= a)
+                {
+                    tab[i - 1][j - 1] = cha;
+                    if(ch == 'S')
+                    {
+                        if(cip[cha].f == 0)
+                            cip[cha] = {i, j};
+                        else
+                            cip[cha] = min(cip[cha], {i, j});
+                    }
+                    else
+                    {
+                        if(cip[cha].f == 0)
+                            cip[cha] = {i, j};
+                        else
+                            cip[cha] = max(cip[cha], {i, j});
+                    }
+                    j++;
+                    if(j == b + 1)
+                        j = 1, i++;
+                }
+            }
+            else
+                if(cha == '>')
+                    bus = false;
+        }
+    }
+    // fore(i, 0, a)
+    // {
+    //     fore(j, 0, b)
+    //         cout<<tab[i][j];
+    //     cout<<'\n';
+    // }
+    fore(i, 0, n)
+    {
+        s = ar[i];
+        vi res;
+        bool bo = true;
+        for(char ch : s)
+        {
+            if(cip[ch].f == 0)
+                bo = false;
+            res.pb(cip[ch].f);
+            res.pb(cip[ch].s);
+        }
+        if(bo)
+        {
+            fore(i, 0, sz(res))
+            {
+                if(i > 0) cout<<',';
+                cout<<res[i];
+            }
+            cout<<'\n';
+        }
+        else
+            cout<<"0\n";
     }
 	return 0;
 }

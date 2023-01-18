@@ -50,26 +50,33 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-void solve()
+struct point {
+    double x, y;
+    point() {}
+    point(double x, double y) : x(x), y(y) {}
+};
+struct line{
+    double a, b, c;
+    line() {}
+    line(point p, point q){
+        a = p.y - q.y;
+        b = q.x - p.x;
+        c = -a * p.x - b * p.y;
+        double z = a < EPS ? -sqrt(a * a + b * b) : sqrt(a * a + b * b);
+        a /= z;
+        b /= z;
+        c /= z;
+    }
+};
+double det(double a, double b, double c, double d)
 {
-
-        int n, m, k;
-        cin>>n>>m>>k;
-        vi a(k);
-        set<int> st;
-        fore(i, 0, k) cin>>a[i];
-        int cur = k;
-        fore(i, 0, k)
-        {
-            st.insert(a[i]);
-            while(cur>=1&&st.find(cur) != st.end())cur--;
-            if(cur==0)break;
-            if(i + 1 - (k - cur) >= n * m - 3){
-                cout<<"TIDAK\n";
-                return;
-            }
-        }
-        cout<<"YA\n";
+    return a * d - b * c;
+}
+point intersect(line a, line b)
+{
+    point p;
+    double d = -det(a.a, a.b, b.a, b.b);
+    return point(det(a.c, a.b, b.c, b.b) / d, det(a.a, a.c, b.a, b.c) / d);
 }
 signed main()
 {
@@ -78,10 +85,32 @@ signed main()
 	// freopen("qwe.txt", "w", stdout);
 	int t;
     cin>>t;
+    auto eq = [&](double a, double b) {
+        return fabs(a - b) < EPS;
+    };
+    cout<<"INTERSECTING LINES OUTPUT\n";
     while(t--)
     {
-        solve();
+        point a, b;
+        cin>>a.x>>a.y>>b.x>>b.y;
+        line l1(a, b);
+        point c, d;
+        cin>>c.x>>c.y>>d.x>>d.y;
+        line l2(c, d);
+        if(eq(l1.a, l2.a) && eq(l1.b, l2.b))
+        {
+            if(eq(l1.c, l2.c))
+                cout<<"LINE\n";
+            else
+                cout<<"NONE\n";
+        }
+        else
+        {
+            point p = intersect(l1, l2);
+            cout<<"POINT "<<fixed<<setprecision(2)<<p.x<<" "<<p.y<<"\n";
+        }
     }
+    cout<<"END OF OUTPUT\n";
 	return 0;
 }
 

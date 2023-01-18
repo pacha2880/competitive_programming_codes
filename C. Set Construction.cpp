@@ -50,37 +50,58 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-void solve()
-{
 
-        int n, m, k;
-        cin>>n>>m>>k;
-        vi a(k);
-        set<int> st;
-        fore(i, 0, k) cin>>a[i];
-        int cur = k;
-        fore(i, 0, k)
-        {
-            st.insert(a[i]);
-            while(cur>=1&&st.find(cur) != st.end())cur--;
-            if(cur==0)break;
-            if(i + 1 - (k - cur) >= n * m - 3){
-                cout<<"TIDAK\n";
-                return;
-            }
-        }
-        cout<<"YA\n";
-}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int t;
+    int t;
     cin>>t;
     while(t--)
     {
-        solve();
+        int n;
+        cin>>n;
+        vector<vi> g(n), res(n, vi(n));
+        vi in(n);
+        fore(i, 0, n)
+        {
+            string s;
+            cin>>s;
+            fore(j, 0, n)
+            {
+                if(s[j] == '1')
+                {
+                    g[i].pb(j);
+                    in[j]++;
+                }
+            }
+        }
+        vi que;
+        int lib = 0;
+        fore(i, 0, n) {if(in[i] == 0) que.pb(i); res[i][i] = 1;}
+        while(!que.empty())
+        {
+            int node = que.back();
+            que.pop_back();
+            for(int x : g[node])
+            {
+                in[x]--;
+                fore(i, 0, n) res[x][i] |= res[node][i];
+                if(in[x] == 0) que.pb(x);
+            }
+        }
+        fore(i, 0, n)
+        {
+            int con = 0;
+            fore(j, 0, n)
+                con += res[i][j];
+            cout<<con<<' ';
+            fore(j, 0, n)
+                if(res[i][j])
+                    cout<<j + 1<<' ';
+            cout<<'\n';
+        }
     }
 	return 0;
 }

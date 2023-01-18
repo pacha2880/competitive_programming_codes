@@ -49,6 +49,7 @@
 #define pb				push_back
 #define all(a)			(a).begin(), (a).end()
 #define sz(a)			(int)a.size()
+#define SZ(a)			(int)a.size()
 #define eq(a, b)     	(fabs(a - b) < EPS)
 #define md(a, b)		((a) % b + b) % b
 #define mod(a)			md(a, MOD)
@@ -92,52 +93,42 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-struct unionFind {
-  vi p;
-  unionFind(int n) : p(n, -1) {}
-  int findParent(int v) {
-    if (p[v] == -1) return v;
-    return p[v] = findParent(p[v]);
-  }
-  bool join(int a, int b) {
-    a = findParent(a);
-    b = findParent(b);
-    if (a == b) return false;
-    p[a] = b;
-    return true;
-  }
-};
+typedef vector<vector<ll> > Matrix;
+Matrix ones(int n) {
+  Matrix r(n,vector<ll>(n));
+  fore(i,0,n)r[i][i]=1;
+  return r;
+}
+Matrix operator*(Matrix &a, Matrix &b) {
+  int n=SZ(a),m=SZ(b[0]),z=SZ(a[0]);
+  Matrix r(n,vector<ll>(m));
+  fore(i,0,n)fore(j,0,m)fore(k,0,z)
+    r[i][j]+=a[i][k]*b[k][j],r[i][j]%=MOD;
+  return r;
+}
+Matrix be(Matrix b, ll e) {
+  Matrix r=ones(SZ(b));
+  while(e){if(e&1LL)r=r*b;b=b*b;e/=2;}
+  return r;
+}
+
 signed main()
 {
-	// ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, m;
-	cin>>n>>m;
-	vi ar(n);
-	fore(i, 0, n) cin>>ar[i];
-	unionFind uni(n);
-	fore(i, 0, m)
-	{
-		int a, b;
-		cin>>a>>b;
-		a--;
-		b--;
-		uni.join(a, b);
-	}
-	vi neo(n);
-	vector<vi> gru(n), pos(n);
-	fore(i, 0, n)
-		gru[uni.findParent(i)].pb(ar[i]), pos[uni.findParent(i)].pb(i);
-	fore(i, 0, n)
-	{
-		sort(all(gru[i]));
-		reverse(all(gru[i]));
-		fore(j, 0, sz(gru[i]))
-			neo[pos[i][j]] = gru[i][j];
-	}
-	fore(i, 0, n)
-		cout<<neo[i]<<' ';
+	int n, k;
+    cin>>n>>k;
+    vi ar(n);
+    fore(i, 0, n) cin>>ar[i];
+    Matrix mat(n, vi(n));
+    fore(i, 0, n)
+        fore(j, 0, n)
+            mat[i][j] = __builtin_popcountll(ar[i] ^ ar[j]) % 3 == 0;
+    mat = be(mat, k - 1);
+    int res = 0;
+    fore(i, 0, n) fore(j, 0, n) res = (res + mat[i][j]) % MOD;
+    cout<<res<<'\n';
 	return 0;
 }
 

@@ -2,7 +2,7 @@
 // #include <ext/pb_ds/assoc_container.hpp>
 // #include <ext/pb_ds/tree_policy.hpp>
 // #include <ext/rope>
-// #define int ll
+#define int ll
 #define mp				make_pair
 #define pb				push_back
 #define all(a)			(a).begin(), (a).end()
@@ -50,38 +50,105 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-void solve()
-{
 
-        int n, m, k;
-        cin>>n>>m>>k;
-        vi a(k);
-        set<int> st;
-        fore(i, 0, k) cin>>a[i];
-        int cur = k;
-        fore(i, 0, k)
-        {
-            st.insert(a[i]);
-            while(cur>=1&&st.find(cur) != st.end())cur--;
-            if(cur==0)break;
-            if(i + 1 - (k - cur) >= n * m - 3){
-                cout<<"TIDAK\n";
-                return;
-            }
-        }
-        cout<<"YA\n";
-}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int t;
-    cin>>t;
-    while(t--)
-    {
-        solve();
-    }
+    int n;
+	cin>>n;
+	vector<pair<int, pair<int, int>>> que(n);
+	vector<pair<pair<int, int>, int>> lineas;
+	fore(i, 0, n)
+	{
+		cin>>que[i].f>>que[i].s.f;
+		if(que[i].f == 1)
+		{
+			cin>>que[i].s.s;
+			lineas.pb({que[i].s, i});
+		}
+		if(que[i].f ==  2)
+			que[i].s.f--;
+	}
+	sort(all(lineas));
+	int sq = 2500;
+	vi deled(n), res(n, -1ll * MOD * MOD);
+	vi dels(sq);
+	vii hull(n);
+	forg(i, 0, n, sq)
+	{
+		// cout<<"------ "<<i<<'\n';
+		vii xs;
+		int top = min(i + sq, n);
+		int pod = 0;
+		fore(j, i, top)
+			if(que[j].f == 2)
+				dels[pod++] = que[j].s.f;
+		
+		fore(j, i, top)
+		{
+			if(que[j].f == 2)
+				deled[que[j].s.f] = 1;
+			if(que[j].f == 3)
+			{
+				fore(k, 0, pod)
+				{
+					// cout<<'%'<<x<<'\n';
+					if(!deled[dels[k]] && dels[k] < j)
+					{
+						// cout<<"#"<<x<<'\n';
+						// cout<<que[j].s.f<<' '<<que[j].s.f * que[x].s.f + que[x].s.s<<'\n';
+						res[j] = max(res[j], que[j].s.f * que[dels[k]].s.f + que[dels[k]].s.s);
+					}
+				}
+				fore(k, i, j)
+					if(!deled[k] && que[k].f == 1)
+						res[j] = max(res[j], que[j].s.f * que[k].s.f + que[k].s.s);
+				xs.pb({que[j].s.f, j});
+			}
+		}
+		sort(all(xs));
+		int sih = 0;
+		for(auto cat : lineas)
+		{
+			// cout<<cat.s<<' '<<deled[cat.s]<<'\n';
+			if(cat.s >= i || deled[cat.s]) continue;
+			while(sih > 0)
+			{
+				if(hull[sih - 1].f == cat.f.f)
+					sih--;
+				if(sih < 2)
+					break;
+				auto a = hull[sih - 1];
+				auto b = hull[sih - 2];
+				if((ld)(b.s - a.s) / (a.f - b.f) >= (ld)(cat.f.s - a.s) / (a.f - cat.f.f))
+					sih--;
+				else
+					break;
+			}
+			hull[sih++] = cat.f;
+		}
+		// cout<<"hull\n";
+		// for(ii cat : hull)
+		// 	cout<<cat.f<<' '<<cat.s<<'\n';
+		int poh = 0;
+		if(sih > 0)
+			for(ii x : xs)
+			{
+				while(poh < sih - 1 && hull[poh].f * x.f + hull[poh].s <= hull[poh + 1].f * x.f + hull[poh + 1].s)
+					poh++;
+				res[x.s] = max(res[x.s], hull[poh].f * x.f + hull[poh].s);			
+			}
+	}
+	fore(i, 0, n)
+	{
+		if(que[i].f == 3)
+			if(res[i] == -1ll * MOD * MOD)
+				cout<<"EMPTY SET\n";
+			else
+				cout<<res[i]<<'\n';
+	}
 	return 0;
 }
 
@@ -89,3 +156,4 @@ signed main()
 // cada día es un poco más fácil, pero tienes que hacerlo cada día,
 // es la parte difícil, pero se vuelve más fácil.
 // Crecer duele.
+// La única manera de pasar esa barrera es pasandola.

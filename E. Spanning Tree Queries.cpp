@@ -113,31 +113,128 @@ signed main()
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
 	int n, m;
-	cin>>n>>m;
-	vi ar(n);
-	fore(i, 0, n) cin>>ar[i];
-	unionFind uni(n);
-	fore(i, 0, m)
-	{
-		int a, b;
-		cin>>a>>b;
-		a--;
-		b--;
-		uni.join(a, b);
-	}
-	vi neo(n);
-	vector<vi> gru(n), pos(n);
-	fore(i, 0, n)
-		gru[uni.findParent(i)].pb(ar[i]), pos[uni.findParent(i)].pb(i);
-	fore(i, 0, n)
-	{
-		sort(all(gru[i]));
-		reverse(all(gru[i]));
-		fore(j, 0, sz(gru[i]))
-			neo[pos[i][j]] = gru[i][j];
-	}
-	fore(i, 0, n)
-		cout<<neo[i]<<' ';
+    cin>>n>>m;
+    vector<pair<int, pair<int, int>>> e(m);
+    set<int> st;
+    fore(i, 0, m)
+        cin>>e[i].s.f>>e[i].s.s>>e[i].f, e[i].s.f--, e[i].s.s--;
+    fore(i, 0, m)
+        fore(j, 0, m)
+            st.insert((e[i].f + e[j].f) / 2), st.insert((e[i].f + e[j].f) / 2 + 1), st.insert((e[i].f + e[j].f) / 2 - 1);
+    vector<pair<int, ii>> res(sz(st));
+    int con = 0;
+    int q = 0;
+    for(int x : st)
+    {
+        // cout<<x<<'\n';
+        unionFind uf(n);
+        sort(all(e), [&](pair<int, pair<int, int>> a, pair<int, pair<int, int>> b)
+        {
+            return abs(a.f - x) < abs(b.f - x);
+        });
+        int su = 0, ri = 0;
+        fore(i, 0, m)
+        {
+            // cout<<i<<'\n';
+            // cout<<e[i].f<<' '<<e[i].s.f<<' '<<e[i].s.s<<'\n';
+            if(uf.join(e[i].s.f, e[i].s.s))
+            {
+                su += abs(e[i].f - x);
+                ri += e[i].f >= x;
+            }
+        }
+        res[con++] = {x, {su, ri}};
+    }
+    // cout<<'@';
+    // return 0;
+    int p, k, a, b, c;
+    cin>>p>>k>>a>>b>>c;
+    int las = 0;
+    int siz = sz(st);
+    int ress = 0;
+    k -= p;
+    while(p--)
+    {
+        int x;
+        cin>>x;
+        // cout<<x<<'\n';
+        int b = 0, e = siz - 1, ras = siz, mid;
+        while(b <= e)
+        {
+            int mid = (b + e) / 2;
+            if(res[mid].f >= x)
+                e = mid - 1, ras = mid;
+            else
+                b = mid + 1;
+        }
+        if(ras == siz)
+        {
+            las = res[siz - 1].s.f + (n - 1) * (x - res[siz - 1].f);
+            // cout<<las<<'\n';
+        }
+        else if(res[ras].f == x)
+        {
+            las = res[ras].s.f;
+            // cout<<las<<'\n';
+        }
+        else if(ras == 0)
+        {
+            las = res[0].s.f + (n - 1) * (res[0].f - x);
+            // cout<<las<<'\n';
+        }
+        else
+        {
+            int difu = res[ras].s.s - (n - 1 - res[ras].s.s);
+            int dafa = (n - 1 - res[ras].s.s) - res[ras].s.s;
+            las = min(res[ras].s.f + difu * (res[ras].f - x), res[ras - 1].s.f + dafa * (x - res[ras - 1].f));
+            // cout<<las<<'\n';
+        }
+        ress ^= las;
+        q = x;
+    }
+    while(k--)
+    {
+        int x = (q * a + b) % c;
+        q = x;
+        // cout<<'#'<<x<<'\n';
+        // cout<<x<<'\n';
+        int b = 0, e = siz - 1, ras = siz, mid;
+        while(b <= e)
+        {
+            int mid = (b + e) / 2;
+            if(res[mid].f >= x)
+                e = mid - 1, ras = mid;
+            else
+                b = mid + 1;
+        }
+        if(ras == siz)
+        {
+            las = res[siz - 1].s.f + (n - 1) * (x - res[siz - 1].f);
+            // cout<<las<<'\n';
+        }
+        else if(res[ras].f == x)
+        {
+            las = res[ras].s.f;
+            // cout<<las<<'\n';
+        }
+        else if(ras == 0)
+        {
+            las = res[0].s.f + (n - 1) * (res[0].f - x);
+            // cout<<las<<'\n';
+        }
+        else
+        {
+            // cout<<res[ras].f<<' '<<res[ras].s.f<<' '<<res[ras].s.s<<'\n';
+            // cout<<res[ras - 1].f<<' '<<res[ras - 1].s.f<<' '<<res[ras - 1].s.s<<'\n';
+            int difu = res[ras].s.s - (n - 1 - res[ras].s.s);
+            int dafa = (n - res[ras - 1].s.s) - (res[ras - 1].s.s - 1);
+            // cout<<res[ras].s.f + difu * (res[ras].f - x)<<' '<<res[ras - 1].s.f + dafa * (x - res[ras - 1].f)<<'\n';
+            las = min(res[ras].s.f + difu * (res[ras].f - x), res[ras - 1].s.f + dafa * (x - res[ras - 1].f));
+            // cout<<las<<'\n';
+        }
+        ress ^= las;
+    }
+    cout<<ress<<'\n';
 	return 0;
 }
 
@@ -147,6 +244,7 @@ signed main()
 // Crecer duele.
 // La única manera de pasar esa barrera es pasandola.
 // efe no más.
-// si no vá por todo, andá pa' allá bobo.
-// no sirve de nada hacer sacrificios si no tienes disciplina.
+// Si no vá por todo, andá pa' allá bobo.
+// No sirve de nada hacer sacrificios si no tienes disciplina.
+// Cae 7 veces, levántate 8.
 // Ale perdóname por favor :,v

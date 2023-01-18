@@ -2,7 +2,7 @@
 // #include <ext/pb_ds/assoc_container.hpp>
 // #include <ext/pb_ds/tree_policy.hpp>
 // #include <ext/rope>
-// #define int ll
+#define int ll
 #define mp				make_pair
 #define pb				push_back
 #define all(a)			(a).begin(), (a).end()
@@ -45,43 +45,69 @@ typedef vector<ll>      vll;
 //mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
 const int tam = 100010;
-const int MOD = 1000000007;
-const int MOD1 = 998244353;
+const int MOD1 = 1000000007;
+const int MOD = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-void solve()
+ll fac[tam], facin[tam];
+ll bino(ll n, ll k)
 {
-
-        int n, m, k;
-        cin>>n>>m>>k;
-        vi a(k);
-        set<int> st;
-        fore(i, 0, k) cin>>a[i];
-        int cur = k;
-        fore(i, 0, k)
-        {
-            st.insert(a[i]);
-            while(cur>=1&&st.find(cur) != st.end())cur--;
-            if(cur==0)break;
-            if(i + 1 - (k - cur) >= n * m - 3){
-                cout<<"TIDAK\n";
-                return;
-            }
-        }
-        cout<<"YA\n";
+    return n >= 0 && k >= 0 && n >= k ? fac[n] * facin[k] % MOD * facin[n - k] % MOD : 0;
+}
+ll pot(ll b, ll e)
+{
+    ll res = 1;
+    while(e)
+    {
+        if(e & 1) res = res * b % MOD;
+        b = b * b % MOD;
+        e /= 2;
+    }
+    return res;
+}
+map<ll, ll> dp[2][2][10010];
+int d;
+ll f(int j, int k, int i, int n)
+{
+    if(n == 1)
+        return bino(d - 1, i - j - k);
+    if(dp[j][k][i].count(n)) return dp[j][k][i][n];
+    ll res = 0;
+    if(n & 1)
+    {
+        fore(l, 0, 2)
+            res = (res + f(j, l, i, n - 1) * bino(d - 1, i - k - l)) % MOD;
+    }
+    else
+    {
+        fore(l, 0, 2)
+            res = (res + f(j, l, i, n / 2) * f(k, l, i, n / 2)) % MOD;
+    }
+    return dp[j][k][i][n] = res;
 }
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int t;
-    cin>>t;
-    while(t--)
+    fac[0] = facin[0] = 1;
+    fore(i, 1, tam)
     {
-        solve();
+        fac[i] = fac[i - 1] * i % MOD;
+        facin[i] = pot(fac[i], MOD - 2);
     }
+	ll n;
+    cin>>n>>d;
+    ll res = 0;
+    fore(i, 0, d + 2)
+        fore(j, 0, 2)
+            fore(k, 0, 2)
+            {
+                res = (res + f(j, k, i, n - 1) * bino(d - 1, i - j - k)) % MOD;
+                // cout<<i<<' '<<j<<' '<<k<<' '<<f(j, k, i, n - 1)<<' '<<bino(d - 1, i - j - k)<<'\n';
+            }
+    cout<<res<<'\n';
 	return 0;
 }
 

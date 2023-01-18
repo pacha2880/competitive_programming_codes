@@ -50,37 +50,45 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-void solve()
-{
 
-        int n, m, k;
-        cin>>n>>m>>k;
-        vi a(k);
-        set<int> st;
-        fore(i, 0, k) cin>>a[i];
-        int cur = k;
-        fore(i, 0, k)
-        {
-            st.insert(a[i]);
-            while(cur>=1&&st.find(cur) != st.end())cur--;
-            if(cur==0)break;
-            if(i + 1 - (k - cur) >= n * m - 3){
-                cout<<"TIDAK\n";
-                return;
-            }
-        }
-        cout<<"YA\n";
-}
+
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int t;
-    cin>>t;
-    while(t--)
+    string s, t;
+    cin>>s>>t;
+    int i = 0, j = 0;
+    while(true)
     {
-        solve();
+        if(((i == sz(s)) != (j == sz(t))) || s[i] != t[j])
+        {
+            cout<<"No\n";
+            return 0;
+        }
+        if(i == sz(s) && j == sz(t))
+        {
+            cout<<"Yes\n";
+            return 0;
+        }
+        int a = 1, b = 1;
+        i++, j++;
+        while(i < sz(s) && s[i] == s[i - 1])
+        {
+            i++;
+            a++;
+        }
+        while(j < sz(t) && t[j] == t[j - 1])
+        {
+            j++;
+            b++;
+        }
+        if(a == 1 && b > 1 || a > b)
+        {
+            cout<<"No\n";
+            return 0;
+        }
     }
 	return 0;
 }

@@ -92,52 +92,94 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-struct unionFind {
-  vi p;
-  unionFind(int n) : p(n, -1) {}
-  int findParent(int v) {
-    if (p[v] == -1) return v;
-    return p[v] = findParent(p[v]);
-  }
-  bool join(int a, int b) {
-    a = findParent(a);
-    b = findParent(b);
-    if (a == b) return false;
-    p[a] = b;
-    return true;
-  }
-};
+
 signed main()
 {
-	// ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, m;
-	cin>>n>>m;
-	vi ar(n);
-	fore(i, 0, n) cin>>ar[i];
-	unionFind uni(n);
-	fore(i, 0, m)
-	{
-		int a, b;
-		cin>>a>>b;
-		a--;
-		b--;
-		uni.join(a, b);
-	}
-	vi neo(n);
-	vector<vi> gru(n), pos(n);
-	fore(i, 0, n)
-		gru[uni.findParent(i)].pb(ar[i]), pos[uni.findParent(i)].pb(i);
-	fore(i, 0, n)
-	{
-		sort(all(gru[i]));
-		reverse(all(gru[i]));
-		fore(j, 0, sz(gru[i]))
-			neo[pos[i][j]] = gru[i][j];
-	}
-	fore(i, 0, n)
-		cout<<neo[i]<<' ';
+    int t;
+    cin>>t;
+    auto pot = [&](ll b, ll e, ll m)
+    {
+        ll res = 1;
+        while(e > 0)
+        {
+            if(e & 1) res = res * b % m;
+            b = b * b % m;
+            e /= 2;
+        }
+        return res;
+    };
+    while(t--)
+    {
+        int a, b, s, p, v;
+        cin>>a>>b>>s>>p>>v;
+        // cout<<p<<'\n';
+        // int ax = s;
+        // cout<<"=====\n";
+        // fore(i, 0, 1058977885)
+        // {
+        //     // cout<<ax<<'\n';
+        //     ax = (ax * a + b) % p;
+        // }
+        // cout<<ax<<'\n';
+        if(v == s)
+        {
+            cout<<0<<'\n';
+            continue;
+        }
+        unordered_map<int, int> ma;
+        ma[s] = p;
+        int sq = sqrt(p);
+        // cout<<"$"<<sq<<'\n';
+        int val;
+        int po = pot(a, sq, p), ax = 1;
+        int in = pot(a - 1, p - 2, p);
+        // cout<<(s * po % p + b * (po - 1) % p * pot(a - 1, p - 2, p) % p) % p<<'\n';
+        // cout<<(s * pot(a, 1058977885ll, p) % p + b * (pot(a, 1058977885ll, p) - 1) % p * pot(a - 1, p - 2, p) % p) % p<<'\n';
+        int ra = -1;
+        ax = s;
+        fore(i, 0, sq)
+        {
+            ax = (ax * a + b) % p;
+            if(ax == v)
+            {
+                ra = i + 1;
+                break;
+            }
+        }
+        if(ra != -1)
+        {
+            cout<<ra<<'\n';
+            continue;
+        }
+        ax = 1;
+        forg(i, sq, p + sq, sq)
+        {
+            ax = ax * po % p;
+            if(a == 1)
+                val = (s + b * i) % p;
+            else
+                val = (s * ax % p + b * (ax - 1) % p * in % p) % p;
+            // cout<<i<<' '<<val<<'\n';
+            if(!ma.count(val))
+                ma[val] = i;
+        }
+        int con = 0;
+        ii minu(MOD * MOD, 0);
+        fore(i, 0, sq)
+        {
+            v = (v * a + b) % p;
+            con++;
+            if(ma.count(v))
+                minu = min(minu, {ma[v], con});
+        }
+        if(minu.f == MOD * MOD)
+            cout<<"IMPOSSIBLE\n";
+        else
+            cout<<minu.f - minu.s<<'\n';
+    }
 	return 0;
 }
 
@@ -149,4 +191,3 @@ signed main()
 // efe no más.
 // si no vá por todo, andá pa' allá bobo.
 // no sirve de nada hacer sacrificios si no tienes disciplina.
-// Ale perdóname por favor :,v

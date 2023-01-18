@@ -2,7 +2,7 @@
 // #include <ext/pb_ds/assoc_container.hpp>
 // #include <ext/pb_ds/tree_policy.hpp>
 // #include <ext/rope>
-// #define int ll
+#define int ll
 #define mp				make_pair
 #define pb				push_back
 #define all(a)			(a).begin(), (a).end()
@@ -50,38 +50,60 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-void solve()
-{
-
-        int n, m, k;
-        cin>>n>>m>>k;
-        vi a(k);
-        set<int> st;
-        fore(i, 0, k) cin>>a[i];
-        int cur = k;
-        fore(i, 0, k)
-        {
-            st.insert(a[i]);
-            while(cur>=1&&st.find(cur) != st.end())cur--;
-            if(cur==0)break;
-            if(i + 1 - (k - cur) >= n * m - 3){
-                cout<<"TIDAK\n";
-                return;
-            }
-        }
-        cout<<"YA\n";
+ll dp[5050][5050];
+int fac[tam], facin[tam];
+int p;
+int bino(int n, int k){
+    if(k > n) return 0;
+    return (fac[n] * facin[k] % p) * facin[n - k] % p;
 }
+ll pupu(int a, int b)
+{
+    // cout<<a<<' '<<b<<'\n';
+    if(dp[a][b] != -1) return dp[a][b];
+    ll res = 0;
+    fore(i, 0, b + 1)
+        res = (res + fac[a + i] * bino(b, i)) % p;
+    return dp[a][b] = res;
+}
+
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int t;
-    cin>>t;
-    while(t--)
-    {
-        solve();
+	int n;
+    cin>>n>>p;
+    mem(dp, -1);
+    fac[0] = facin[0] = 1;
+    auto pot = [&](int a, int b){
+        int res = 1;
+        while(b){
+            if(b & 1) res = res * a % p;
+            a = a * a % p;
+            b >>= 1;
+        }
+        return res;
+    };
+    fore(i, 1, tam){
+        fac[i] = fac[i - 1] * i % p;
+        facin[i] = pot(fac[i], p - 2);
     }
+    int res = 0;
+    if(n % 2 == 0)
+        res = fac[n - 2];
+    // cout<<res<<'\n';
+    fore(i, 1, n / 2 + 1)
+    {
+        fore(j, (n + 1) / 2, i + (n + 1) / 2)
+        {
+            if(j == i) continue;
+            // cout<<i<<' '<<j<<'\n';
+            res = (res + pupu(n - j + i - 2, j - i - 1));
+            // cout<<res<<'\n';
+        }
+    }
+    cout<<res * n % p<<'\n';
 	return 0;
 }
 

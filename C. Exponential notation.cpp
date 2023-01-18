@@ -92,52 +92,71 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-struct unionFind {
-  vi p;
-  unionFind(int n) : p(n, -1) {}
-  int findParent(int v) {
-    if (p[v] == -1) return v;
-    return p[v] = findParent(p[v]);
-  }
-  bool join(int a, int b) {
-    a = findParent(a);
-    b = findParent(b);
-    if (a == b) return false;
-    p[a] = b;
-    return true;
-  }
-};
+
 signed main()
 {
-	// ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, m;
-	cin>>n>>m;
-	vi ar(n);
-	fore(i, 0, n) cin>>ar[i];
-	unionFind uni(n);
-	fore(i, 0, m)
-	{
-		int a, b;
-		cin>>a>>b;
-		a--;
-		b--;
-		uni.join(a, b);
-	}
-	vi neo(n);
-	vector<vi> gru(n), pos(n);
-	fore(i, 0, n)
-		gru[uni.findParent(i)].pb(ar[i]), pos[uni.findParent(i)].pb(i);
-	fore(i, 0, n)
-	{
-		sort(all(gru[i]));
-		reverse(all(gru[i]));
-		fore(j, 0, sz(gru[i]))
-			neo[pos[i][j]] = gru[i][j];
-	}
-	fore(i, 0, n)
-		cout<<neo[i]<<' ';
+	string s;
+    cin>>s;
+    string a, b;
+    bool bo = true, ba = true;
+    fore(i, 0, s.size())
+    {
+        if(ba == true)
+        {
+            if(s[i] == '.')
+                ba = false, bo = false;
+            else if(s[i] != '0')
+                ba = false, a += s[i];
+        }
+        else
+        {
+            if(bo == true)
+            {
+                if(s[i] == '.')
+                    bo = false;
+                else
+                    a += s[i];
+            }
+            else
+                b += s[i];
+        }
+    }
+    while(sz(b) && b.back() == '0')
+        b.pop_back();
+    int e = 0;
+    if(sz(a) == 0)
+    {
+        int ce = 0;
+        fore(i, 0, sz(b))
+            if(b[i] != '0')
+            {
+                ce = i;
+                break;
+            }
+        cout<<b[ce];
+        if(ce < sz(b) - 1)
+            cout<<'.';
+        fore(i, ce + 1, sz(b)) cout<<b[i];
+        cout<<'E'<<-1-ce<<'\n';
+    }
+    else
+    {
+        e = sz(a) - 1;
+        if(sz(b) == 0)
+            while(sz(a) > 0 && a.back() == '0')
+                a.pop_back();
+        cout<<a[0];
+        if(sz(a) + sz(b) > 1) cout<<'.';
+        fore(i, 1, sz(a)) cout<<a[i];
+        fore(i, 0, sz(b)) cout<<b[i];
+        if(e > 0)
+            cout<<'E'<<e<<'\n';
+        else
+            cout<<'\n';
+    }
 	return 0;
 }
 

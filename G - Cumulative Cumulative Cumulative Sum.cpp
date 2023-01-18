@@ -44,43 +44,82 @@ typedef vector<ll>      vll;
 // find_by_order kth largest  order_of_key <
 //mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 100010;
-const int MOD = 1000000007;
-const int MOD1 = 998244353;
+const int tam = 200010;
+const int MOD1 = 1000000007;
+const int MOD = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-void solve()
-{
-
-        int n, m, k;
-        cin>>n>>m>>k;
-        vi a(k);
-        set<int> st;
-        fore(i, 0, k) cin>>a[i];
-        int cur = k;
-        fore(i, 0, k)
-        {
-            st.insert(a[i]);
-            while(cur>=1&&st.find(cur) != st.end())cur--;
-            if(cur==0)break;
-            if(i + 1 - (k - cur) >= n * m - 3){
-                cout<<"TIDAK\n";
-                return;
-            }
-        }
-        cout<<"YA\n";
+struct node {
+    ll suma1, suma2, suma3, dis;
+    node() {
+        suma1 = suma2 = suma3 = 0; dis = 1;
+    }
+    node(ll a, ll b, ll c) {
+        suma1 = a;
+        suma2 = b;
+        suma3 = c;
+        dis = 1;
+    }
+};
+node join(node a, node b) {
+    node c;
+    c.suma1 = (a.suma1 + b.suma1) % MOD;
+    c.suma2 = (b.suma2 + a.suma2 + b.dis * a.suma1) % MOD;
+    c.suma3 = (b.suma3 + a.suma3 + b.dis * a.suma2 + b.dis * (b.dis - 1) / 2 % MOD * a.suma1) % MOD;
+    c.dis = a.dis + b.dis;
+    return c;
+}
+node t[4 * tam];
+ll a[tam];
+void build(int node, int b, int e) {
+    if(b == e) {
+        t[node] = {a[b], 2 * a[b], a[b]};
+        return;
+    }
+    index;
+    build(l, b, mid);
+    build(r, mid + 1, e);
+    t[node] = join(t[l], t[r]);
+}
+void update(int node, int b, int e, int pos, ll val) {
+    if(b == e) {
+        t[node] = {val, 2 * val, val};
+        return;
+    }
+    index;
+    if(pos <= mid) update(l, b, mid, pos, val);
+    else update(r, mid + 1, e, pos, val);
+    t[node] = join(t[l], t[r]);
+}
+node query(int node, int b, int e, int i, int j) {
+    if(b >= i && e <= j) return t[node];
+    index;
+    if(j <= mid) return query(l, b, mid, i, j);
+    if(i > mid) return query(r, mid + 1, e, i, j);
+    return join(query(l, b, mid, i, j), query(r, mid + 1, e, i, j));
 }
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int t;
-    cin>>t;
-    while(t--)
-    {
-        solve();
+	int n, q;
+    cin>>n>>q;
+    fore(i, 0, n)
+        cin>>a[i];
+    build(0, 0, n - 1);
+    while(q--) {
+        int t, a, b;
+        cin>>t>>a;
+        a--;
+        if(t == 1) {
+            cin>>b;
+            update(0, 0, n - 1, a, b);
+        } else {
+            node ans = query(0, 0, n - 1, 0, a);
+            cout<<ans.suma3 % MOD<<'\n';
+        }
     }
 	return 0;
 }

@@ -50,37 +50,30 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-void solve()
-{
 
-        int n, m, k;
-        cin>>n>>m>>k;
-        vi a(k);
-        set<int> st;
-        fore(i, 0, k) cin>>a[i];
-        int cur = k;
-        fore(i, 0, k)
-        {
-            st.insert(a[i]);
-            while(cur>=1&&st.find(cur) != st.end())cur--;
-            if(cur==0)break;
-            if(i + 1 - (k - cur) >= n * m - 3){
-                cout<<"TIDAK\n";
-                return;
-            }
-        }
-        cout<<"YA\n";
-}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int t;
+    int t;
     cin>>t;
-    while(t--)
+    fore(cas, 1, t + 1)
     {
-        solve();
+        int a, b, c, d;
+        cin>>a>>b>>c>>d;
+        int q;
+        cin>>q;
+        cout<<"Case "<<cas<<":\n";
+        while(q--)
+        {
+            int x, y;
+            cin>>x>>y;
+            if(x >= a && x <= c && y >= b && y <= d)
+                cout<<"Yes\n";
+            else
+                cout<<"No\n";
+        }
     }
 	return 0;
 }

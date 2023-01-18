@@ -92,52 +92,74 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-struct unionFind {
-  vi p;
-  unionFind(int n) : p(n, -1) {}
-  int findParent(int v) {
-    if (p[v] == -1) return v;
-    return p[v] = findParent(p[v]);
-  }
-  bool join(int a, int b) {
-    a = findParent(a);
-    b = findParent(b);
-    if (a == b) return false;
-    p[a] = b;
-    return true;
-  }
-};
+
 signed main()
 {
-	// ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, m;
-	cin>>n>>m;
-	vi ar(n);
-	fore(i, 0, n) cin>>ar[i];
-	unionFind uni(n);
-	fore(i, 0, m)
-	{
-		int a, b;
-		cin>>a>>b;
-		a--;
-		b--;
-		uni.join(a, b);
-	}
-	vi neo(n);
-	vector<vi> gru(n), pos(n);
-	fore(i, 0, n)
-		gru[uni.findParent(i)].pb(ar[i]), pos[uni.findParent(i)].pb(i);
-	fore(i, 0, n)
-	{
-		sort(all(gru[i]));
-		reverse(all(gru[i]));
-		fore(j, 0, sz(gru[i]))
-			neo[pos[i][j]] = gru[i][j];
-	}
-	fore(i, 0, n)
-		cout<<neo[i]<<' ';
+	int n, k;
+    cin>>n>>k;
+    vector<string> v(n);
+    fore(i, 0, n) cin>>v[i];
+    int res = 0;
+        set<int> st;
+    fore(i, 0, 1<<n)
+    {
+        // cout<<"mascara "<<i<<":\n";
+        for(int j = i; j; j = (j - 1) & i)
+        {
+            if(__builtin_popcount(j) != k) continue;
+            // cout<<j<<":\n";
+            int nu = (1<<26) - 1;
+            set<char> cht;
+            fore(k, 0, n)
+            {
+                if(j & (1<<k))
+                {
+                    // cout<<v[k]<<'\n';
+                    int na = 0;
+                    for(char ch : v[k])
+                            na |= (1<<(ch - 'a'));
+                    nu &= na;
+                }
+            }
+            // cout<<nu<<'\n';
+            // fore(i, 0, 26)
+            //     if(nu & (1<<i))
+            //         cout<<(char)(i + 'a')<<' ';
+            // cout<<'\n';
+            fore(k, 0, n)
+                if(!(j & (1<<k)) && (i & (1<<k)))
+                {
+                    // cout<<v[k]<<'\n';
+                    int na = 0;
+                    for(char ch : v[k])
+                        nu &= (1<<26) - 1 - (1<<(ch - 'a'));
+                }
+            // cout<<nu<<'\n';
+            // fore(i, 0, 26)
+            //     if(nu & (1<<i))
+            //         cout<<(char)(i + 'a')<<' ';
+            // cout<<'\n';
+            if(nu)
+                st.insert(nu);
+        }
+        int ras = 0;
+        for(int x : st)
+            ras += __builtin_popcount(x);
+        res = max(res, ras);
+    }
+    cout<<res<<'\n';
+    // for(int x : st)
+    // {
+    //     cout<<x<<": ";
+    //     fore(i, 0, 26)
+    //         if(x & (1<<i))
+    //             cout<<(char)(i + 'a')<<' ';
+    //     cout<<'\n';
+    // }
+    // cout<<st.size()<<'\n';
 	return 0;
 }
 

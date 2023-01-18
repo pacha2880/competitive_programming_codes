@@ -2,7 +2,7 @@
 // #include <ext/pb_ds/assoc_container.hpp>
 // #include <ext/pb_ds/tree_policy.hpp>
 // #include <ext/rope>
-// #define int ll
+#define int ll
 #define mp				make_pair
 #define pb				push_back
 #define all(a)			(a).begin(), (a).end()
@@ -50,38 +50,31 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-void solve()
-{
 
-        int n, m, k;
-        cin>>n>>m>>k;
-        vi a(k);
-        set<int> st;
-        fore(i, 0, k) cin>>a[i];
-        int cur = k;
-        fore(i, 0, k)
-        {
-            st.insert(a[i]);
-            while(cur>=1&&st.find(cur) != st.end())cur--;
-            if(cur==0)break;
-            if(i + 1 - (k - cur) >= n * m - 3){
-                cout<<"TIDAK\n";
-                return;
-            }
-        }
-        cout<<"YA\n";
-}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int t;
-    cin>>t;
-    while(t--)
-    {
-        solve();
-    }
+	int n;
+	cin>>n;
+	vi ar(n);
+	fore(i, 0, n) cin>>ar[i];
+	vector<vi> dp(2, vi(n));
+	dp[1][n - 1] = ar[n - 1];
+	for(int i = n - 2; i >= 0; i--){
+		dp[0][i] = dp[1][i + 1];
+		dp[1][i] = min(dp[1][i + 1], dp[0][i + 1]) + ar[i];
+	}
+	int res = dp[1][0];
+	dp.assign(2, vi(n));
+	dp[1][n - 1] = ar[n - 1];
+	dp[0][n - 1] = 1ll * MOD * MOD;
+	for(int i = n - 2; i >= 0; i--){
+		dp[0][i] = dp[1][i + 1];
+		dp[1][i] = min(dp[1][i + 1], dp[0][i + 1]) + ar[i];
+	}
+	cout<<min(res, min(dp[0][0], dp[1][0]))<<'\n';
 	return 0;
 }
 
@@ -89,3 +82,5 @@ signed main()
 // cada día es un poco más fácil, pero tienes que hacerlo cada día,
 // es la parte difícil, pero se vuelve más fácil.
 // Crecer duele.
+// La única manera de pasar esa barrera es pasandola.
+// efe no más

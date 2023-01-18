@@ -86,58 +86,68 @@ typedef vector<ll>      vll;
 // find_by_order kth largest  order_of_key <
 //mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 200010;
+const int tam = 1001;
 const int MOD = 1000000007;
 const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-struct unionFind {
-  vi p;
-  unionFind(int n) : p(n, -1) {}
-  int findParent(int v) {
-    if (p[v] == -1) return v;
-    return p[v] = findParent(p[v]);
-  }
-  bool join(int a, int b) {
-    a = findParent(a);
-    b = findParent(b);
-    if (a == b) return false;
-    p[a] = b;
-    return true;
-  }
-};
+
 signed main()
 {
-	// ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, m;
-	cin>>n>>m;
-	vi ar(n);
-	fore(i, 0, n) cin>>ar[i];
-	unionFind uni(n);
-	fore(i, 0, m)
-	{
-		int a, b;
-		cin>>a>>b;
-		a--;
-		b--;
-		uni.join(a, b);
-	}
-	vi neo(n);
-	vector<vi> gru(n), pos(n);
-	fore(i, 0, n)
-		gru[uni.findParent(i)].pb(ar[i]), pos[uni.findParent(i)].pb(i);
-	fore(i, 0, n)
-	{
-		sort(all(gru[i]));
-		reverse(all(gru[i]));
-		fore(j, 0, sz(gru[i]))
-			neo[pos[i][j]] = gru[i][j];
-	}
-	fore(i, 0, n)
-		cout<<neo[i]<<' ';
+	vector<vi> go(tam);
+    fore(i, 1, tam)
+    {
+        set<int> st;
+        fore(j, 1, (i + 2) / 2 + 1)
+            st.insert(i / j);
+        go[i].assign(all(st));
+    }
+    vi dp(tam, MOD);
+    dp[1] = 0;
+    fore(i, 1, tam)
+    {
+        for(int x : go[i])
+            if(i + x < tam)
+                dp[i + x] = min(dp[i + x], dp[i] + 1);
+    }
+    int tom = 12001;
+    int t;
+    cin>>t;
+    while(t--)
+    {
+        int n, k;
+        cin>>n>>k;
+        k = min(k, tom - 1);
+        vi b(n), c(n);
+        fore(i, 0, n)
+        {
+            int x;
+            cin>>x;
+            b[i] = dp[x];
+            // cout<<x<<' '<<dp[x]<<'\n';
+        }
+        fore(i, 0, n) cin>>c[i];
+        vi cos(tom);
+        fore(i, 0, n)
+        {
+            int x = b[i];
+            for(int j = tom - 1; j >= x; j--)
+                cos[j] = max(cos[j], cos[j - x] + c[i]);
+            // cout<<i<<'\n';
+            // fore(i, 0, k + 1) cout<<cos[i]<<' ';
+            // cout<<'\n';
+        }
+        int res = 0;
+        // fore(i, 0, k + 1) cout<<i<<' '<<cos[i]<<'\n';
+        fore(i, 0, k + 1)
+            res = max(res, cos[i]);
+        cout<<res<<'\n';
+    }
+
 	return 0;
 }
 
@@ -147,6 +157,7 @@ signed main()
 // Crecer duele.
 // La única manera de pasar esa barrera es pasandola.
 // efe no más.
-// si no vá por todo, andá pa' allá bobo.
-// no sirve de nada hacer sacrificios si no tienes disciplina.
+// Si no vá por todo, andá pa' allá bobo.
+// No sirve de nada hacer sacrificios si no tienes disciplina.
+// Cae 7 veces, levántate 8.
 // Ale perdóname por favor :,v

@@ -92,52 +92,72 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-struct unionFind {
-  vi p;
-  unionFind(int n) : p(n, -1) {}
-  int findParent(int v) {
-    if (p[v] == -1) return v;
-    return p[v] = findParent(p[v]);
-  }
-  bool join(int a, int b) {
-    a = findParent(a);
-    b = findParent(b);
-    if (a == b) return false;
-    p[a] = b;
-    return true;
-  }
-};
+int vis[tam];
+vi g[tam];
+int ar[tam];
+int y;
+void dfs(int node, int d)
+{
+    vis[node] = d;
+    y++;
+    for(int x : g[node])
+        if(vis[x] != d && ar[x] % d == 0)
+            dfs(x, d);
+}
+int mu[tam], is_prime [tam];
 signed main()
 {
-	// ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, m;
-	cin>>n>>m;
-	vi ar(n);
-	fore(i, 0, n) cin>>ar[i];
-	unionFind uni(n);
-	fore(i, 0, m)
-	{
-		int a, b;
-		cin>>a>>b;
-		a--;
-		b--;
-		uni.join(a, b);
-	}
-	vi neo(n);
-	vector<vi> gru(n), pos(n);
-	fore(i, 0, n)
-		gru[uni.findParent(i)].pb(ar[i]), pos[uni.findParent(i)].pb(i);
-	fore(i, 0, n)
-	{
-		sort(all(gru[i]));
-		reverse(all(gru[i]));
-		fore(j, 0, sz(gru[i]))
-			neo[pos[i][j]] = gru[i][j];
-	}
-	fore(i, 0, n)
-		cout<<neo[i]<<' ';
+	vector<vi> divos(tam);
+    int n;
+    cin>>n;
+    fore(i, 0, n)
+    {
+        cin>>ar[i];
+        divos[ar[i]].pb(i);
+    }
+    fore(i, 0, n - 1)
+    {
+        int a, b;
+        cin>>a>>b;
+        a--, b--;
+        g[a].pb(b);
+        g[b].pb(a);
+    }
+    vi cont(tam);
+    fore(i, 1, tam)
+    {
+        // cout<<'$'<<i<<'\n';
+        forg(j, i, tam, i)
+        for(int x : divos[j])
+        {
+            if(vis[x] == i) continue;
+            y = 0;
+            dfs(x, i);
+            // cout<<x<<' '<<y<<'\n';
+            cont[i] += y * (y - 1) / 2 + y;
+        }
+    }
+    fore(i, 0, tam) mu[i]=is_prime[i]=1;
+    fore(i, 2, tam) if(is_prime[i]) {
+    forg(j, i, tam, i) {
+        if(j > i) is_prime[j] = 0;
+        if(j / i % i == 0) mu[j]=0;
+        mu[j] = -mu[j];
+    }
+    }
+    // fore(i, 1, tam)
+    //     cout<<i<<' '<<mu[i]<<' '<<cont[i]<<'\n';
+    fore(i, 1, tam)
+    {
+        int res = 0;
+        for(int j = 1; j * i < tam; j++)
+            res += mu[j] * cont[j * i];
+        if(res)
+            cout<<i<<' '<<res<<'\n';
+    }
 	return 0;
 }
 
@@ -147,6 +167,7 @@ signed main()
 // Crecer duele.
 // La única manera de pasar esa barrera es pasandola.
 // efe no más.
-// si no vá por todo, andá pa' allá bobo.
-// no sirve de nada hacer sacrificios si no tienes disciplina.
+// Si no vá por todo, andá pa' allá bobo.
+// No sirve de nada hacer sacrificios si no tienes disciplina.
+// Cae 7 veces, levántate 8.
 // Ale perdóname por favor :,v

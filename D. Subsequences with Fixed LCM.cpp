@@ -44,44 +44,52 @@ typedef vector<ll>      vll;
 // find_by_order kth largest  order_of_key <
 //mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 100010;
-const int MOD = 1000000007;
-const int MOD1 = 998244353;
+const int tam = 1000010;
+const int MOD1 = 1000000007;
+const int MOD = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-void solve()
+ll pot(ll b, ll e)
 {
-
-        int n, m, k;
-        cin>>n>>m>>k;
-        vi a(k);
-        set<int> st;
-        fore(i, 0, k) cin>>a[i];
-        int cur = k;
-        fore(i, 0, k)
-        {
-            st.insert(a[i]);
-            while(cur>=1&&st.find(cur) != st.end())cur--;
-            if(cur==0)break;
-            if(i + 1 - (k - cur) >= n * m - 3){
-                cout<<"TIDAK\n";
-                return;
-            }
-        }
-        cout<<"YA\n";
+    ll res = 1;
+    while(e)
+    {
+        if(e & 1) res = (res * b) % MOD;
+        b = (b * b) % MOD;
+        e >>= 1;
+    }
+    return res;
 }
+int mu[tam], is_prime [tam];
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int t;
-    cin>>t;
-    while(t--)
-    {
-        solve();
+    fore(i, 0, tam) mu[i]=is_prime[i]=1; 
+    fore(i, 2, tam) if(is_prime[i]) {
+        forg(j, i, tam, i) {
+            if(j > i) is_prime[j] = 0;
+            if(j / i % i == 0) mu[j]=0;
+            mu[j] = -mu[j];
+        }
     }
+	int n, m;
+    cin>>n>>m;
+    vi cnt(tam), fac(tam), f(tam);
+    fore(i, 0, n) {int x; cin>>x; cnt[x]++;}
+    fore(i, 1, tam)
+        forg(j, i, tam, i)
+            f[j] += cnt[i];
+    fore(i, 1, tam)
+        f[i] = pot(2, f[i]) - 1;
+    vi g(tam);
+    fore(i, 1, tam)
+        forg(j, i, tam, i)
+            g[j] = (g[j] + f[i] * mu[j / i]) % MOD;
+    fore(i, 1, m + 1)
+        cout<<(g[i] % MOD + MOD) % MOD<<' ';
 	return 0;
 }
 

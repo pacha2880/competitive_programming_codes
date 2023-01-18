@@ -2,7 +2,7 @@
 // #include <ext/pb_ds/assoc_container.hpp>
 // #include <ext/pb_ds/tree_policy.hpp>
 // #include <ext/rope>
-// #define int ll
+#define int ll
 #define mp				make_pair
 #define pb				push_back
 #define all(a)			(a).begin(), (a).end()
@@ -50,38 +50,44 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-void solve()
-{
-
-        int n, m, k;
-        cin>>n>>m>>k;
-        vi a(k);
-        set<int> st;
-        fore(i, 0, k) cin>>a[i];
-        int cur = k;
-        fore(i, 0, k)
+vi hallar(int n, int po){
+    vi res(n);
+    int nana = n;
+    while(po >= nana)
+    {
+        res[n - nana] = nana - 1;
+        po -= nana - 1;
+        nana--;
+    }
+    if(nana)
+    {
+        int fro = n - nana;
+        fore(i, fro, n)
+            res[i] = i - fro;
+        fore(i, 1, po + 1)
         {
-            st.insert(a[i]);
-            while(cur>=1&&st.find(cur) != st.end())cur--;
-            if(cur==0)break;
-            if(i + 1 - (k - cur) >= n * m - 3){
-                cout<<"TIDAK\n";
-                return;
-            }
+            swap(res[fro], res[fro + i]);
         }
-        cout<<"YA\n";
+    }
+    return res;
 }
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int t;
-    cin>>t;
-    while(t--)
+	int n, l, r;
+    cin>>n>>l>>r;
+    vi fro = hallar(n, l - 1), to = hallar(n, r);
+    vi res(n);
+    vi po(n);
+    fore(i, 0, n) po[fro[i]] = i;
+    fore(i, 0, n)
     {
-        solve();
+        res[i] = po[to[i]];
     }
+    fore(i, 0, n) cout<<res[i] + 1<<' ';
+    cout<<'\n';
 	return 0;
 }
 

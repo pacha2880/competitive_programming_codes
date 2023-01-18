@@ -92,52 +92,89 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-struct unionFind {
-  vi p;
-  unionFind(int n) : p(n, -1) {}
-  int findParent(int v) {
-    if (p[v] == -1) return v;
-    return p[v] = findParent(p[v]);
-  }
-  bool join(int a, int b) {
-    a = findParent(a);
-    b = findParent(b);
-    if (a == b) return false;
-    p[a] = b;
-    return true;
-  }
-};
+
 signed main()
 {
-	// ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
-	// freopen("asd.txt", "r", stdin);
-	// freopen("qwe.txt", "w", stdout);
-	int n, m;
-	cin>>n>>m;
-	vi ar(n);
-	fore(i, 0, n) cin>>ar[i];
-	unionFind uni(n);
-	fore(i, 0, m)
-	{
-		int a, b;
-		cin>>a>>b;
-		a--;
-		b--;
-		uni.join(a, b);
-	}
-	vi neo(n);
-	vector<vi> gru(n), pos(n);
-	fore(i, 0, n)
-		gru[uni.findParent(i)].pb(ar[i]), pos[uni.findParent(i)].pb(i);
-	fore(i, 0, n)
-	{
-		sort(all(gru[i]));
-		reverse(all(gru[i]));
-		fore(j, 0, sz(gru[i]))
-			neo[pos[i][j]] = gru[i][j];
-	}
-	fore(i, 0, n)
-		cout<<neo[i]<<' ';
+	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+	// freopen("qwe.txt", "r", stdin);
+	// freopen("asd.txt", "w", stdout);
+	int t;
+    cin>>t;
+    fore(cas, 0, t)
+    {
+        int n, m;
+        cin>>n>>m;
+        vector<string> v(n);
+        fore(i, 0, n)
+            cin>>v[i];
+        vector<vi> maxus(n, vi(m));
+        fore(j, 0, m)
+        {
+            int hay = -1, hoy = -1;
+            for(int i = n - 1; i > -1; i--)
+            {
+                if(v[i][j] == 'B' && hoy == -1)
+                    hoy = i;
+                if(hoy != -1)
+                    maxus[i][j] = max(maxus[i][j], hoy - i);
+            }
+            fore(i, 0, n)
+            {
+                if(v[i][j] == 'B' && hay == -1)
+                    hay = i;
+                if(hay != -1)
+                    maxus[i][j] = max(maxus[i][j], i - hay);
+            }
+        }
+        // fore(i, 0, n)
+        // {
+        //     fore(j, 0, m)
+        //         cout<<maxus[i][j]<<' ';
+        //     cout<<'\n';
+        // }
+        pair<int, ii> res = {n * m, {1, 1}};
+        fore(i, 0, n)
+        {
+            vi suf(m), pref(m);
+            pref[0] = maxus[i][0];
+            suf[m - 1] = maxus[i][m - 1];
+            fore(j, 1, m)
+            {
+                pref[j] = max(pref[j - 1] || v[i][j - 1] == 'B' ? pref[j - 1] + 1 : 0, maxus[i][j]);
+            }
+            for(int j = m - 2; j > -1; j--)
+                suf[j] = max(suf[j + 1] || v[i][j + 1] == 'B' ? suf[j + 1] + 1 : 0, maxus[i][j]);
+
+            // fore(i, 0, m) cout<<pref[i]<<','<<suf[i]<<' ';
+            // cout<<'\n';
+            fore(j, 0, m)
+                res = min(res, {max(pref[j], suf[j]), {i + 1, j + 1}});
+        }
+        // cout<<cas<<'\n';
+        // fore(i, 0, n) cout<<v[i]<<'\n';
+        // cout<<res.f<<'\n';
+        cout<<res.s.f<<' '<<res.s.s<<'\n';
+        // auto bruteforce = [&]()
+        // {
+        //     int res = n * m;
+        //     int x, y;
+        //     fore(i, 0, n)
+        //         fore(j, 0, m)
+        //         {
+        //             int ma = 0;
+        //             fore(k, 0, n)
+        //                 fore(l, 0, m)
+        //                     if(v[k][l] == 'B')
+        //                         ma = max(ma, abs(i - k) + abs(j - l));
+        //             if(res > ma)
+        //                 x = i + 1, y = j + 1;
+        //             res = min(res, ma);
+        //         }
+        //     cout<<res<<' '<<x<<' '<<y<<'\n';
+        //     return res;
+        // };
+        // assert(res.f == bruteforce());
+    }
 	return 0;
 }
 
@@ -147,6 +184,7 @@ signed main()
 // Crecer duele.
 // La única manera de pasar esa barrera es pasandola.
 // efe no más.
-// si no vá por todo, andá pa' allá bobo.
-// no sirve de nada hacer sacrificios si no tienes disciplina.
+// Si no vá por todo, andá pa' allá bobo.
+// No sirve de nada hacer sacrificios si no tienes disciplina.
+// Cae 7 veces, levántate 8.
 // Ale perdóname por favor :,v

@@ -42,9 +42,10 @@
 */
 #include <bits/stdc++.h>
 // #include <ext/pb_ds/assoc_container.hpp>
+// #include <ext/pb_ds/assoc_container.hpp>
 // #include <ext/pb_ds/tree_policy.hpp>
 // #include <ext/rope>
-#define int ll
+// #define int ll
 #define mp				make_pair
 #define pb				push_back
 #define all(a)			(a).begin(), (a).end()
@@ -63,7 +64,7 @@
 #define index	int mid = (b + e) / 2, l = node * 2 + 1, r = l + 1;
 #define DBG(x) cerr<<#x<<" = "<<(x)<<endl
 #define RAYA cerr<<"=============================="<<endl
-// int in(){int r=0,c;for(c=getchar();c<=32;c=getchar());if(c=='-') return -in();for(;c>32;r=(r<<1)+(r<<3)+c-'0',c=getchar());return r;}
+int in(){int r=0,c;for(c=getchar();c<=32;c=getchar());for(;c>32;r=(r<<1)+(r<<3)+c-'0',c=getchar());return r;}
 
 
 using namespace std;
@@ -84,60 +85,76 @@ typedef vector<ii>      vii;
 typedef vector<ll>      vll;
 // typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_update> ordered_set;
 // find_by_order kth largest  order_of_key <
-//mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+// mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 200010;
+const int tam = 10000010;
 const int MOD = 1000000007;
 const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-struct unionFind {
-  vi p;
-  unionFind(int n) : p(n, -1) {}
-  int findParent(int v) {
-    if (p[v] == -1) return v;
-    return p[v] = findParent(p[v]);
-  }
-  bool join(int a, int b) {
-    a = findParent(a);
-    b = findParent(b);
-    if (a == b) return false;
-    p[a] = b;
-    return true;
-  }
-};
+ll phi[tam];
+int pri[tam], pra[tam];
+void criba()
+{
+    pri[1] = 1;
+    fore(i, 1, tam) phi[i] = 1ll * i * i;
+    fore(i, 2, tam)
+    {
+        if(pri[i] == 0)
+        {
+            for(int j = i; j < tam; j += i)
+            {
+                phi[j] -= phi[j] / i;
+                pri[j] = i; 
+            }
+            phi[i]++;
+        }
+        // else
+        // {
+        //     // cout<<i<<' '<<pri[i]<<'\n';
+        //     pra = pri[i];
+        //     while(i % pra == 0)
+        //         pra *= pri[i];
+        //     pra /= pri[i];
+        //     phi[i] = phi[i / pri[i]] + phi[i / pra] * pra * pra / pri[i] * (pri[i] - 1);
+        // }
+    }
+    // fore(i, 1, tam)
+    // {
+    //     forg(j, i, tam, i)
+    //         cal[j] += phi[i] * i;
+    // }
+}
+ll f(int x)
+{
+    if(pri[x] == x) return phi[x];
+    int pra = pri[x];
+    while(x % (1ll * pri[x] * pra) == 0)
+        pra *= pri[x];
+    phi[x] = f(x / pri[x]) + f(x / pra) * pra * pra / pri[x] * (pri[x] - 1);
+    pri[x] = x;
+    return phi[x];
+}
 signed main()
 {
 	// ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, m;
-	cin>>n>>m;
-	vi ar(n);
-	fore(i, 0, n) cin>>ar[i];
-	unionFind uni(n);
-	fore(i, 0, m)
-	{
-		int a, b;
-		cin>>a>>b;
-		a--;
-		b--;
-		uni.join(a, b);
-	}
-	vi neo(n);
-	vector<vi> gru(n), pos(n);
-	fore(i, 0, n)
-		gru[uni.findParent(i)].pb(ar[i]), pos[uni.findParent(i)].pb(i);
-	fore(i, 0, n)
-	{
-		sort(all(gru[i]));
-		reverse(all(gru[i]));
-		fore(j, 0, sz(gru[i]))
-			neo[pos[i][j]] = gru[i][j];
-	}
-	fore(i, 0, n)
-		cout<<neo[i]<<' ';
+	criba();
+    int t;
+    // cin>>t;
+    t = in();
+    // cout<<t<<'\n';
+    while(t--)
+    {
+        int x;
+        // cin>>x;
+        x = in();
+        // scanf("%lld", &x);
+        printf("%ld\n", f(x));
+        // cout<<phi[x]<<'\n';
+    }
 	return 0;
 }
 
@@ -147,6 +164,7 @@ signed main()
 // Crecer duele.
 // La única manera de pasar esa barrera es pasandola.
 // efe no más.
-// si no vá por todo, andá pa' allá bobo.
-// no sirve de nada hacer sacrificios si no tienes disciplina.
+// Si no vá por todo, andá pa' allá bobo.
+// No sirve de nada hacer sacrificios si no tienes disciplina.
+// Cae 7 veces, levántate 8.
 // Ale perdóname por favor :,v

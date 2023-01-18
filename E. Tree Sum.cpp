@@ -87,57 +87,55 @@ typedef vector<ll>      vll;
 //mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
 const int tam = 200010;
-const int MOD = 1000000007;
-const int MOD1 = 998244353;
+const int MOD1 = 1000000007;
+const int MOD = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-struct unionFind {
-  vi p;
-  unionFind(int n) : p(n, -1) {}
-  int findParent(int v) {
-    if (p[v] == -1) return v;
-    return p[v] = findParent(p[v]);
-  }
-  bool join(int a, int b) {
-    a = findParent(a);
-    b = findParent(b);
-    if (a == b) return false;
-    p[a] = b;
-    return true;
-  }
-};
+
 signed main()
 {
-	// ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, m;
-	cin>>n>>m;
-	vi ar(n);
-	fore(i, 0, n) cin>>ar[i];
-	unionFind uni(n);
-	fore(i, 0, m)
-	{
-		int a, b;
-		cin>>a>>b;
-		a--;
-		b--;
-		uni.join(a, b);
-	}
-	vi neo(n);
-	vector<vi> gru(n), pos(n);
-	fore(i, 0, n)
-		gru[uni.findParent(i)].pb(ar[i]), pos[uni.findParent(i)].pb(i);
-	fore(i, 0, n)
-	{
-		sort(all(gru[i]));
-		reverse(all(gru[i]));
-		fore(j, 0, sz(gru[i]))
-			neo[pos[i][j]] = gru[i][j];
-	}
-	fore(i, 0, n)
-		cout<<neo[i]<<' ';
+	int n;
+    cin>>n;
+    vi fac(n), facin(n);
+    fac[0] = facin[0] = 1;
+    auto pot = [&](int b, int e) {
+        int res = 1;
+        while(e > 0)
+        {
+            if(e & 1) res = res * b % MOD;
+            b = b * b % MOD;
+            e /= 2;
+        }
+        return res;
+    };
+    fore(i, 1, n )
+    {
+        fac[i] = fac[i - 1] * i % MOD;
+        facin[i] = pot(fac[i], MOD - 2);
+    }
+    int res = 0;
+    auto bino = [&](int n, int k)
+    {
+        return fac[n] * facin[k] % MOD * facin[n - k] % MOD;
+    };
+    if(n & 1)
+        cout<<0<<'\n';
+    else
+    {
+        fore(i, 1, n)
+        {
+            int l = i, r = n - i;
+            int can = bino(n - 2, l - 1) * l % MOD * r % MOD * pot(l, l - 2) % MOD * pot(r, r - 2) % MOD;
+            if(i & 1) res = (res + MOD - can) % MOD;
+            else
+                res = (res + can) % MOD;
+        }
+    cout<<res<<'\n';
+    }
 	return 0;
 }
 
@@ -149,4 +147,3 @@ signed main()
 // efe no más.
 // si no vá por todo, andá pa' allá bobo.
 // no sirve de nada hacer sacrificios si no tienes disciplina.
-// Ale perdóname por favor :,v

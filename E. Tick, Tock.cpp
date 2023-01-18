@@ -2,7 +2,7 @@
 // #include <ext/pb_ds/assoc_container.hpp>
 // #include <ext/pb_ds/tree_policy.hpp>
 // #include <ext/rope>
-// #define int ll
+#define int ll
 #define mp				make_pair
 #define pb				push_back
 #define all(a)			(a).begin(), (a).end()
@@ -50,38 +50,84 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-void solve()
-{
-
-        int n, m, k;
-        cin>>n>>m>>k;
-        vi a(k);
-        set<int> st;
-        fore(i, 0, k) cin>>a[i];
-        int cur = k;
-        fore(i, 0, k)
-        {
-            st.insert(a[i]);
-            while(cur>=1&&st.find(cur) != st.end())cur--;
-            if(cur==0)break;
-            if(i + 1 - (k - cur) >= n * m - 3){
-                cout<<"TIDAK\n";
-                return;
-            }
-        }
-        cout<<"YA\n";
-}
+struct unionFind {
+  vi p;
+  unionFind(int n) : p(n, -1) {}
+  int findParent(int v) {
+    if (p[v] == -1) return v;
+    return p[v] = findParent(p[v]);
+  }
+  bool join(int a, int b) {
+    a = findParent(a);
+    b = findParent(b);
+    if (a == b) return false;
+    p[a] = b;
+    return true;
+  }
+};
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
 	int t;
-    cin>>t;
-    while(t--)
+  cin>>t;
+  fore(asd, 0, t)
+  {
+    int n, m, h;
+    cin>>n>>m>>h;
+    unionFind uf(min(n, m));
+    int con = 0;
+    vector<vi> mat(n, vi(m));
+    forn(i, n) forn(j, m) cin>>mat[i][j];
+    if(n < m)
     {
-        solve();
+      vector<vi> mat2(m, vi(n));
+      forn(i, n) forn(j, m) mat2[j][i] = mat[i][j];
+      swap(mat, mat2);
+      swap(n, m);
     }
+    vector<vi> dif(m, vi(m, -1));
+    bool bo = true;
+    fore(i, 0, n)
+    {
+      forn(j, m)
+      {
+        fore(k, j + 1, m)
+        {
+          if(mat[i][j] != -1 && mat[i][k] != -1)
+          {
+            int di = ((mat[i][j] - mat[i][k]) % h + h) % h;
+            if(dif[j][k] == -1) dif[j][k] = di;
+            else bo &= dif[j][k] == di;
+            con += uf.join(j, k);
+          }
+        }
+      }
+    }
+    fore(i, 0, m)
+    fore(j, i + 1, m)
+    fore(k, j + 1, m)
+      if(dif[i][j] != -1 && dif[j][k] != -1 && dif[i][k] != -1)
+        bo &= (dif[i][j] + dif[j][k]) % h == dif[i][k];
+      else if(dif[i][j] != -1 && dif[j][k] != -1)
+        dif[i][k] = (dif[i][j] + dif[j][k]) % h;
+    if(bo)
+    {
+      int res = 1;
+      fore(i, con, m - 1) res = res * h % MOD;
+      fore(i, 0, n)
+      {
+        int co = 0;
+        forn(j, m) if(mat[i][j] == -1) co++;
+        if(co == m)
+          res = res * h % MOD;
+      }
+      cout<<res<<'\n';
+    }
+    else
+      cout<<0<<'\n';
+  }
 	return 0;
 }
 

@@ -2,7 +2,7 @@
 // #include <ext/pb_ds/assoc_container.hpp>
 // #include <ext/pb_ds/tree_policy.hpp>
 // #include <ext/rope>
-// #define int ll
+#define int ll
 #define mp				make_pair
 #define pb				push_back
 #define all(a)			(a).begin(), (a).end()
@@ -50,38 +50,48 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-void solve()
+int vis[200];
+pair<ii, int> ar[200];
+int can, n, s;
+int dis(int a, int b)
 {
-
-        int n, m, k;
-        cin>>n>>m>>k;
-        vi a(k);
-        set<int> st;
-        fore(i, 0, k) cin>>a[i];
-        int cur = k;
-        fore(i, 0, k)
-        {
-            st.insert(a[i]);
-            while(cur>=1&&st.find(cur) != st.end())cur--;
-            if(cur==0)break;
-            if(i + 1 - (k - cur) >= n * m - 3){
-                cout<<"TIDAK\n";
-                return;
-            }
-        }
-        cout<<"YA\n";
+    return abs(ar[a].f.f - ar[b].f.f) + abs(ar[a].f.s - ar[b].f.s);
+}
+void dfs(int node)
+{
+    vis[node] = 1;
+    can++;
+    fore(i, 0, n)
+        if(!vis[i] && dis(node, i) <= s * ar[node].s)
+            dfs(i);
 }
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int t;
-    cin>>t;
-    while(t--)
+    cin>>n;
+    fore(i, 0, n)
+        cin>>ar[i].f.f>>ar[i].f.s>>ar[i].s;
+    int res = 4 * MOD;
+    fore(i, 0, n)
     {
-        solve();
+        int b = 1, e = 4 * MOD, mid, rus;
+        while(b <= e)
+        {
+            mid = (b + e) / 2;
+            mem(vis, 0);
+            s = mid;
+            can = 0;
+            dfs(i);
+            if(can == n)
+                e = mid - 1, rus = mid;
+            else
+                b = mid + 1;
+        }
+        res = min(res, rus);
     }
+    cout<<res<<'\n';
 	return 0;
 }
 

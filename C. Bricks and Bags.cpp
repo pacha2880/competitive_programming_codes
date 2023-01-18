@@ -50,27 +50,7 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-void solve()
-{
 
-        int n, m, k;
-        cin>>n>>m>>k;
-        vi a(k);
-        set<int> st;
-        fore(i, 0, k) cin>>a[i];
-        int cur = k;
-        fore(i, 0, k)
-        {
-            st.insert(a[i]);
-            while(cur>=1&&st.find(cur) != st.end())cur--;
-            if(cur==0)break;
-            if(i + 1 - (k - cur) >= n * m - 3){
-                cout<<"TIDAK\n";
-                return;
-            }
-        }
-        cout<<"YA\n";
-}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
@@ -80,7 +60,45 @@ signed main()
     cin>>t;
     while(t--)
     {
-        solve();
+        int n;
+        int res = 0;
+        cin>>n;
+        vi ar;
+        set<int> st;
+        fore(i, 0, n)
+        {
+            int x;
+            cin>>x;
+            st.insert(x);
+        }
+        for(auto x: st)
+        {
+            ar.pb(x);
+        }
+        if(sz(ar) == 1)
+        {
+            cout<<0<<'\n';
+            continue;
+        }
+        if(sz(ar) == 2)
+        {
+            cout<<(ar[1] - ar[0]) * 2<<'\n';
+            continue;
+        }
+        n = sz(ar);
+        res = max(ar[1] - ar[0] + ar[n -1] - ar[0], ar[n - 1] - ar[n - 2] + ar[n - 1] - ar[0]);
+        // cout<<res<<' ';
+        fore(i, 1, n - 1)
+        {
+            res = max(res, min(ar[i + 1] - ar[i], ar[i] - ar[i - 1]) + max(ar[n - 1] - ar[i], ar[i] - ar[0]));
+        }
+        // cout<<res<<' ';
+        fore(i, 0, n - 2)
+            res = max(res, ar[i + 1] - ar[i] + ar[i + 2] - ar[i]), res = max(res, ar[i + 1] - ar[i] + ar[n - 1] - ar[i]);
+        
+        for(int i = n - 1; i > 1; i--)
+            res = max(res, ar[i] - ar[i - 1] + ar[i] - ar[i - 2]), res = max(res, ar[i] - ar[i - 1] + ar[i] - ar[0]);
+        cout<<res<<'\n';
     }
 	return 0;
 }

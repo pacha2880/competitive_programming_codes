@@ -2,7 +2,7 @@
 // #include <ext/pb_ds/assoc_container.hpp>
 // #include <ext/pb_ds/tree_policy.hpp>
 // #include <ext/rope>
-// #define int ll
+#define int ll
 #define mp				make_pair
 #define pb				push_back
 #define all(a)			(a).begin(), (a).end()
@@ -47,40 +47,58 @@ typedef vector<ll>      vll;
 const int tam = 100010;
 const int MOD = 1000000007;
 const int MOD1 = 998244353;
-const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-void solve()
-{
-
-        int n, m, k;
-        cin>>n>>m>>k;
-        vi a(k);
-        set<int> st;
-        fore(i, 0, k) cin>>a[i];
-        int cur = k;
-        fore(i, 0, k)
-        {
-            st.insert(a[i]);
-            while(cur>=1&&st.find(cur) != st.end())cur--;
-            if(cur==0)break;
-            if(i + 1 - (k - cur) >= n * m - 3){
-                cout<<"TIDAK\n";
-                return;
-            }
-        }
-        cout<<"YA\n";
-}
+struct point{
+    int x, y;
+    point() {}
+    point(int x, int y) : x(x), y(y) {}
+    point operator + (const point &p) const { return point(x + p.x, y + p.y); }
+    point operator - (const point &p) const { return point(x - p.x, y - p.y); }
+    ll operator ^ (const point &p) const { return x * p.y - y * p.x;}
+};
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int t;
-    cin>>t;
-    while(t--)
+	int n;
+    cin>>n;
+    vector<point> ar(n + 1), a(n), b(n);
+    vi us(n);
+    fore(i, 0, n) cin>>ar[i].x>>ar[i].y;
+    ar[n] = ar[0];
+    int m;
+    cin>>m;
+    while(m--)
     {
-        solve();
+        int x, y;
+        cin>>x>>y;
+        fore(i, 0, n)
+        {
+            point p1 = ar[i] + point(x, y), p2 = ar[i + 1] + point(x, y);
+            if(!us[i] || ((p1 - a[i]) ^ (b[i] - a[i])) < 0)
+            {
+                a[i] = p1;
+                b[i] = p2;
+                us[i] = 1;
+            }
+        }
+    }
+    // fore(i, 0, n) cout<<a[i].x<<' '<<a[i].y<<' '<<b[i].x<<' '<<b[i].y<<'\n';
+    int q;
+    cin>>q;
+    while(q--)
+    {
+        int x, y;
+        cin>>x>>y;
+        bool bo = true;
+        fore(i, 0, n)
+            bo &= ((point(x, y) - a[i]) ^ (b[i] - a[i])) <= 0;
+        if(bo)
+            cout<<"Yes\n";
+        else
+            cout<<"No\n";
     }
 	return 0;
 }
@@ -89,3 +107,5 @@ signed main()
 // cada día es un poco más fácil, pero tienes que hacerlo cada día,
 // es la parte difícil, pero se vuelve más fácil.
 // Crecer duele.
+// La única manera de pasar esa barrera es pasandola.
+// efe no más

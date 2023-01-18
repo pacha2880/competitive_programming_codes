@@ -92,52 +92,47 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-struct unionFind {
-  vi p;
-  unionFind(int n) : p(n, -1) {}
-  int findParent(int v) {
-    if (p[v] == -1) return v;
-    return p[v] = findParent(p[v]);
-  }
-  bool join(int a, int b) {
-    a = findParent(a);
-    b = findParent(b);
-    if (a == b) return false;
-    p[a] = b;
-    return true;
-  }
-};
+
 signed main()
 {
-	// ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, m;
-	cin>>n>>m;
-	vi ar(n);
-	fore(i, 0, n) cin>>ar[i];
-	unionFind uni(n);
-	fore(i, 0, m)
-	{
-		int a, b;
-		cin>>a>>b;
-		a--;
-		b--;
-		uni.join(a, b);
-	}
-	vi neo(n);
-	vector<vi> gru(n), pos(n);
-	fore(i, 0, n)
-		gru[uni.findParent(i)].pb(ar[i]), pos[uni.findParent(i)].pb(i);
-	fore(i, 0, n)
-	{
-		sort(all(gru[i]));
-		reverse(all(gru[i]));
-		fore(j, 0, sz(gru[i]))
-			neo[pos[i][j]] = gru[i][j];
-	}
-	fore(i, 0, n)
-		cout<<neo[i]<<' ';
+	int n;
+    cin>>n;n *=2;
+
+    vii ar(n);
+    fore(i, 0, n) cin>>ar[i].f, ar[i].s = i;
+    sort(all(ar));
+    vi dp(n + 2);
+    if(abs(ar[0].s - ar[1].s) > 1)
+        dp[2] = ar[1].f - ar[0].f;
+    else
+        dp[2] = MOD * MOD;
+    vi nega(n);
+    forg(i, 0, n, 2)
+    {
+        if(abs(ar[i].s - ar[i + 1].s) == 1)
+            nega[i] = 1;
+    }
+    forg(i, 2, n, 2)
+    {
+        // cout<<nega[i]<<'\n';
+        if(nega[i])
+        {
+            dp[i + 2] = dp[i - 2] + ar[i].f - ar[i - 2].f + ar[i + 1].f - ar[i - 1].f;
+            if(i > 2)
+                dp[i + 2] = min(dp[i + 2], dp[i - 4] + ar[i].f - ar[i - 1].f + ar[i + 1].f - ar[i - 4].f + ar[i - 2].f - ar[i - 3].f);
+        }
+        else if(nega[i - 2])
+        {
+            dp[i + 2] = min(dp[i] + ar[i + 1].f - ar[i].f, dp[i - 2] + ar[i].f - ar[i - 2].f + ar[i + 1].f - ar[i - 1].f);
+        }
+        else
+            dp[i + 2] = dp[i] + ar[i + 1].f - ar[i].f;
+    }
+    // forg(i, 2, n + 2, 2) cout<<i<<' '<<dp[i]<<' '<<nega[i]<<'\n';
+    cout<<dp[n]<<'\n';
 	return 0;
 }
 

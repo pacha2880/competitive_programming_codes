@@ -87,57 +87,61 @@ typedef vector<ll>      vll;
 //mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
 const int tam = 200010;
-const int MOD = 1000000007;
-const int MOD1 = 998244353;
+const int MOD1 = 1000000007;
+const int MOD = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-struct unionFind {
-  vi p;
-  unionFind(int n) : p(n, -1) {}
-  int findParent(int v) {
-    if (p[v] == -1) return v;
-    return p[v] = findParent(p[v]);
-  }
-  bool join(int a, int b) {
-    a = findParent(a);
-    b = findParent(b);
-    if (a == b) return false;
-    p[a] = b;
-    return true;
-  }
+struct point{
+    int x, y;
+    point() {}
+    point(int x, int y) : x(x), y(y) {}
+    ll operator ^(const point &p) const {
+        return (ll)x * p.y - (ll)y * p.x;
+    }
 };
 signed main()
 {
-	// ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, m;
-	cin>>n>>m;
-	vi ar(n);
-	fore(i, 0, n) cin>>ar[i];
-	unionFind uni(n);
-	fore(i, 0, m)
-	{
-		int a, b;
-		cin>>a>>b;
-		a--;
-		b--;
-		uni.join(a, b);
-	}
-	vi neo(n);
-	vector<vi> gru(n), pos(n);
-	fore(i, 0, n)
-		gru[uni.findParent(i)].pb(ar[i]), pos[uni.findParent(i)].pb(i);
-	fore(i, 0, n)
-	{
-		sort(all(gru[i]));
-		reverse(all(gru[i]));
-		fore(j, 0, sz(gru[i]))
-			neo[pos[i][j]] = gru[i][j];
-	}
-	fore(i, 0, n)
-		cout<<neo[i]<<' ';
+	int n;
+    cin>>n;
+    vector<point> pop(2 * n);
+    vi pref(2 * n);
+    fore(i, 0, n)
+    {
+        cin>>pop[i].x>>pop[i].y;
+        pop[i].x *= 4, pop[i].y *= 4;
+        pop[i + n] = pop[i];
+        if(i > 0)
+        {
+            pref[i] = pref[i - 1] + (pop[i - 1] ^ pop[i]) / 4;
+        }
+    }
+    fore(i, n, 2 * n)
+        pref[i] = pref[i - 1] + (pop[i - 1] ^ pop[i]) / 4;
+    int area = pref[n] / 4;
+    int res = (1ll<<63) - 1;
+    fore(i, 0, n)
+    {
+        int lo = i + 2, hi = i + n - 2, mid, ans = i + 2;
+        while(lo <= hi)
+        {
+            mid = (lo + hi) / 2;
+            if(area >= pref[mid] - pref[i] + (pop[mid] ^ pop[i]) / 4)
+                ans = mid, lo = mid + 1;
+            else
+                hi = mid - 1;
+        }
+        res = min(res, abs(area - (pref[ans] - pref[i] + (pop[ans] ^ pop[i]) / 4)));
+        if(ans < i + n - 2)
+        {
+            ans++;
+            res = min(res, abs(area - (pref[ans] - pref[i] + (pop[ans] ^ pop[i]) / 4)));
+        }
+    }
+    cout<<res<<'\n';
 	return 0;
 }
 
@@ -149,4 +153,3 @@ signed main()
 // efe no más.
 // si no vá por todo, andá pa' allá bobo.
 // no sirve de nada hacer sacrificios si no tienes disciplina.
-// Ale perdóname por favor :,v

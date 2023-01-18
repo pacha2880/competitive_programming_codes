@@ -2,7 +2,7 @@
 // #include <ext/pb_ds/assoc_container.hpp>
 // #include <ext/pb_ds/tree_policy.hpp>
 // #include <ext/rope>
-// #define int ll
+#define int ll
 #define mp				make_pair
 #define pb				push_back
 #define all(a)			(a).begin(), (a).end()
@@ -44,44 +44,59 @@ typedef vector<ll>      vll;
 // find_by_order kth largest  order_of_key <
 //mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 100010;
+const int tam = 1000010;
 const int MOD = 1000000007;
 const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
-const double PI = acos(-1); 
-void solve()
-{
-
-        int n, m, k;
-        cin>>n>>m>>k;
-        vi a(k);
-        set<int> st;
-        fore(i, 0, k) cin>>a[i];
-        int cur = k;
-        fore(i, 0, k)
-        {
-            st.insert(a[i]);
-            while(cur>=1&&st.find(cur) != st.end())cur--;
-            if(cur==0)break;
-            if(i + 1 - (k - cur) >= n * m - 3){
-                cout<<"TIDAK\n";
-                return;
-            }
-        }
-        cout<<"YA\n";
-}
+const double PI = acos(-1);
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int t;
-    cin>>t;
-    while(t--)
+    int n;
+    cin>>n;
+    if(n == 1)
     {
-        solve();
+        cout<<0<<'\n';
+        return 0;
     }
+    vi v;
+    for(int i = 1; i * i <= n; i++)
+    {
+        v.pb(i); if(i * i != n) v.pb(n / i);
+    }
+    sort(all(v));
+    int siz = sz(v);
+    int sq = sqrt(n);
+    vi dp(siz);
+    vi pi(siz);
+    fore(i, 0, siz) dp[i] = v[i];
+    auto pos = [&](int x){
+        return x <= sq ? x - 1 : siz - (n / x);
+    };
+    int pri = 0;
+    int res = 0;
+    for(int i = 2; i * i <= n; i++)
+    {
+        pi[i] = pi[i - 1];
+        if(dp[pos(i)] != dp[pos(i - 1)])
+        {
+            pri++;
+            if(i * i * i <= n) res++;
+            pi[i]++;
+            for(int j = siz - 1; j > -1; j--)
+            {
+                if(v[j] < i * i) break;
+                dp[j] -= dp[pos(v[j] / i)] - pri;
+            }
+        }
+    }
+    for(int i = 0; v[i] * v[i] < n; i++)
+        if(pi[v[i]] != pi[v[i] - 1])
+            res += dp[siz - i - 1] - dp[i];
+    cout<<res<<'\n';
 	return 0;
 }
 
@@ -89,3 +104,4 @@ signed main()
 // cada día es un poco más fácil, pero tienes que hacerlo cada día,
 // es la parte difícil, pero se vuelve más fácil.
 // Crecer duele.
+// La única manera de pasar esa barrera es pasandola.

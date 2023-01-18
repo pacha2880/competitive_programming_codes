@@ -92,52 +92,57 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-struct unionFind {
-  vi p;
-  unionFind(int n) : p(n, -1) {}
-  int findParent(int v) {
-    if (p[v] == -1) return v;
-    return p[v] = findParent(p[v]);
-  }
-  bool join(int a, int b) {
-    a = findParent(a);
-    b = findParent(b);
-    if (a == b) return false;
-    p[a] = b;
-    return true;
-  }
-};
+
 signed main()
 {
 	// ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, m;
-	cin>>n>>m;
-	vi ar(n);
-	fore(i, 0, n) cin>>ar[i];
-	unionFind uni(n);
-	fore(i, 0, m)
-	{
-		int a, b;
-		cin>>a>>b;
-		a--;
-		b--;
-		uni.join(a, b);
-	}
-	vi neo(n);
-	vector<vi> gru(n), pos(n);
-	fore(i, 0, n)
-		gru[uni.findParent(i)].pb(ar[i]), pos[uni.findParent(i)].pb(i);
-	fore(i, 0, n)
-	{
-		sort(all(gru[i]));
-		reverse(all(gru[i]));
-		fore(j, 0, sz(gru[i]))
-			neo[pos[i][j]] = gru[i][j];
-	}
-	fore(i, 0, n)
-		cout<<neo[i]<<' ';
+	int n;
+    cin>>n;
+    vi ar(n);
+    fore(i, 0, n) cin>>ar[i];
+    vii res;
+    int con = 0;
+    while(true)
+    {
+        con++;
+        // for(int x : ar)
+        //     cout<<x<<' ';
+        // cout<<'\n';
+        bool bo = true;
+        vi er;
+        er.pb(ar.back());
+        res.pb({1, 3});
+        ar.pop_back();
+        while(!ar.empty() && ar.back() < er.back())
+        {
+            er.pb(ar.back());
+            ar.pop_back();
+            res.pb({1, 3});
+        }
+        if(ar.empty())
+            break;
+        res.pb({1, 2});
+        int nu = ar.back();
+        ar.pop_back();
+        // for(int x : ar)
+        //     cout<<x<<' ';
+        // cout<<'\n';
+        while(!er.empty())
+        {
+            if(nu != -1 && nu < er.back())
+                res.pb({2, 1}), ar.pb(nu), nu = -1;
+                    ar.pb(er.back());
+                    er.pop_back();
+                    res.pb({3, 1});
+                }
+        if(nu != -1)
+            res.pb({2, 1}), ar.pb(nu);
+    }
+    cout<<res.size()<<'\n';
+    for(ii cat : res)
+        cout<<cat.f<<' '<<cat.s<<'\n';
 	return 0;
 }
 
@@ -149,4 +154,6 @@ signed main()
 // efe no más.
 // si no vá por todo, andá pa' allá bobo.
 // no sirve de nada hacer sacrificios si no tienes disciplina.
-// Ale perdóname por favor :,v
+// Ale perdóname por favor :,var)
+        //     cout<<x<<' ';
+        // cout<<'\n';

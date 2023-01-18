@@ -92,52 +92,93 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-struct unionFind {
-  vi p;
-  unionFind(int n) : p(n, -1) {}
-  int findParent(int v) {
-    if (p[v] == -1) return v;
-    return p[v] = findParent(p[v]);
-  }
-  bool join(int a, int b) {
-    a = findParent(a);
-    b = findParent(b);
-    if (a == b) return false;
-    p[a] = b;
-    return true;
-  }
-};
+int ar[tam], t[4 * tam], l[4 * tam];
+void push(int b, int e, int node)
+{
+    if(l[node])
+    {
+        t[node] += l[node];
+        if(b < e)
+            l[node * 2 + 1] += l[node], l[node * 2 + 2] += l[node];
+        l[node] = 0;
+    }
+}
+void init(int b, int e, int node)
+{
+    if(b == e)
+    {
+        t[node] = ar[b];
+        return;
+    }
+    index;
+    init(b, mid, l);
+    init(mid + 1, e, r);
+    t[node] = max(t[l], t[r]);
+}
+int query(int b, int e, int node, int i, int j)
+{
+    push(b, e, node);
+    if(b >= i && e <= j)
+        return t[node];
+    index;
+    if(mid >= j)
+        return query(b, mid, l, i, j);
+    if(mid < i)
+        return query(mid + 1, e, r, i, j);
+    return max(query(b, mid, l, i, j), query(mid + 1, e, r, i, j));
+}
+void update(int b, int e, int node, int i, int j, int val)
+{
+    if(b > e) return;
+    push(b, e, node);
+    if(e < i || b > j)
+        return;
+    if(b >= i && e <= j)
+    {
+        l[node] += val;
+        push(b, e, node);
+        return;
+    }
+    index;
+    update(b, mid, l, i, j, val);
+    update(mid + 1, e, r, i, j, val);
+    t[node] = max(t[l], t[r]);
+}
 signed main()
 {
-	// ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, m;
-	cin>>n>>m;
-	vi ar(n);
-	fore(i, 0, n) cin>>ar[i];
-	unionFind uni(n);
-	fore(i, 0, m)
-	{
-		int a, b;
-		cin>>a>>b;
-		a--;
-		b--;
-		uni.join(a, b);
-	}
-	vi neo(n);
-	vector<vi> gru(n), pos(n);
-	fore(i, 0, n)
-		gru[uni.findParent(i)].pb(ar[i]), pos[uni.findParent(i)].pb(i);
-	fore(i, 0, n)
-	{
-		sort(all(gru[i]));
-		reverse(all(gru[i]));
-		fore(j, 0, sz(gru[i]))
-			neo[pos[i][j]] = gru[i][j];
-	}
-	fore(i, 0, n)
-		cout<<neo[i]<<' ';
+    int n;
+    cin>>n;
+    int res = 0;
+    set<ii> st;
+    fore(i, 0, n)
+    {
+        int x;
+        ar[i] = -1 * (i + 1);
+        cin>>x;
+        st.insert({x, i});
+        res -= x;
+    }
+    init(0, n - 1, 0);
+    fore(i, 0, n)
+    {
+        ii cat = *--st.end();
+        st.erase(--st.end());
+        int v = query(0, n - 1, 0, cat.s, n - 1);
+        if(v <= -2)
+        {
+            res += 2 * cat.f;
+            update(0, n - 1, 0, cat.s, n - 1, 2);
+        }
+        else if(v == -1)
+        {
+            res += cat.f;
+            update(0, n - 1, 0, cat.s, n - 1, 1);
+        }
+    }
+    cout<<res<<'\n';
 	return 0;
 }
 
@@ -149,4 +190,3 @@ signed main()
 // efe no más.
 // si no vá por todo, andá pa' allá bobo.
 // no sirve de nada hacer sacrificios si no tienes disciplina.
-// Ale perdóname por favor :,v

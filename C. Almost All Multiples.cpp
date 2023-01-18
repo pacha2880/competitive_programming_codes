@@ -50,27 +50,7 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-void solve()
-{
 
-        int n, m, k;
-        cin>>n>>m>>k;
-        vi a(k);
-        set<int> st;
-        fore(i, 0, k) cin>>a[i];
-        int cur = k;
-        fore(i, 0, k)
-        {
-            st.insert(a[i]);
-            while(cur>=1&&st.find(cur) != st.end())cur--;
-            if(cur==0)break;
-            if(i + 1 - (k - cur) >= n * m - 3){
-                cout<<"TIDAK\n";
-                return;
-            }
-        }
-        cout<<"YA\n";
-}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
@@ -80,7 +60,35 @@ signed main()
     cin>>t;
     while(t--)
     {
-        solve();
+        int n, x;
+        cin>>n>>x;
+        if(n % x != 0)
+        {
+            cout<<-1<<'\n';
+            continue;
+        }
+        vi res(n);
+        int in = 2;
+        res[0] = x;
+        res[n - 1] = 1;
+        while(x < n)
+        {
+            // cout<<n<<' '<<x<<'\n';
+            int di = n / x;
+            for(;in <= di; in++)
+            {
+                if(di % in == 0) break;
+            }
+            res[x - 1] = x * in;
+            x *= in;
+        }
+        for(int i = 0; i < sz(res); i++)
+        {
+            if(res[i] == 0) res[i] = i + 1;
+        }
+        for(int x : res)
+            cout<<x<<' ';
+        cout<<'\n';
     }
 	return 0;
 }

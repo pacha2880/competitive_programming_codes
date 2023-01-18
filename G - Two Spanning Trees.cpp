@@ -2,7 +2,7 @@
 // #include <ext/pb_ds/assoc_container.hpp>
 // #include <ext/pb_ds/tree_policy.hpp>
 // #include <ext/rope>
-// #define int ll
+#define int ll
 #define mp				make_pair
 #define pb				push_back
 #define all(a)			(a).begin(), (a).end()
@@ -44,43 +44,60 @@ typedef vector<ll>      vll;
 // find_by_order kth largest  order_of_key <
 //mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 100010;
+const int tam = 200010;
 const int MOD = 1000000007;
 const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-void solve()
+int n;
+vi g[tam];
+int vis[tam];
+void dfs(int node)
 {
-
-        int n, m, k;
-        cin>>n>>m>>k;
-        vi a(k);
-        set<int> st;
-        fore(i, 0, k) cin>>a[i];
-        int cur = k;
-        fore(i, 0, k)
+    vis[node] = 1;
+    for(int x : g[node])
+    {
+        if(!vis[x])
         {
-            st.insert(a[i]);
-            while(cur>=1&&st.find(cur) != st.end())cur--;
-            if(cur==0)break;
-            if(i + 1 - (k - cur) >= n * m - 3){
-                cout<<"TIDAK\n";
-                return;
-            }
+            cout<<node + 1<<' '<<x + 1<<'\n';
+            dfs(x);
         }
-        cout<<"YA\n";
+    }
 }
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int t;
-    cin>>t;
-    while(t--)
+	int m;
+    cin>>n>>m;
+    fore(i, 0, m)
     {
-        solve();
+        int a, b;
+        cin>>a>>b;
+        a--, b--;
+        g[a].pb(b);
+        g[b].pb(a);
+    }
+    dfs(0);
+    vi vis(n);
+    queue<int> que;
+    que.push(0);
+    vis[0] = 1;
+    while(!que.empty())
+    {
+        int node = que.front();
+        que.pop();
+        for(int x : g[node])
+        {
+            if(!vis[x])
+            {
+                vis[x] = 1;
+                cout<<node + 1<<' '<<x + 1<<'\n';
+                que.push(x);
+            }
+        }
     }
 	return 0;
 }
@@ -89,3 +106,5 @@ signed main()
 // cada día es un poco más fácil, pero tienes que hacerlo cada día,
 // es la parte difícil, pero se vuelve más fácil.
 // Crecer duele.
+// La única manera de pasar esa barrera es pasandola.
+// efe no más
