@@ -133,25 +133,37 @@ signed main()
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+	int n;
+    cin>>n;
+    vector<vi> tab(n, vi(n));
+    fore(i, 0, n) fore(j, 0, n) cin>>tab[i][j];
+    fore(i, 0, n)
+    {
+        int me = 0;
+        int res = 0;
+        fore(j, 0, n)
+        {
+            if(tab[j][i] > me)
+                res++, me = tab[j][i];
+            
+        }
+        cout<<res<<' ';
+    }
+    cout<<'\n';
+    fore(i, 0, n)
+    {
+        int me = 0;
+        int res = 0;
+        fore(j, 0, n)
+        {
+            if(tab[i][j] > me)
+                res++, me = tab[i][j];
+            
+        }
+        cout<<res<<'\n';
+    }
 	return 0;
 }
-// 30067266499541040
 // Se vuelve más fácil,
 // cada día es un poco más fácil, pero tienes que hacerlo cada día,
 // es la parte difícil, pero se vuelve más fácil.
@@ -161,5 +173,4 @@ signed main()
 // Si no vá por todo, andá pa' allá bobo.
 // No sirve de nada hacer sacrificios si no tienes disciplina.
 // Cae 7 veces, levántate 8.
-// Ale perdóname por favor :,v
 // LA DISCIPLINA es el puente entre tus metas y tus logros.

@@ -133,22 +133,103 @@ signed main()
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+	int t;
+    cin>>t;
+    while(t--)
+    {
+        int n, p;
+        cin>>n>>p;
+        set<int> st;
+        vi nu(n);
+        fore(i, 0, n)
+        {
+            int x;
+            cin>>x;
+            nu[i] = x;
+            st.insert(x);
+        }
+        int rach = p - sz(st);
+        if(rach)
+        {
+            auto it = st.lower_bound(nu.back());
+            int res = 0;
+            int la;
+            while(true)
+            {
+                la = *it;
+                it++;
+                if(it == st.end()) break;
+                rach -= *it - la - 1;
+                res += *it - la;
+                if(rach == 0)
+                {
+                    res--;
+                    break;
+                }
+            }
+            // cout<<rach<<' '<<res<<'\n';
+            if(rach == 0)
+                cout<<res<<'\n';
+            else
+            {
+                if(la != p - 1)
+                    rach -= p - 1 - la, res += p - 1 - la;
+                if(rach == 0)
+                    cout<<res<<'\n';
+                else
+                {
+                    // cout<<rach<<' '<<res<<'\n';
+                    if(!st.count(0))
+                        rach--, st.insert(0);
+                    res++;
+                    int ax = nu[n - 1];
+                    nu[n - 1] = p - 1;
+                    for(int i = n - 1; i > -1; i--)
+                    {
+                        nu[i]++;
+                        // cout<<nu[i]<<' '<<p<<' '<<i<<'\n';
+                        if(nu[i] != p)
+                        {
+                            if(!st.count(nu[i]) && nu[i] < ax)
+                                rach--, st.insert(nu[i]);
+                            break;
+                        }
+                        else{
+                            if(i == 0)
+                            {
+                                // cout<<"asdf";
+                                if(!st.count(1) && 1 < ax)
+                                    rach--, st.insert(1);
+                            }
+                        }
+
+                    }
+                    if(rach == 0)
+                        cout<<res<<'\n';
+                    else
+                    {
+                        la = 0;
+                        auto it = st.upper_bound(0);
+                        while(true)
+                        {
+                            res += *it - la;
+                            rach -= *it - la - 1;
+                            if(rach == 0)
+                            {
+                                res--;
+                                break;
+                            }
+                            la = *it;
+                            it++;
+                        }
+                        cout<<res<<'\n';
+                    }
+                }
+            }
+        }
+        else
+            cout<<0<<'\n';
+    }
 	return 0;
 }
 // 30067266499541040

@@ -133,22 +133,47 @@ signed main()
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+	int a, b, c;
+    cin>>a>>b>>c;
+    int n;
+    cin>>n;
+    vi us, pc;
+    while(n--)
+    {
+        int x;
+        cin>>x;
+        string s;
+        cin>>s;
+        if(s[0] == 'U')
+            us.pb(x);
+        else
+            pc.pb(x);
+    }
+    sort(all(us));
+    sort(all(pc));
+    int nu = 0, cos = 0;
+    reverse(all(us));
+    reverse(all(pc));
+    while(a && !us.empty())
+        a--, nu++, cos += us.back(), us.pop_back();
+    while(b && !pc.empty())
+        b--, nu++, cos += pc.back(), pc.pop_back();
+    while(c && (!us.empty() || !pc.empty()))
+    {
+        if((!us.empty() && !pc.empty()))
+        {
+            if(us.back() < pc.back())
+                c--, nu++, cos += us.back(), us.pop_back();
+            else
+                c--, nu++, cos += pc.back(), pc.pop_back();
+        }
+        else if(!us.empty())
+            c--, nu++, cos += us.back(), us.pop_back();
+        else
+            c--, nu++, cos += pc.back(), pc.pop_back();
+
+    }
+    cout<<nu<<' '<<cos<<'\n';
 	return 0;
 }
 // 30067266499541040

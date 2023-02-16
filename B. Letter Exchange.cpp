@@ -130,25 +130,104 @@ const double PI = acos(-1);
 
 signed main()
 {
-	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+	// ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+	int t;
+    cin>>t;
+    vi conver(500);
+    conver['w'] = 0;
+    conver['i'] = 1;
+    conver['n'] = 2;
+    string stu = "win";
+    while(t--)
+    {
+        // cout<<"$$$$$\n";
+        int n;
+        cin>>n;
+        vector<vi> ar(n);
+        map<vi, set<int>> fal;
+
+        fore(i, 0, n)
+        {
+            // cout<<'^'<<i<<'\n';
+            string s;
+            cin>>s;
+            // return 0;
+            vi cu(3);
+            for(char ch : s)
+                cu[conver[ch]]++;
+            ar[i] = cu;
+            // fore(i, 0, 3)
+            //     cout<<cu[i]<<' ';
+            // cout<<'\n';
+            fal[cu].insert(i);
+        }
+        // return 0;
+        vi per({1, 1, 1});
+        vector<pair<pair<int, char>, pair<int, char>>> res;
+        fore(i, 0, n)
+        {
+            // cout<<'%'<<i<<'\n';
+            while(ar[i] != per)
+            {
+                int bus = 0, a = -1, b = -1, c;
+                fore(j, 0, 3)
+                {
+                    // cout<<ar[i][j]<<' ';
+                    if(ar[i][j] > 1 && a == -1) a = j;
+                    else if(ar[i][j] == 0 && b == -1) b = j;
+                    else c = j;
+                }
+                // cout<<'\n';
+                vi ba(3);
+                // cout<<a<<' '<<b<<' '<<c<<'\n';
+                ba[a] = 0;
+                ba[b] = 2;
+                ba[c] = 1;
+                fal[ar[i]].erase(i);
+                ar[i][a]--;
+                ar[i][b]++;
+                fal[ar[i]].insert(i);
+                if(!empty(fal[ba]))
+                {
+                    int to = *fal[ba].begin();
+                    fal[ba].erase(to);
+                    ar[to][a]++;
+                    ar[to][b]--;
+                    res.pb({{i + 1, stu[a]}, {to + 1, stu[b]}});
+                }
+                else
+                {
+                    ba[b] = 3;
+                    ba[c] = 0;
+                    if(!empty(fal[ba]))
+                    {
+                        int to = *fal[ba].begin();
+                        fal[ba].erase(to);
+                        ar[to][a]++;
+                        ar[to][b]--;
+                        fal[ar[to]].insert(to);
+                        res.pb({{i + 1, stu[a]}, {to + 1, stu[b]}});
+                    }
+                    else
+                    {
+                        ba[b] = 2;
+                        ba[a] = 1;
+                        int to = *fal[ba].begin();
+                        fal[ba].erase(to);
+                        ar[to][a]++;
+                        ar[to][b]--;
+                        fal[ar[to]].insert(to);
+                        res.pb({{i + 1, stu[a]}, {to + 1, stu[b]}});
+                    }
+                }
+            }
+        }
+        cout<<res.size()<<'\n';
+        for(auto cat : res)
+            cout<<cat.f.f<<' '<<cat.f.s<<' '<<cat.s.f<<' '<<cat.s.s<<'\n';
+    }
 	return 0;
 }
 // 30067266499541040

@@ -121,9 +121,9 @@ typedef vector<ll>      vll;
 // find_by_order kth largest  order_of_key <
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 200010;
-const int MOD = 1000000007;
-const int MOD1 = 998244353;
+const int tam = 2000010;
+const int MOD1 = 1000000007;
+const int MOD = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
@@ -133,25 +133,46 @@ signed main()
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+	int n;
+    cin>>n;
+    vi fac(tam), facin(tam);
+    fac[0] = facin[0] = 1;
+    auto pot = [&](int b, int e)
+    {
+        int res = 1;
+        while(e)
+        {
+            if(e & 1) res = res * b % MOD;
+            b = b * b % MOD;
+            e /= 2;
+        }
+        return res;
+    };
+    fore(i, 1, tam)
+    {
+        fac[i] = fac[i - 1] * i % MOD;
+        facin[i] = pot(fac[i], MOD - 2);
+    }
+    auto bino = [&](int n, int k)
+    {
+        return k > n ? 0 : fac[n] * facin[k] % MOD * facin[n - k] % MOD;
+    };
+    vector<vi> dp(n + 1, vi(1<<n));
+    dp[0][(1<<n) - 1] = 1;
+    fore(i, 1, n + 1)
+    {
+        int suma = 0;
+        for(int j = (1<<n) - 1; j > -1; j--)
+        {
+            dp[i][j] = suma;
+            suma += 2 * dp[i - 1][j] * bino(j - (1<<(n - i)), (1<<(n - i)) - 1) % MOD * fac[1<<(n - i)];
+            suma %= MOD;
+        }
+    }
+    fore(i, 0, 1<<n)
+        cout<<dp[n][(1<<n) - i - 1]<<'\n';
 	return 0;
 }
-// 30067266499541040
 // Se vuelve más fácil,
 // cada día es un poco más fácil, pero tienes que hacerlo cada día,
 // es la parte difícil, pero se vuelve más fácil.
@@ -161,5 +182,4 @@ signed main()
 // Si no vá por todo, andá pa' allá bobo.
 // No sirve de nada hacer sacrificios si no tienes disciplina.
 // Cae 7 veces, levántate 8.
-// Ale perdóname por favor :,v
 // LA DISCIPLINA es el puente entre tus metas y tus logros.

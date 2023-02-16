@@ -130,25 +130,95 @@ const double PI = acos(-1);
 
 signed main()
 {
-	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+	// ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+    int t;
+    cin>>t;
+    while(t--)
+    {
+        int n;
+        cin>>n;
+        vi ar(n);
+        vii sorto(n);
+        vi res(n);
+        vi ax(n);
+        fore(i, 0, n)
+            cin>>ar[i], sorto[i] = {ar[i], i};
+        ax = ar;
+        sort(all(ar));
+        sort(all(sorto));
+        int ne = 1;
+        bool bab = 0;
+        vi patos;
+        set<ii> liebres;
+        vi dondo(n);
+        fore(i, 0, n)
+        {
+            int ind = sorto[i].s;
+            if(ar[i] > ne)
+            {
+                patos.pb(ind);
+                dondo[ind] = sz(patos);
+                ne++;
+                res[n - 1] += ar[i] - ne;
+                if(!bab)
+                    res[n - 1]++;
+            }
+            else if(ar[i] == ne)
+            {
+                if(!bab)
+                {
+                    patos.pb(ind);
+                    dondo[ind] = sz(patos);
+                }
+                else
+                    liebres.insert({ar[i], ind});
+                bab = true;
+            }
+            else
+                liebres.insert({ar[i], ind});
+        }
+        ar = ax;
+        for(int i = n - 1; i > 0; i--)
+        {
+            // cout<<i<<' '<<dondo[i]<<'\n';
+            // cout<<"liebres\n";
+            // for(auto cat : liebres)
+            //     cout<<cat.f<<' '<<cat.s<<' '<<dondo[cat.s]<<'\n';
+            // cout<<"patos\n";
+            // for(int x : patos)
+            //     cout<<x<<' '<<ar[x]<<' '<<dondo[x]<<'\n';
+            res[i - 1] = res[i];
+            if(dondo[i] == 0)
+            {
+                liebres.erase({ar[i], i});
+            }
+            else
+            {
+                auto it = liebres.lower_bound({dondo[i], 0});
+                if(it != liebres.end())
+                {
+                    res[i - 1] += it->f - ar[i];
+                    patos[dondo[i] - 1] = it->s;
+                    dondo[it->s] = dondo[i];
+                    liebres.erase(it);
+                }
+                else
+                {
+                    // cout<<"#####\n";
+                    // cout<<sz(patos)<<' '<<dondo[i]<<'\n';
+                    res[i - 1] -= ar[i] - dondo[i];
+                    res[i - 1] += sz(patos) - dondo[i];
+                    dondo[patos.back()] = dondo[i];
+                    patos[dondo[i] - 1] = patos.back();
+                    patos.pop_back();
+                }
+            }
+        }
+        fore(i, 0, n) cout<<res[i]<<' ';
+        cout<<'\n';
+    }
 	return 0;
 }
 // 30067266499541040

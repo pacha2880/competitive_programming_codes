@@ -93,22 +93,20 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-ll phi[tam];
-int pri[tam], pra[tam];
+ll phi[tam], pha[tam];
+int pri[tam], vis[tam];
 void criba()
 {
-    pri[1] = 1;
-    fore(i, 1, tam) phi[i] = 1ll * i * i;
+    phi[1] = 1;
     fore(i, 2, tam)
     {
         if(pri[i] == 0)
         {
-            for(int j = i; j < tam; j += i)
-            {
-                phi[j] -= phi[j] / i;
+            pri[i] = i;
+            for(ll j = 1ll * i * i; j < tam; j += i)
                 pri[j] = i; 
-            }
-            phi[i]++;
+            for(ll j = i; j < tam; j *= i)
+                phi[j] = phi[j / i] + j * (j - j / i);
         }
         // else
         // {
@@ -126,16 +124,6 @@ void criba()
     //         cal[j] += phi[i] * i;
     // }
 }
-ll f(int x)
-{
-    if(pri[x] == x) return phi[x];
-    int pra = pri[x];
-    while(x % (1ll * pri[x] * pra) == 0)
-        pra *= pri[x];
-    phi[x] = f(x / pri[x]) + f(x / pra) * pra * pra / pri[x] * (pri[x] - 1);
-    pri[x] = x;
-    return phi[x];
-}
 signed main()
 {
 	// ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
@@ -152,7 +140,18 @@ signed main()
         // cin>>x;
         x = in();
         // scanf("%lld", &x);
-        printf("%ld\n", f(x));
+        ll res = 1;
+        while(x > 1)
+        {
+            ll p = pri[x], p2 = 1;
+            // cout<<p<<' '<<p2<<'\n';
+            while(x % p == 0)
+                p2 *= p, x /= p;
+            // cout<<p2<<'\n';
+            // cout<<p2<<' '<<phi[p2]<<'\n';
+            res *= phi[p2];
+        }
+        printf("%ld\n", res);
         // cout<<phi[x]<<'\n';
     }
 	return 0;

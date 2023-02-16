@@ -133,22 +133,85 @@ signed main()
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+	int t;
+    cin>>t;
+    // fore(i, 0, 1000000)
+    while(t--)
+    {
+        int n;
+        // n = i + 1;
+        cin>>n;
+        int med = n / 2;
+        int a, b;
+        if((n & 1))
+        {
+            int po = 1;
+            while((med + 1) % po == 0)
+                po *= 10;
+            po /= 100;
+            if(po == 0)
+                cout<<med<<' '<<med + 1<<'\n';
+            else
+            {
+                int con = 0;
+                while((med + 1) % 10 == 0)
+                    med /= 10, con++;
+                // int ux = med;
+                if(med || con == 0)
+                    cout<<med;
+                // a = med;
+                fore(i, 0, con)
+                {
+                    // a *= 10;
+                    if(i & 1)
+                        cout<<4;
+                        // a += 4;
+                    else
+                        cout<<5;
+                        // a += 5;
+                }
+                cout<<' ';
+                med++;
+                cout<<med;
+                b = med;
+                fore(i, 0, con)
+                {
+                    b *= 10;
+                    if(i & 1)
+                        cout<<5;
+                        // b += 5;
+                    else
+                        cout<<4;
+                        // b += 4;
+                }
+                cout<<'\n';
+            }
+        }
+        else
+        {
+            int po = 1;
+            while(med % po == 0)
+                po *= 10;
+            po /= 100;
+            cout<<med + 5 * po<<' '<<med - 5 * po<<'\n';
+            // a = med + 5 * po, b = med - 5 * po;
+        }
+        // int sua = 0, sub = 0;
+        // int axa = a, axb = b;
+        // while(a)
+        // {
+        //     sua += a % 10;
+        //     a /= 10;
+        // }
+        // while(b)
+        // {
+        //     sub += b % 10;
+        //     b /= 10;
+        // }
+        // if(abs(sua - sub) > 1 || axa + axb != n)
+        //     cout<<n<<' '<<axa<<' '<<axb<<'\n';
+        // assert(abs(sua - sub) <= 1 && axa + axb == n);
+    }
 	return 0;
 }
 // 30067266499541040

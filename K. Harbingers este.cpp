@@ -127,28 +127,123 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-
+int dis[tam], papa[tam];
+vii g[tam];
+void dfs(int node, int pa, int di)
+{
+    dis[node] = di;
+    for(ii x : g[node])
+        if(x.f != pa)
+            dfs(x.f, node, di + x.s);
+}
+vi hull;
+int a[tam], b[tam], dp[tam];
+vi tree;
+int pars[20][tam];
+int query(int x, int pos)
+{
+    auto f = [&](int x, int pos)
+    {
+        // cout<<"**\n";
+        // cout<<x<<' '<<pos<<'\n';
+        // cout<<hull[pos]<<' ';cout<<dis[hull[pos]]<<' ';cout<<dp[hull[pos]]<<'\n';
+        // cout<<x * dis[hull[pos]] - dp[hull[pos]]<<'\n';
+        return x * dis[pos] - dp[pos];
+    };
+    // cout<<"eeee\n";
+    // cout<<be<<' '<<e<<'\n';
+    for(int i = 18; i > -1; i--)
+        if(f(x, pars[i][pos]) < f(x, pars[0][pars[i][pos]]))
+            pos = pars[i][pos];
+    if(f(x, pos) < f(x, pars[0][pos]))
+        pos = pars[0][pos];
+    return max(0ll, f(x, pos));
+}
+void dfs(int node, int pa)
+{
+    // cout<<node<<' ';
+    int head = pa;
+    // int ax = head;
+    // // cout<<"## "<<node<<'\n';
+    // do
+    // {
+    //     // cout<<ax<<' ';
+    //     ax = pars[0][ax];
+    // }
+    // while(ax != 0);
+    // cout<<'\n';
+    if(node == 0)
+        head = 0;
+    else if(pa == 0)
+        dp[node] = a[node] + b[node] * dis[node];
+    else
+        dp[node] = a[node] + b[node] * dis[node] - query(b[node], head);
+    // cout<<dp[node]<<'\n';
+    int k3 = -dp[node], m3 = dis[node];
+    // cout<<"caca\n";
+    // cout<<node + 1<<'\n';
+    // for(int x : hull)
+    //     cout<<x<<' ';
+    // cout<<'\n';
+    // cout<<sz(hull)<<'\n';
+    for(int i = 18; i > -1; i--)
+    {
+        if(pars[i][head] == 0) continue;
+        int un = pars[i][head];
+        int dos = pars[0][pars[i][head]];
+        // cout<<un<<' '<<dos<<' '<<head<<'\n';
+        int k1 = -dp[dos], k2 = -dp[un];
+        int m1 = dis[dos], m2 = dis[un];
+        if((k2 - k1) * (m1 - m3) >= (k3 - k1) * (m1 - m2))
+            head = pars[0][pars[i][head]];
+    }
+    while(head != 0)
+    {
+        int un = head;
+        int dos = pars[0][head];
+        // cout<<un<<' '<<dos<<' '<<head<<'\n';
+        int k1 = -dp[dos], k2 = -dp[un];
+        int m1 = dis[dos], m2 = dis[un];
+        if((k2 - k1) * (m1 - m3) < (k3 - k1) * (m1 - m2))
+            break;
+        head = pars[0][head];
+    }
+    pars[0][node] = head;
+    fore(i, 1, 19)
+        pars[i][node] = pars[i - 1][pars[i - 1][node]];
+    // cout<<"sdfdfs";
+    // cout<<'\n';
+    // cout<<endl;
+    // for(int x : hull)
+    //     cout<<x<<' ';
+    // cout<<'\n';
+    for(ii x : g[node])
+        if(x.f != pa)
+            dfs(x.f, node);
+}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
-	// freopen("asd.txt", "r", stdin);
+	// freopen("asd.txt", "r", stdin)
 	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+	int n;
+    cin>>n;
+    // vi dp(n);
+    fore(i, 0, n - 1)
+    {
+        int a, b, c;
+        cin>>a>>b>>c;
+        a--, b--;
+        g[a].pb({b, c});
+        g[b].pb({a, c});
+    }
+    fore(i, 1, n) cin>>a[i]>>b[i];
+    dfs(0, -1, 0);
+    // cout<<"###\n";
+    dfs(0, -1);
+    fore(i, 1, n)
+        cout<<dp[i]<<' ';
+    cout<<'\n';
 	return 0;
 }
 // 30067266499541040
@@ -158,6 +253,7 @@ signed main()
 // Crecer duele.
 // La única manera de pasar esa barrera es pasandola.
 // efe no más.
+// Las chicas lindas son cyanes
 // Si no vá por todo, andá pa' allá bobo.
 // No sirve de nada hacer sacrificios si no tienes disciplina.
 // Cae 7 veces, levántate 8.

@@ -127,28 +127,69 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
+struct st
+{
+	int val;
+	st* r;
+	st* l;
+	st() {r = l = NULL; val = 0;}
+	st(int v) {r = l = NULL; val = v;}
+	st(st* L, st* R) {l = L; r = R, val = l->val + r->val;}
+};
+typedef st* pst;
+void update(pst &t, int b, int e, int pos, int val)
+{
+    if(!t) t = new st();
+	if(b == e)
+    {
+		t->val = max(t->val, val);
+        return;
+    }
+	int mid = (b + e) / 2;
+	if(mid >= pos)
+		update(t->l, b, mid, pos, val);
+    else
+        update(t->r, mid + 1, e, pos, val);
+    t->val = max((t->l?t->l->val:0), (t->r?t->r->val:0));
+}
+int query(pst t, int b, int e, int i, int j)
+{
+    if(!t) 
+        return 0;
+	if(b >= i && e <= j)
+		return t->val;
+	int mid = (b + e) / 2;
+	if(mid >= j)
+		return query(t->l, b, mid, i, j);
+	if(mid < i)
+		return query(t->r, mid +1, e, i, j);
+	return max(query(t->l, b, mid, i, j), query(t->r, mid +1, e, i, j));
+}
 
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+	int n;
+    cin>>n;
+    vi ar(n);
+    fore(i, 0, n) cin>>ar[i];
+    int res = 0;
+    pst tree = new st();
+    int off = 1e17;
+    int siz = MOD * MOD;
+    for(int i = n - 1; i > -1; i--)
+    {
+        off -= ar[i];
+        int ma = query(tree, 0, siz - 1, off, siz - 1);
+        update(tree, 0, siz - 1, off + ar[i], i + res);
+        if(ar[i] >= 0)
+            res++;
+        if(ma > 0)
+            res = max(res, ma - i + 1);
+    }
+    cout<<res<<'\n';
 	return 0;
 }
 // 30067266499541040

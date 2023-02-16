@@ -133,22 +133,46 @@ signed main()
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+	int n;
+    cin>>n;
+    vi ar(n);
+    fore(i, 0, n) cin>>ar[i];
+    vector<vi> dp(n, vi(n)), sus(n, vi(n)), note(n, vi(n));
+    vi aus(n);
+    fore(i, 0, n) aus[i] = 1;
+    int res = 0;
+    vi pot(n);
+    pot[0] = 1;
+    fore(i, 1, n) pot[i] = pot[i-1] * 2 % MOD;
+    fore(i, 1, n)
+    {
+        int le = i;
+        // cout<<le<<'\n';
+        for(int j = i - 1; j > -1; j--)
+        {
+            // cout<<le<<' '<<n<<'\n';
+            while(le < n && ar[le] - ar[i] < ar[i] - ar[j])
+                le++;
+            // cout<<sus[j][i]<<'\n';
+            sus[j][i] += sus[j][i - 1] %= MOD;
+            note[j][i] += note[j][i - 1] %= MOD;
+            // cout<<i<<' '<<j<<' '<<le<<' '<<aus[j]<<' '<<sus[j][i]<<'\n';
+            dp[j][i] = (aus[j] + sus[j][i]) % MOD;
+            // cout<<"###"<<dp[j][i]<<'\n';
+            res += dp[j][i] %= MOD;
+            if(le < n)
+            {
+                note[i][le] += pot[j] %= MOD;
+                sus[i][le] -= note[j][i] %= MOD;
+            }
+            // cout<<note[j][i]<<'\n';
+            if(i < n - 1)
+                sus[i][i + 1] += note[j][i] %= MOD;
+            aus[i] += dp[j][i] %= MOD;
+        }
+
+    }
+    cout<<(res + MOD) % MOD<<'\n';
 	return 0;
 }
 // 30067266499541040

@@ -127,28 +127,99 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-
+int disa[tam], disb[tam];
+vi g[tam];
+int d;
+void caldis(int node, int par)
+{
+    for(int x : g[node])
+        if(x != par)
+        {
+            caldis(x, node);
+            if(disa[x] >= 0)
+                disa[node] = max(disa[x] + 1, disa[node]);
+            if(disb[x] >= 0)
+                disb[node] = max(disb[x] + 1, disb[node]);
+        }
+    // cout<<node + 1<<' '<<disa[node]<<' '<<disb[node]<<'\n';
+}
+ii rambo(int node, int par)
+{
+    if(disa[node] <= 0 && disb[node] <= 0)
+        return {0, 0};
+    ii res = {MOD, MOD};
+    vii raca;
+    int toto = 0;
+    for(int x : g[node])
+    {
+        if(x != par)
+        {
+            auto cat = rambo(x, node);
+            // cout<<cat.f<<' '<<cat.s<<'\n';
+            // cout<<disa[x]<<' '<<disb[x]<<'\n';
+            if(disa[x] != -1 && disb[x] != -1)
+            {
+                // cout<<'.';
+                cat.f += 2;
+                cat.s += 4;
+            }
+            else if(disa[x] != -1)
+            {
+                if(disa[x] + 1 > d)
+                    cat.f++, cat.s += 2;
+                // cout<<',';
+                cat.f++, cat.s += 2;
+            }
+            else if(disb[x] != -1)
+            {
+                if(disb[x] + 1 > d)
+                    cat.f++, cat.s += 2;
+                // cout<<'-';
+                cat.f++, cat.s += 2;
+            }
+            toto += cat.s;
+            raca.pb(cat);
+            // cout<<'$'<<node + 1<<' '<<x + 1<<' '<<cat.f<<' '<<cat.s<<'\n';
+        }
+    }
+    for(ii cat : raca)
+        res = min(res, {cat.f + toto - cat.s, toto});
+    // cout<<'*'<<node + 1<<' '<<res.f<<' '<<res.s<<' '<<toto<<'\n';
+    return res;
+}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+	int n;
+    cin>>n>>d;
+    fore(i, 0, n - 1)
+    {
+        int a, b;
+        cin>>a>>b;
+        a--, b--;
+        g[a].pb(b);
+        g[b].pb(a);
+    }
+    mem(disa, -1); mem(disb, -1);
+    int cana;
+    cin>>cana;
+    fore(i, 0, cana)
+    {
+        int x;
+        cin>>x;
+        disa[x - 1] = 0;
+    }
+    cin>>cana;
+    fore(i, 0, cana)
+    {
+        int x;
+        cin>>x;
+        disb[x - 1] = 0;
+    }
+    caldis(0, -1);
+    cout<<rambo(0, - 1).s<<'\n';
 	return 0;
 }
 // 30067266499541040

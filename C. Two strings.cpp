@@ -133,22 +133,59 @@ signed main()
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+	string a, b;
+    cin>>a>>b;
+    swap(a, b);
+    int male = 0, mari = 0;
+    int n = a.size();
+    int m = b.size();
+    vi mamus(m);
+    int r = m - 1;
+    for(int i = n - 1; i > -1; i--)
+    {
+        // cout<<r<<'\n';
+        while(r > -1 && b[r] != a[i])
+            mamus[r] = n - i - 1, r--;
+        if(r > -1)
+            mamus[r] = n - i, r--;
+    }
+    // fore(i, 0, m)   cout<<mamus[i]<<'\n';
+    if(r < m - 1)
+    fore(i, 0, r + 1)
+        mamus[i] = mamus[r + 1];
+    int sasa = mamus[0];
+    mari = mamus[0];
+    mamus.pb(0);
+    // cout<<sasa<<' '<<male<<' '<<mari<<'\n';
+    r = 0;
+    fore(i, 0, n - 1)
+    {
+        while(r < m && b[r] != a[i])
+            r++;
+        if(r < m)
+        {
+            if(sasa < i + 1 + mamus[r + 1])
+            {
+                sasa = i + 1 + mamus[r + 1];
+                male = i + 1;
+                mari = mamus[r + 1];
+            }
+            r++;
+        }
+    }
+    // cout<<sasa<<' '<<male<<' '<<mari<<'\n';
+    if(sasa == 0)
+        cout<<"-\n";
+    else if(male + mari >= n)
+        cout<<a<<'\n';
+    else
+    {
+        fore(i, 0, male)
+            cout<<a[i];
+        fore(i, n - mari, n)
+            cout<<a[i];
+        cout<<'\n';
+    }
 	return 0;
 }
 // 30067266499541040

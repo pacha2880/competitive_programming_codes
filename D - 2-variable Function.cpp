@@ -121,7 +121,7 @@ typedef vector<ll>      vll;
 // find_by_order kth largest  order_of_key <
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 200010;
+const int tam = 1000010;
 const int MOD = 1000000007;
 const int MOD1 = 998244353;
 const double DINF=1e100;
@@ -133,22 +133,24 @@ signed main()
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+	int n;
+    cin>>n;
+    int res = (1ll<<63) - 1;
+    // cout<<res<<'\n';
+    fore(i, 0, tam)
+    {
+        int b = 0, e = tam, mid;
+        while(b <= e)
+        {
+            mid = (b + e) / 2;
+            int nu = i * i * i + i * i * mid + i * mid * mid + mid * mid * mid;
+            if(nu >= n)
+                res = min(res, nu), e = mid - 1;
+            else
+                b = mid + 1;
+        }
+    }
+    cout<<res<<'\n';
 	return 0;
 }
 // 30067266499541040

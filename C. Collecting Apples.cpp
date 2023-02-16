@@ -38,7 +38,7 @@ messi siemppre esta arriba
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠓⠄⠀⠀⠀⠀⢀⠄⠀⠈⠧⣼⠁⠀⠀⠀⠀⠀⠀⠀⠀⡃⠀⣠⡾⠀⠀⠀⠀⠀⢿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⢸⣄⠀⠀⠀⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⣻⣴⠏⡇⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠲⠀⠀⠀⠀⠀⠈⠛⠳⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡞⠍⠁⠀⠒⡇⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠛⠑⠀⠀⠀⢸⠇⠀⠀⠀⠀⢀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠛⠑⠀⠀⠀⢸⠇⠀⠀⠀⠀⢀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀
 gracias por el perrito cheems
 EL PEMRRITO MALVADO
 
@@ -71,7 +71,7 @@ EL PEMRRITO MALVADO
 ⠀⠀⠀⠀⠠⣿⣄⣾⣄⡷⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡿⠀⠀⠀⢸⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠈⠁⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣼⡁⠀⠀⠀⢸⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣏⡇⠀⡶⠀⣸⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠹⣇⣴⠷⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠹⣇⣴⠷⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 
 */
 #include <bits/stdc++.h>
@@ -133,25 +133,66 @@ signed main()
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+	int n, m, k;
+    cin>>n>>m>>k;
+    vector<vi> tab(n, vi(m));
+    fore(i, 0, n)
+        fore(j, 0, m)
+            cin>>tab[i][j];
+    int maximus = 11801;
+    vector<vector<vi>> dope(n, vector<vi>(m, vi(maximus)));
+    dope[n - 1][m - 1][tab[n - 1][m - 1]] = 1;
+    for(int i = n - 1; i > -1; i--)
+        for(int j = m - 1; j > -1; j--)
+        {
+            // cout<<i<<' '<<j<<'\n';
+            if(i < n - 1)
+                for(int k = maximus - 1; k >= tab[i][j]; k--)
+                    dope[i][j][k] += dope[i + 1][j][k - tab[i][j]];
+            if(j < m - 1)
+                for(int k = maximus - 1; k >= tab[i][j]; k--)
+                    dope[i][j][k] += dope[i][j + 1][k - tab[i][j]];
+        }
+    int x = 0, y = 0;
+    string res;
+    while(x != n - 1 || y != m - 1)
+    {
+        // cout<<res<<' '<<k<<'\n';
+        // cout<<x<<' '<<y<<'\n';
+        if(x == n - 1)
+        {
+            res += 'R';
+            y++;
+        }
+        else if(y == m - 1)
+        {
+            res += 'D';
+            x++;
+        }
+        else
+        {
+            int sasa = 0;
+            int lala = 0, lolo = 0;
+            for(int i = maximus - 1; i > -1; i--)
+            {
+                sasa += dope[x + 1][y][i] + dope[x][y + 1][i];
+                if(sasa >= k)
+                {
+                    if(sasa - dope[x][y + 1][i] >= k)
+                        x++, k -= lolo, res += 'D';
+                    else
+                        y++, k -= lala + dope[x + 1][y - 1][i], res += 'R';
+                    break;
+                }
+                lala += dope[x + 1][y][i];
+                lolo += dope[x][y + 1][i];
+            }
+        }
+    }
+    cout<<res<<'\n';
 	return 0;
 }
-// 30067266499541040
+
 // Se vuelve más fácil,
 // cada día es un poco más fácil, pero tienes que hacerlo cada día,
 // es la parte difícil, pero se vuelve más fácil.
@@ -163,3 +204,4 @@ signed main()
 // Cae 7 veces, levántate 8.
 // Ale perdóname por favor :,v
 // LA DISCIPLINA es el puente entre tus metas y tus logros.
+// esto será binarysearcheable?

@@ -128,38 +128,89 @@ const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
 
+int T[6*tam];
+vi v;
+void init(int nodo, int b, int e){ 
+    int L=2*nodo+1,R=L+1,mid=(b+e)/2;
+    if(b==e){
+        T[nodo]=v[b];
+        return;
+    }
+    init(L,b,mid);
+    init(R,mid+1,e);
+    T[nodo]=min(T[L],T[R]);
+}
+
+void update(int nodo, int b, int e, int pos, int val){
+    int L=2*nodo+1,R=L+1,mid=(b+e)/2;
+    if(b==e){
+        T[nodo]=val;
+        return;
+    }
+    if(pos<=mid){
+        update(L,b,mid,pos,val);
+    }else{
+        update(R,mid+1,e,pos,val);
+    }
+    T[nodo]=min(T[L],T[R]);
+}
+
+int query(int nodo, int b, int e, int izq, int der){
+    int L=2*nodo+1,R=L+1,mid=(b+e)/2;
+    if(b>=izq && e<=der){
+        return T[nodo];
+    }
+    if(der<=mid)return query(L,b,mid,izq,der);
+    if(izq>=mid+1)return query(R,mid,e,izq,der);
+    return min(query(L,b,mid,izq,der),query(R,mid+1,e,izq,der));
+}
+
+
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
-	// freopen("asd.txt", "r", stdin);
-	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+    // freopen("asd.txt", "r", stdin);
+    // freopen("qwe.txt", "w", stdout);
+    int n,m,x;
+    cin>>n;
+    for(int i=0;i<n;i++){
+        cin>>x;
+        v.pb(x);
+    }
+    init(0,0,n-1);
+    cin>>m;
+    int res=0;
+    vector<bool>vis(n+1,false);
+    for(int i=0;i<m;i++){
+        cin>>x;
+        int b=0,e=n-1;
+        int pos=1e9;
+        while(b<=e){
+            int mid=(b+e)/2;
+            if(query(0,0,n-1,0,mid)<=x){
+                pos=mid;
+                e=mid-1;
+            }else{
+                b=mid+1;
+            }
+        }
+        if(pos==1e9)continue;
+        if(vis[pos]==false)res++;
+        vis[pos]=true;
+        update(0,0,n-1,pos,x+1);
+    }
+    cout<<res<<"\n";
+
 	return 0;
 }
-// 30067266499541040
 // Se vuelve más fácil,
 // cada día es un poco más fácil, pero tienes que hacerlo cada día,
 // es la parte difícil, pero se vuelve más fácil.
 // Crecer duele.
 // La única manera de pasar esa barrera es pasandola.
+// Las chicas lindas son cyanes
 // efe no más.
 // Si no vá por todo, andá pa' allá bobo.
 // No sirve de nada hacer sacrificios si no tienes disciplina.
 // Cae 7 veces, levántate 8.
-// Ale perdóname por favor :,v
 // LA DISCIPLINA es el puente entre tus metas y tus logros.

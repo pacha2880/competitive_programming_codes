@@ -133,33 +133,51 @@ signed main()
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+	int n;
+    cin>>n;
+    vii ar(n);
+    fore(i, 0, n)
+    {
+        int x;
+        cin>>x;
+        ar[x - 1].f = i;
+    }
+    fore(i, 0, n)
+    {
+        int x;
+        cin>>x;
+        ar[x - 1].s = i;
+        if(ar[x - 1].f > ar[x - 1].s)
+            swap(ar[x - 1].f, ar[x - 1].s);
+    }
+    int res = ar[0].f * (ar[0].f + 1) / 2 + 1;
+    int ri = n - ar[0].s - 1;
+    res += ri * (ri + 1) / 2;
+    ri = ar[0].s - ar[0].f - 1;
+    res += ri * (ri + 1) / 2;
+    // cout<<res<<'\n';
+    int le = ar[0].f; ri = ar[0].s;
+    fore(i, 1, n)
+    {
+        if(ar[i].f < le && ar[i].s > ri)
+            res += (le - ar[i].f) * (ar[i].s - ri);
+        else if(ar[i].f < le && ar[i].s < le)
+            res += (n - ri) * (le - max(ar[i].f, ar[i].s));
+        else if(ar[i].f > ri && ar[i].s > ri)
+            res += (le + 1) * (min(ar[i].f, ar[i].s) - ri);
+        le = min(le, ar[i].f), ri = max(ri, ar[i].s);
+    }
+    cout<<res<<'\n';
 	return 0;
 }
-// 30067266499541040
 // Se vuelve más fácil,
 // cada día es un poco más fácil, pero tienes que hacerlo cada día,
 // es la parte difícil, pero se vuelve más fácil.
 // Crecer duele.
 // La única manera de pasar esa barrera es pasandola.
 // efe no más.
+// Si me sueltan la correa yo arranco pa la perrera
 // Si no vá por todo, andá pa' allá bobo.
 // No sirve de nada hacer sacrificios si no tienes disciplina.
 // Cae 7 veces, levántate 8.
-// Ale perdóname por favor :,v
 // LA DISCIPLINA es el puente entre tus metas y tus logros.

@@ -127,28 +127,86 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
+struct st
+{
+	int val;
+	st* r;
+	st* l;
+	st() {r = l = NULL; val = 0;}
+	st(int v) {r = l = NULL; val = v;}
+	st(st* L, st* R) {l = L; r = R, val = l->val + r->val;}
+};
+typedef st* pst;
+void update(pst &t, int b, int e, int pos, int val)
+{
+    // cout<<t<<' '<<b<<' '<<e<<'\n';
+    if(!t) t = new st();
+	if(b == e)
+    {
+		t->val += val;
+        return;
+    }
+	int mid = (b + e) / 2;
+	if(mid >= pos)
+		update(t->l, b, mid, pos, val);
+    else
+        update(t->r, mid + 1, e, pos, val);
+    t->val = (t->l?t->l->val:0) + (t->r?t->r->val:0);
+}
+int query(pst t, int b, int e, int i, int j)
+{
+    // cout<<b<<' '<<e<<' '<<i<<' '<<j<<'\n';
+    // cout<<t<<'\n';
+    // if(!t) cout<<"wererw\n";
+    if(!t) 
+    {
+        // cout<<"dfsfdsf\n";
+        return 0;
+    }
+	if(b >= i && e <= j)
+		return t->val;
+	int mid = (b + e) / 2;
+    // cout<<'.';
+	if(mid >= j)
+		return query(t->l, b, mid, i, j);
+    // cout<<'-';
+	if(mid < i)
+		return query(t->r, mid +1, e, i, j);
+    // cout<<'!';
+	return query(t->l, b, mid, i, j) + query(t->r, mid +1, e, i, j);
+}
 
 signed main()
 {
-	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+	// ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+    int tom = 10001;
+	vector<pst> trus(tom, NULL);
+    int n, k;
+    cin>>n>>k;
+    int siz = 2 * MOD;
+    fore(i, 0, tom)
+        trus[i];
+    vector<pair<int, pair<int, int>>> ar(n);
+    int res = 0;
+    fore(i, 0, n) cin>>ar[i].s.f>>ar[i].f>>ar[i].s.s;
+    sort(all(ar));
+    reverse(all(ar));
+    fore(i, 0, n)
+    {
+        // cout<<i<<'\n';
+        for(int j = max(1ll, ar[i].s.s - k); j < min(tom, ar[i].s.s + k + 1); j++)
+        {
+            // cout<<'$'<<j<<'\n';
+            res += query(trus[j], 0, siz - 1, ar[i].s.f - ar[i].f, ar[i].s.f + ar[i].f);
+            // cout<<'%';
+        }
+        // cout<<'%';
+        // return 0;
+        update(trus[ar[i].s.s], 0, siz - 1, ar[i].s.f, 1);
+    }
+    cout<<res<<'\n';
 	return 0;
 }
 // 30067266499541040

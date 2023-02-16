@@ -127,28 +127,55 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-
+vi g[tam];
+int ar[tam];
+int dfs(int node, int pa, int lima)
+{
+    int res = -1;
+    for(int x : g[node])
+        if(x != pa)
+        {
+            res += dfs(x, node, lima);
+        }
+    // cout<<node<<' '<<res<<'\n';
+    return max(res, 0ll) + (ar[node] >= lima);
+}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+	int n;
+    cin>>n;
+    fore(i, 1, n) cin>>ar[i];
+    fore(i, 0, n - 1)
+    {
+        int a, b;
+        cin>>a>>b;
+        a--, b--;
+        g[a].pb(b);
+        g[b].pb(a);
+    }
+    int b = 1, e = MOD, mid, res;
+    while(b <= e)
+    {
+        mid = (b + e) / 2;
+        // cout<<"$$$ "<<mid<<'\n';
+        int x = dfs(0, -1, mid);
+        // cout<<x<<'\n';
+        if(x == 0)
+            res = mid, e = mid - 1;
+        else
+            b = mid + 1;
+    }
+    int ras = 0;
+    fore(i, 0, n)
+    {
+        // cout<<ar[i]<<' '<<res<<'\n';
+        if(ar[i] < res)
+            ras = max(ras, ar[i]);
+    }
+    cout<<ras<<'\n';
 	return 0;
 }
 // 30067266499541040

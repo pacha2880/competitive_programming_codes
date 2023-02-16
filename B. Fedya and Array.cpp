@@ -133,33 +133,29 @@ signed main()
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+	int t;
+    cin>>t;
+    while(t--)
+    {
+        int a, b;
+        cin>>a>>b;
+        cout<<2 * (a - b)<<'\n';
+        fore(i, b, a + 1)
+            cout<<i<<' ';
+        for(int i = a - 1; i > b; i--)
+            cout<<i<<' ';
+        cout<<'\n';
+    }
 	return 0;
 }
-// 30067266499541040
 // Se vuelve más fácil,
 // cada día es un poco más fácil, pero tienes que hacerlo cada día,
 // es la parte difícil, pero se vuelve más fácil.
 // Crecer duele.
 // La única manera de pasar esa barrera es pasandola.
 // efe no más.
+// Si me sueltan la correa yo arranco pa la perrera
 // Si no vá por todo, andá pa' allá bobo.
 // No sirve de nada hacer sacrificios si no tienes disciplina.
 // Cae 7 veces, levántate 8.
-// Ale perdóname por favor :,v
 // LA DISCIPLINA es el puente entre tus metas y tus logros.

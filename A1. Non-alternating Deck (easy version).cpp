@@ -133,25 +133,67 @@ signed main()
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+	int t;
+    cin>>t;
+    while(t--)
+    {
+        int n;
+        cin>>n;
+        int a1 = 1, a2 = 0, b1 = 0, b2 = 0;
+        int col = 1;
+        n--;
+        int papa = 2;
+        while(n)
+        {
+            fore(i, 0, 2)
+            {
+                if(n == 0) break;
+                if(papa > n)
+                {
+                    if(col)
+                        b1 += n / 2, b2 += (n + 1) / 2, n = 0;
+                    else
+                        b2 += n / 2, b1 += (n + 1) / 2, n = 0;
+                }
+                else
+                {
+                    if(col)
+                        b1 += papa / 2, b2 += (papa + 1) / 2;
+                    else
+                        b2 += papa / 2, b1 += (papa + 1) / 2;
+                    if(papa & 1)
+                        col ^= 1;
+                    n -= papa;
+                    papa++;
+                }   
+            }
+            fore(i, 0, 2)
+            {
+                if(n == 0) break;
+                if(papa > n)
+                {
+                    if(col)
+                        a1 += n / 2, a2 += (n + 1) / 2, n = 0;
+                    else
+                        a2 += n / 2, a1 += (n + 1) / 2, n = 0;
+                }
+                else
+                {
+                    if(col)
+                        a1 += papa / 2, a2 += (papa + 1) / 2;
+                    else
+                        a2 += papa / 2, a1 += (papa + 1) / 2;
+                    if(papa & 1)
+                        col ^= 1;
+                    n -= papa;
+                    papa++;
+                }   
+            }
+        }
+        cout<<a1<<' '<<a2<<' '<<b1<<' '<<b2<<'\n';
+    }
 	return 0;
 }
-// 30067266499541040
 // Se vuelve más fácil,
 // cada día es un poco más fácil, pero tienes que hacerlo cada día,
 // es la parte difícil, pero se vuelve más fácil.
@@ -161,5 +203,4 @@ signed main()
 // Si no vá por todo, andá pa' allá bobo.
 // No sirve de nada hacer sacrificios si no tienes disciplina.
 // Cae 7 veces, levántate 8.
-// Ale perdóname por favor :,v
 // LA DISCIPLINA es el puente entre tus metas y tus logros.

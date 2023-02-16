@@ -127,28 +127,59 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-
+int val[tam], cost[tam];
+vi g[tam];
+int dp[tam];
+int f(int node, int lim)
+{
+    if(dp[node] != -1) return dp[node];
+    dp[node] = 0;
+    for(int x : g[node])
+        if(cost[x] <= lim)
+            dp[node] = max(dp[node], f(x, lim));
+    dp[node] += val[node];
+    return dp[node];
+}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+	int t;
+    cin>>t;
+    while(t--)
+    {
+        int n, k;
+        cin>>n>>k;
+        fore(i, 0, n) cin>>val[i];
+        fore(i, 1, n)
+        {
+            int x;
+            cin>>x;
+            x--;
+            g[x].pb(i);
+        }
+        fore(i, 1, n) cin>>cost[i];
+        int b = 0, e = MOD, mid, res = MOD;
+        while(b <= e)
+        {
+            mid = (b + e) / 2;
+            int mama = 0;
+            fore(i, 0, n) dp[i] = -1;
+            fore(i, 0, n)
+                mama = max(mama, f(i, mid));
+            // cout<<mid<<' '<<mama<<'\n';
+            if(mama >= k)
+                res = mid, e = mid - 1;
+            else
+                b = mid + 1;
+        }
+        fore(i, 0, n) g[i].clear();
+        if(res == MOD)
+            cout<<-1<<'\n';
+        else
+            cout<<res<<'\n';
+    }
 	return 0;
 }
 // 30067266499541040

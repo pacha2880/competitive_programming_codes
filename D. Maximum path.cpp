@@ -133,22 +133,25 @@ signed main()
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+	int n;
+    cin>>n;
+    vector<vi> ar(3, vi(n));
+    fore(i, 0, 3)
+        fore(j, 0, n) cin>>ar[i][j];
+    vi status(5, -MOD * MOD);
+    status[0] = 0;
+    fore(i, 0, n)
+    {
+        vi ax(5);
+        int a = ar[0][i], b = ar[1][i], c = ar[2][i];
+        ax[0] = max({status[0] + a, status[1] + a + b, status[2] + a + b + c, status[4] + a + b + c});
+        ax[1] = max({status[0] + a + b, status[1] + b, status[2] + b + c});
+        ax[2] = max({status[0] + a + b + c, status[1] + b + c, status[2] + c, status[3] + a + b + c});
+        ax[3] = max({status[0] + a + b + c, status[3] + a + b + c});
+        ax[4] = max({status[2] + a + b + c, status[4] + a + b + c});
+        swap(ax, status);
+    }
+    cout<<status[2]<<'\n';
 	return 0;
 }
 // 30067266499541040

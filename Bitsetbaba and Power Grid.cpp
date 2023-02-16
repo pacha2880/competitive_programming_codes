@@ -127,39 +127,57 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-
+int si = 0;
+int base[30];
+void add(int x)
+{
+    fore(i, 0, 30)
+    {
+        if(x & 1 << i)
+        {
+            if(base[i])
+                x ^= base[i];
+            else
+            {
+                base[i] = x;
+                si++;
+                break;
+            }
+        }
+    }
+}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+	int t;
+    cin>>t;
+    while(t--)
+    {
+        int k, m;
+        cin>>k>>m;
+        si = 0;
+        fore(i, 0, 30) base[i] = 0;
+        while(m--)
+        {
+            int x;
+            cin>>x;
+            add(x);
+        }
+        cout<<(1<<k) / (1<<si)<<'\n';
+    }
+
 	return 0;
 }
-// 30067266499541040
 // Se vuelve más fácil,
 // cada día es un poco más fácil, pero tienes que hacerlo cada día,
 // es la parte difícil, pero se vuelve más fácil.
 // Crecer duele.
 // La única manera de pasar esa barrera es pasandola.
 // efe no más.
+// Si me sueltan la correa yo arranco pa la perrera
 // Si no vá por todo, andá pa' allá bobo.
 // No sirve de nada hacer sacrificios si no tienes disciplina.
 // Cae 7 veces, levántate 8.
-// Ale perdóname por favor :,v
 // LA DISCIPLINA es el puente entre tus metas y tus logros.

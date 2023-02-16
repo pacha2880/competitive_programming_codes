@@ -121,35 +121,109 @@ typedef vector<ll>      vll;
 // find_by_order kth largest  order_of_key <
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 200010;
+const int tam = 1010;
 const int MOD = 1000000007;
 const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-
+int pri[tam];
+map<int, int> factura[tam];
+map<int, int> facturas[tam];
+bool contiene(map<int, int> &a, map<int, int> &b)
+{
+    for(auto cat : b)
+    {
+        auto it = a.find(cat.f);
+        if(it == a.end() || it->s < cat.s)
+            return false;
+    }
+    return true;
+}
+vi rosa;
+vi rus;
+void build(map<int, int> &mob)
+{
+    if(mob.empty())
+    {
+        if(sz(rus) < sz(rosa))
+            rosa = rus;
+    }
+    else
+    {
+        int canda = (--mob.end())->f;
+        do
+        {
+            if(contiene(mob, facturas[canda]))
+            {
+                rus.pb(canda);
+                for(auto cat : facturas[canda])
+                {
+                    mob[cat.f] -= cat.s;
+                    if(mob[cat.f] == 0)
+                        mob.erase(cat.f);
+                }
+                build(mob);
+                for(auto cat : facturas[canda])
+                    mob[cat.f] += cat.s;
+                rus.pop_back();
+            }
+            canda++;
+        } while (!pri[canda]);
+    }
+}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
-	return 0;
+	int n;
+    cin>>n;
+    fore(i, 2, tam)
+    {
+        int di = 0;
+        int ax = i;
+        facturas[i] = facturas[i - 1];
+        for(int j = 2; j * j <= i; j++)
+        {
+            if(ax % j == 0)
+            {
+                di++;
+                while(ax % j == 0)
+                    ax /= j, factura[i][j]++, facturas[i][j]++;
+            }
+        }
+        if(ax > 1)
+            factura[i][ax]++, facturas[i][ax]++;
+        if(di == 0)
+            pri[i] = 1;
+    }
+    map<int, int> mop;
+    vi ras(30);
+    for(int i = n - 1; !pri[i + 1]; i--)
+    {
+        for(auto cat : factura[i + 1])
+            mop[cat.f] += cat.s;
+        rosa.resize(30);
+        rus.pb(i);  
+        build(mop);
+        rus.pop_back();
+        if(sz(rosa) < sz(ras))
+            ras = rosa;
+    }
+    if(sz(ras) < 30)
+    {
+        sort(all(ras));
+        cout<<n<<"! = ";
+        fore(i, 0, sz(ras))
+        {
+            if(i > 0)
+                cout<<" * ";
+            cout<<ras[i]<<"!";
+        }
+    }
+    else
+        cout<<"No solution\n";
 }
 // 30067266499541040
 // Se vuelve más fácil,

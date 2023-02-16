@@ -128,38 +128,53 @@ const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
 
+
+//>
+const int N = 1e6+10;
+int vis[N];
+int n,a,b;
+
+void f(int donde){
+    //if(donde < 0 || donde > n) return 0;
+    //if(dp[donde] != -1) return dp[donde];
+    if(donde - a >= 0 && !vis[donde-a]){ 
+        vis[donde-a] = 1;
+        //ans = max(ans, f(donde-a)+a);
+        f(donde-a);
+    }
+    if(n-donde >= b && !vis[donde+b]){
+        vis[donde+b] = 1;
+        //ans = max(ans, f(donde+b)-b);
+        f(donde+b);
+    }
+}
+
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+    cin>>n>>a>>b;
+    forn(i,n+1) vis[i] = 0;
+    f(n);
+    int ans = 0;
+    forn(i,n+1){
+        if(vis[i] == 1){
+            ans = i;
+            break;
+        }
+    }
+    cout<<n-ans<<endl;
 	return 0;
 }
-// 30067266499541040
 // Se vuelve más fácil,
 // cada día es un poco más fácil, pero tienes que hacerlo cada día,
 // es la parte difícil, pero se vuelve más fácil.
 // Crecer duele.
 // La única manera de pasar esa barrera es pasandola.
 // efe no más.
+// Si me sueltan la perrea yo arranco pa la perrera
 // Si no vá por todo, andá pa' allá bobo.
 // No sirve de nada hacer sacrificios si no tienes disciplina.
 // Cae 7 veces, levántate 8.
-// Ale perdóname por favor :,v
 // LA DISCIPLINA es el puente entre tus metas y tus logros.

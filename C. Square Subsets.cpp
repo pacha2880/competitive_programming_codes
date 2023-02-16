@@ -127,39 +127,67 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-
+int si = 0;
+int base[50];
+void add(int x)
+{
+    fore(i, 0, 50)
+    {
+        if(x & 1 << i)
+        {
+            if(!base[i])
+            {
+                si++;
+                base[i] = x;
+                break;
+            }
+            else
+                x ^= base[i];
+        }
+    }
+}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+	int n;
+    cin>>n;
+    vi pris;
+    fore(i, 2, 70)
+    {
+        int div = 0;
+        fore(j, 1, i + 1)
+            if(i % j == 0) div++;
+        if(div == 2)
+            pris.pb(i);
+    }
+    fore(i, 0, n)
+    {
+        int x;
+        cin>>x;
+        int mask = 0;
+        fore(i, 0, sz(pris))
+            while(x % pris[i] == 0)
+                x /= pris[i], mask ^= 1<<i;
+        // cout<<mask<<'\n';
+        add(mask);
+    }
+    int res = 1;
+    // cout<<si<<' '<<n<<'\n';
+    while(si < n)
+        si++, res = res * 2 % MOD;
+    cout<<(res + MOD - 1) % MOD<<'\n';
 	return 0;
 }
-// 30067266499541040
 // Se vuelve más fácil,
 // cada día es un poco más fácil, pero tienes que hacerlo cada día,
 // es la parte difícil, pero se vuelve más fácil.
 // Crecer duele.
 // La única manera de pasar esa barrera es pasandola.
 // efe no más.
+// Si me sueltan la correa yo arranco pa la perrera
 // Si no vá por todo, andá pa' allá bobo.
 // No sirve de nada hacer sacrificios si no tienes disciplina.
 // Cae 7 veces, levántate 8.
-// Ale perdóname por favor :,v
 // LA DISCIPLINA es el puente entre tus metas y tus logros.

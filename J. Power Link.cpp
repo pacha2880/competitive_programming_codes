@@ -133,33 +133,91 @@ signed main()
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+	int n, m;
+    cin>>n>>m;
+    vi ar(n);
+    fore(i, 0, n) cin>>ar[i];
+    vi unicornio(m), su(m), res(m);
+    vector<vi> cholos(m);
+    vector<vi> amigos(n);
+    int sq = 300;
+    fore(i, 0, m)
+    {
+        int k;
+        cin>>k;
+        if(k > 300)
+        {
+            while(k--)
+            {
+                int x;
+                cin>>x;
+                amigos[x - 1].pb(i);
+                res[i] += su[i] * ar[x - 1];
+                su[i] += ar[x - 1];
+                unicornio[i] = 1;
+            }
+        }
+        else
+        {
+            while(k--)
+            {
+                int x;
+                cin>>x;
+                cholos[i].pb(x - 1);
+            }
+        }
+    }
+    int q;
+    cin>>q;
+    while(q--)
+    {
+        // cout<<'@'<<q<<endl;
+        int a;
+        cin>>a;
+        if(a == 1)
+        {
+            int b, c;
+            cin>>b>>c;
+            b--;
+            // cout<<b<<endl;
+            for(int x : amigos[b])
+            {
+                // cout<<x<<'$'<<endl;
+                res[x] += (su[x] - ar[b]) * c - (su[x] - ar[b]) * ar[b], su[x] += c - ar[b];
+            }
+            ar[b] = c;
+        }
+        else
+        {
+            int b;
+            cin>>b;
+            b--;
+            // cout<<b<<endl;
+            if(unicornio[b])
+                cout<<res[b]<<'\n';
+            else
+            {
+                int res = 0;
+                int su = 0;
+                for(int x : cholos[b])
+                {
+                    // cout<<'!'<<x<<endl;
+                    res += ar[x] * su, su += ar[x];
+                }
+                cout<<res<<'\n';
+            }
+        }
+    }
 	return 0;
 }
-// 30067266499541040
 // Se vuelve más fácil,
 // cada día es un poco más fácil, pero tienes que hacerlo cada día,
 // es la parte difícil, pero se vuelve más fácil.
 // Crecer duele.
 // La única manera de pasar esa barrera es pasandola.
+// Las chicas lindas son cyanes
 // efe no más.
 // Si no vá por todo, andá pa' allá bobo.
 // No sirve de nada hacer sacrificios si no tienes disciplina.
 // Cae 7 veces, levántate 8.
-// Ale perdóname por favor :,v
 // LA DISCIPLINA es el puente entre tus metas y tus logros.

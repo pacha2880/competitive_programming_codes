@@ -127,39 +127,134 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
+struct flowEdge
+{
+    int to, rev, f, cap;
+};
 
+vector<vector<flowEdge> > G;
+
+// Añade arista (st -> en) con su capacidad
+void addEdge(int st, int en, int cap) {
+    flowEdge A = {en, (int)G[en].size(), 0, cap};
+    flowEdge B = {st, (int)G[st].size(), 0, 0};
+    G[st].pb(A);
+    G[en].pb(B);
+}
+
+int nodes, S, T; // asignar estos valores al armar el grafo G
+                 // nodes = nodos en red de flujo. Hacer G.clear(); G.resize(nodes);
+vi work, lvl;
+int Q[200010];
+
+bool bfs() {
+    int qt = 0;
+    Q[qt++] = S;
+    lvl.assign(nodes, -1);
+    lvl[S] = 0;
+    for (int qh = 0; qh < qt; qh++) {
+        int v = Q[qh];
+        for (flowEdge &e : G[v]) {
+            int u = e.to;
+            if (e.cap <= e.f || lvl[u] != -1) continue;
+            lvl[u] = lvl[v] + 1;
+            Q[qt++] = u;
+        }
+    }
+    return lvl[T] != -1;
+}
+
+int dfs(int v, int f) {
+    if (v == T || f == 0) return f;
+    for (int &i = work[v]; i < G[v].size(); i++) {
+        flowEdge &e = G[v][i];
+        int u = e.to;
+        if (e.cap <= e.f || lvl[u] != lvl[v] + 1) continue;
+        int df = dfs(u, min(f, e.cap - e.f));
+        if (df) {
+            e.f += df;
+            G[u][e.rev].f -= df;
+            return df;
+        }
+    }
+    return 0;
+}
+
+int maxFlow() {
+    int flow = 0;
+    while (bfs()) {
+        work.assign(nodes, 0);
+        while (true) {
+            int df = dfs(S, MOD);
+            if (df == 0) break;
+            flow += df;
+        }
+    }
+    return flow;
+}
+vii g[tam];
+int dis[tam];
+int vas[tam];
+void dfs(int node)
+{
+    vas[node] = 1;
+    for(ii x : g[node])
+    {
+        if(dis[x.f] + x.s == dis[node])
+        {
+            
+            addEdge(node, x.f, 1);
+            if(! vas[x.f])
+            dfs(x.f);
+        }
+    }
+}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+	int n, m;
+    cin>>n>>m;
+    nodes = n;
+    G.resize(nodes);
+    S = n - 1, T = 0;
+    while(m--)
+    {
+        int a, b, c;
+        cin>>a>>b>>c;
+        a--, b--;
+        g[a].pb({b, c});
+        g[b].pb({a, c});
+    }
+    priority_queue<pair<int, int>> que;
+    que.push({0, 0});
+    fore(i, 1, n) dis[i] = MOD * MOD;
+    while(!que.empty())
+    {
+        int node = que.top().s, pas = dis[node];
+        que.pop();
+        for(ii x : g[node])
+        {
+            if(dis[x.f] > dis[node] + x.s)
+            {
+                dis[x.f] = dis[node] + x.s;
+                que.push({-dis[x.f], x.f});
+            }
+        }
+    }
+    dfs(n - 1);
+    cout<<maxFlow()<<'\n';
 	return 0;
 }
-// 30067266499541040
 // Se vuelve más fácil,
 // cada día es un poco más fácil, pero tienes que hacerlo cada día,
 // es la parte difícil, pero se vuelve más fácil.
 // Crecer duele.
 // La única manera de pasar esa barrera es pasandola.
+// Las chicas lindas son cyanes
 // efe no más.
 // Si no vá por todo, andá pa' allá bobo.
 // No sirve de nada hacer sacrificios si no tienes disciplina.
 // Cae 7 veces, levántate 8.
-// Ale perdóname por favor :,v
 // LA DISCIPLINA es el puente entre tus metas y tus logros.

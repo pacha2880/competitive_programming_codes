@@ -122,44 +122,118 @@ typedef vector<ll>      vll;
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
 const int tam = 200010;
-const int MOD = 1000000007;
-const int MOD1 = 998244353;
+const int MOD1 = 1000000007;
+const int MOD = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-
+struct st
+{
+    int su, sul, sur;
+    st* r;
+    st* l;
+    st() {r = l = NULL; su =sul=sur=0;}
+    st(int v) {r = l = NULL, su = sul = sur = v;}
+};
+typedef st* pst;
+void update(pst &t, int b, int e, int pos, int val)
+{
+    // cout<<b<<' '<<e<<endl;
+    if(!t) t = new st();
+    if(b == e)
+    {
+        t->su = t->sul = t->sur = t->su + val;
+        return;
+    }
+    int mid = (b + e) / 2;
+    if(mid >= pos)
+        update(t->l, b, mid, pos, val);
+    else
+        update(t->r, mid + 1, e, pos, val);
+    if(!t->l) t->l = new st();
+    if(!t->r) t->r = new st();
+    t->su = (1ll * t->l->su + t->r->su) % MOD;
+    t->sul = (t->l->sul + t->r->sul + 1ll * t->r->su * (mid - b + 1)) % MOD;
+    t->sur = (t->r->sur + t->l->sur + 1ll * t->l->su * (e - mid)) % MOD;
+}
+struct asd
+{
+    int su, sul, sur, si;
+    asd(int sis) {su = 0, sul = 0, sur = 0, si = sis;}
+    asd(pst t, int sis)
+    {
+        su = t->su;
+        sul = t->sul;
+        sur = t->sur;
+        si = sis;
+    }
+};
+asd join(asd a, asd b)
+{
+    // cout<<'$'<<a.su<<' '<<a.sul<<' '<<a.sur<<' '<<a.si<<endl;
+    // cout<<'#'<<b.su<<' '<<b.sul<<' '<<b.sur<<' '<<b.si<<endl;
+    int sul = (a.sul + b.sul + 1ll * b.su * a.si) % MOD;
+    int sur = (a.sur + b.sur + 1ll * a.su * b.si) % MOD;
+    a.su += b.su %= MOD;
+    a.sul = sul;
+    a.sur = sur;
+    a.si += b.si;
+    // cout<<'@'<<a.su<<' '<<a.sul<<' '<<a.sur<<' '<<a.si<<endl;
+    return a;
+}
+asd query(pst t, int b, int e, int i, int j)
+{
+    if(!t)
+        return asd(min(j, e) - max(b, i) + 1);
+    // cout<<i<<' '<<j<<'\n';
+    // cout<<b<<' '<<e<<' '<<t->su<<' '<<t->sul<<' '<<t->sur<<' '<<'\n';
+    if(b >= i && e <= j)
+        return asd(t, e - b + 1);
+    int mid = (b + e) / 2;
+    if(mid >= j)
+        return query(t->l, b, mid, i, j);
+    if(mid < i)
+        return query(t->r, mid + 1, e, i, j);
+    return join(query(t->l, b, mid, i, j), query(t->r, mid + 1, e, i, j));
+}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+	int n;
+    cin>>n;
+    int res = 0;
+    pst tree = NULL;
+    int sz = MOD1;
+    while(n--)
+    {
+        int x;
+        cin>>x;
+        // cout<<"##"<<endl;
+        // cout<<"###############################"<<endl;
+        x += 2;
+        int le = query(tree, 0, sz - 1, 0, x - 1).sur;
+        // cout<<le<<endl;
+        // cout<<"%%%%%%%%%%%%%%%%%%%%%%%%"<<endl;
+        int ri = query(tree, 0, sz - 1, x + 1, sz - 1).sul;
+        // cout<<ri<<endl;
+        int neo = (le + ri) % MOD;
+        // cout<<neo<<endl;
+        res = (res + neo) % MOD;
+        update(tree, 0, sz - 1, x, (neo + 1) % MOD);
+    }
+    cout<<res<<'\n';
 	return 0;
 }
-// 30067266499541040
 // Se vuelve más fácil,
 // cada día es un poco más fácil, pero tienes que hacerlo cada día,
 // es la parte difícil, pero se vuelve más fácil.
 // Crecer duele.
 // La única manera de pasar esa barrera es pasandola.
+// Las chicas lindas son cyanes
 // efe no más.
 // Si no vá por todo, andá pa' allá bobo.
 // No sirve de nada hacer sacrificios si no tienes disciplina.
 // Cae 7 veces, levántate 8.
-// Ale perdóname por favor :,v
 // LA DISCIPLINA es el puente entre tus metas y tus logros.

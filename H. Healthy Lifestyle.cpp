@@ -127,28 +127,77 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
+vi G[tam];
+int num=0;
+int vis[tam];
+int arc[tam];
+int color[tam];
+set<pair<int,int> >st;
+vi G2[tam];
+int c=0;
+void tarjan(int nodo, int padre){
+    num++;
+    vis[nodo]=arc[nodo]=num;
+    for(auto it : G[nodo]){
+        if(it==padre)continue;
+        if(vis[it]){
+            arc[nodo]=min(arc[nodo],vis[it]);
+        }else{
+            tarjan(it,nodo);
+            arc[nodo]=min(arc[nodo],arc[it]);
+            if(arc[it]>vis[nodo]){
+                st.insert({nodo,it});
+                st.insert({it,nodo});
+            }
+        }
+    }
+}
 
+void dfs(int nodo){
+    color[nodo]=c;
+    for(auto it : G2[nodo]){
+        if(color[it]==0)dfs(it);
+    }
+}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+    int n,m,q,a,b;
+    cin>>n>>m>>q;
+    vector<pair<int,int> >E;
+    for(int i=0;i<m;i++){
+        cin>>a>>b;
+        G[a].pb(b);
+        G[b].pb(a);
+        E.pb({a,b});
+    }
+    tarjan(1,-1);
+    for(int i=0;i<m;i++){
+        a=E[i].f,b=E[i].s;
+        if(st.find({a,b})==st.end() && st.find({b,a})==st.end()){
+            G2[a].pb(b);
+            G2[b].pb(a);
+        }
+    }
+
+    for(int i=1;i<=n;i++){
+        if(color[i]==0){
+            c++;
+            dfs(i);
+        }
+    }
+    
+    while(q--){
+        cin>>a>>b;
+        if(color[a]==color[b]){
+            cout<<"YES"<<"\n";
+        }else{
+            cout<<"NO"<<"\n";
+        }
+    }
+
 	return 0;
 }
 // 30067266499541040
@@ -158,6 +207,7 @@ signed main()
 // Crecer duele.
 // La única manera de pasar esa barrera es pasandola.
 // efe no más.
+// Las chicas lindas son cyanes
 // Si no vá por todo, andá pa' allá bobo.
 // No sirve de nada hacer sacrificios si no tienes disciplina.
 // Cae 7 veces, levántate 8.

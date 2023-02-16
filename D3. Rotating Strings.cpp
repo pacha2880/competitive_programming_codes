@@ -130,25 +130,29 @@ const double PI = acos(-1);
 
 signed main()
 {
-	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+	// ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+	int t;
+    cin>>t;
+    while(t--)
+    {
+        int n;
+        cin>>n;
+        string s;
+        cin>>s;
+        vi ar(26);
+        for(char ch : s)
+            ar[ch - 'a']++;
+        int g = 0;
+        // cout<<s<<'\n';
+        fore(i, 0, 26)
+        {
+            // cout<<ar[i]<<'\n';
+            g = __gcd(g, ar[i]);
+        }
+        cout<<n - n / g<<'\n';
+    }
 	return 0;
 }
 // 30067266499541040

@@ -121,34 +121,97 @@ typedef vector<ll>      vll;
 // find_by_order kth largest  order_of_key <
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 200010;
-const int MOD = 1000000007;
-const int MOD1 = 998244353;
+const int tam = 100010;
+const int MOD1 = 1000000007;
+const int MOD = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-
+typedef vector<vector<ll> > Matrix;
+Matrix ones(int n) {
+  Matrix r(n,vector<ll>(n));
+  fore(i,0,n)r[i][i]=1;
+  return r;
+}
+Matrix operator*(Matrix &a, Matrix &b) {
+  int n=sz(a),m=sz(b[0]),z=sz(a[0]);
+  Matrix r(n,vector<ll>(m));
+  fore(i,0,n)fore(j,0,m)fore(k,0,z)
+    r[i][j]+=a[i][k]*b[k][j],r[i][j]%=MOD;
+  return r;
+}
+Matrix be(Matrix b, ll e) {
+  Matrix r=ones(sz(b));
+  while(e){if(e&1LL)r=r*b;b=b*b;e/=2;}
+  return r;
+}
+Matrix t[4 * tam];
+vector<Matrix> quinoa(3);
+int ar[tam];
+void init(int b, int e, int node)
+{
+  if(b == e)
+  {
+    t[node] = quinoa[ar[b]];
+    return;
+  }
+  index;
+  init(b, mid, l);
+  init(mid + 1, e, r);
+  t[node] = t[l] * t[r];
+}
+void update(int b, int e, int node, int pos, int val)
+{
+  if(b == e)
+  {
+    t[node] = quinoa[val];
+    return;
+  }
+  index;
+  if(pos <= mid)
+    update(b, mid, l, pos, val);
+  else
+    update(mid + 1, e, r, pos, val);
+  t[node] = t[l] * t[r];
+}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+	int n, q;
+  cin>>n>>q;
+  string s;
+  cin>>s;
+  vi val(500);
+  val['0']= 0;
+  val['1'] = 1;
+  val['?'] = 2;
+  fore(i, 0, n)
+  {
+    ar[i] = val[s[i]];
+  }
+  quinoa[0] = Matrix({vi({1, 0, 0}), vi({1, 1, 1}), vi({0, 0, 1})});
+  quinoa[1] = Matrix({vi({1, 1, 1}), vi({0, 1, 0}), vi({0, 0, 1})});
+  quinoa[2] = Matrix({vi({1, 1, 1}), vi({1, 1, 1}), vi({0, 0, 1})});
+  // cout<<"asfsdaffasd";
+  init(0, n - 1, 0);
+  // cout<<"werwre";
+  while(q--)
+  {
+    int po;
+    char ch;
+    cin>>po>>ch;
+    // cout<<po<<' '<<ch<<'\n';
+    update(0, n - 1, 0, po - 1, val[ch]);
+    // fore(i, 0, 3)
+    // {
+    //   fore(j, 0, 3)
+    //     cout<<t[0][i][j]<<' ';
+    //   cout<<'\n';
+    // }
+    cout<<(t[0][0][2] + t[0][1][2]) % MOD<<'\n';
+  }
 	return 0;
 }
 // 30067266499541040

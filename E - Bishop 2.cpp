@@ -133,22 +133,61 @@ signed main()
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+	int n, xi, yi, xf, yf;
+    cin>>n>>xi>>yi>>xf>>yf;
+    vector<vector<vi>> dis(4, vector<vi>(n, vi(n, MOD)));
+    vector<string> tab(n);
+    // cout<<"asdffasd";
+    fore(i, 0, n) cin>>tab[i];
+    queue<pair<int, pair<int, int>>> que;
+    int dir[2][4] = {{1, 1, -1, -1}, {1, -1, 1, -1}};
+    xi--, yi--;
+    fore(i, 0, 4)
+    {
+        // cout<<i<<'\n';
+        que.push({i, {xi, yi}});
+        dis[i][xi][yi] = 1;
+        // cout<<'f';
+    }
+    // cout<<"asdf";
+    // return 0;
+    auto val = [&](int x, int y)
+    {
+        return x > -1 && y > -1 && x < n && y < n && tab[x][y] == '.';
+    };
+    while(!que.empty())
+    {
+        int diri = que.front().f, x = que.front().s.f, y = que.front().s.s;
+        int pas = dis[diri][x][y];
+        que.pop();
+        // cout<<diri<<' '<<x<<' '<<y<<' '<<pas<<'\n';
+        fore(i, 0, 4)
+        {
+            int x1 = x + dir[0][i], y1 = y + dir[1][i];
+            if(val(x1, y1))
+            {
+            if(diri == i)
+            {
+                if(dis[i][x1][y1] > pas)
+                {
+                    dis[i][x1][y1] = pas;
+                    que.push({i, {x1, y1}});
+                }
+            }
+            else if(dis[i][x1][y1] > pas + 1)
+            {
+                dis[i][x1][y1] = pas + 1;
+                que.push({i, {x1, y1}});
+            }
+            }
+        }
+    }
+    int res = MOD;
+    fore(i, 0, 4) res = min(res, dis[i][xf - 1][yf - 1]);
+    if(res == MOD)
+        cout<<-1<<'\n';
+    else
+        cout<<res<<'\n';
 	return 0;
 }
 // 30067266499541040

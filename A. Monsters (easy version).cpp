@@ -133,22 +133,32 @@ signed main()
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+    int t;
+    cin>>t;
+    while(t--)
+    {
+        int n;
+        cin>>n;
+        vi ar(n);
+        fore(i, 0, n)
+            cin>>ar[i];
+        sort(all(ar));
+        int ne = 1, res = 0;
+        bool bab = 0;
+        fore(i, 0, n)
+        {
+            if(ar[i] > ne)
+            {
+                ne++;
+                res += ar[i] - ne;
+                if(!bab)
+                    res++;
+            }
+            else if(ar[i] == ne)
+                bab = true;
+        }
+        cout<<res<<'\n';
+    }
 	return 0;
 }
 // 30067266499541040

@@ -1,5 +1,4 @@
 /*
-messi siemppre esta arriba
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡞⠉⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⣀⡠⠖⠒⠓⣦⢀⡞⠀⢰⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⣴⣪⠟⢙⣶⣴⣿⣿⣿⠟⠀⢲⡎⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -38,40 +37,7 @@ messi siemppre esta arriba
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠓⠄⠀⠀⠀⠀⢀⠄⠀⠈⠧⣼⠁⠀⠀⠀⠀⠀⠀⠀⠀⡃⠀⣠⡾⠀⠀⠀⠀⠀⢿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⢸⣄⠀⠀⠀⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⣻⣴⠏⡇⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠲⠀⠀⠀⠀⠀⠈⠛⠳⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡞⠍⠁⠀⠒⡇⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠛⠑⠀⠀⠀⢸⠇⠀⠀⠀⠀⢀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-gracias por el perrito cheems
-EL PEMRRITO MALVADO
-
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⠀⠀⠀⠀⢀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣏⡽⠷⠾⠭⠍⠉⣯⣿⣶⢶⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⠞⣿⣦⣴⣤⣀⠀⠉⣛⠹⣮⡇⣿⣿⢶⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⣴⠃⣴⣿⡯⠟⠀⠈⢀⠀⠹⡄⠙⣷⣿⣿⠶⣿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣴⣿⡟⠀⣰⣬⣿⣾⠗⠀⠀⠐⢯⠛⣧⠀⢘⢷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⣰⣿⣿⣿⡴⠀⠙⠉⠉⠈⠀⠀⠀⠀⠀⠀⣼⣶⠾⢾⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⢀⣴⣿⣿⣿⠻⠁⠀⠀⠀⠀⠀⠀⠀⢀⠀⠀⣠⣿⠙⣄⠾⠿⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⢠⣿⣿⣿⡿⠥⠀⠀⢀⣴⠀⠀⠀⠀⠀⣨⠀⠴⠋⠀⠘⠁⠀⣠⣿⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠈⠙⠿⣿⣧⣤⣯⣿⡿⠋⠀⠀⠀⣤⠞⠀⠀⠀⠀⠀⠀⠀⠀⠟⠁⠘⢦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⠛⠁⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀⢀⣴⠀⠀⠀⠀⠀⠀⠀⢳⣄⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠹⡦⠀⣀⣴⠏⠀⠀⠀⠀⠀⠀⠀⣀⣿⠙⢦⡀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣄⠀⠀⠀⠀⠀⠀⠀⠳⠖⠉⠀⠀⠀⠀⠀⠀⠁⠀⣴⠟⠩⠀⢠⣿⢦⡀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⠋⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣤⠀⠿⠀⠁⠀⠀⢀⣸⡯⠙⢷⡀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⠤⠐⠈⠀⠀⠀⠀⠀⠀⠀⣠⠟⠃⠀⢸⣇⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⢖⠀⠀⠀⠀⠀⠀⠀⠐⠚⠉⠀⠀⠀⠀⡴⡋⠀⠀⠀⠀⣦⡏⠀⠀⠀⣾⣿⡄⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⣿⠷⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⢪⡞⠁⠀⠀⠀⠀⠁⠀⠀⠀⣶⠏⣿⣿⡄⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢿⡦⡌⠳⠤⠀⠀⠀⠀⠀⠀⠀⠀⢀⣰⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⠋⠀⣻⣹⣿⡄
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠰⠋⠀⠀⠀⠀⠀⠀⢀⣾⠀⠀⠀⠀⣾⠀⠹⢿⣿⣷
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⠀⠀⠀⠀⣶⠀⠀⠀⠀⠀⣆⠀⠟⠀⠀⠀⠀⠀⡾⠃⠀⢠⡠⠀⢠⣾⣾⣿⣿⡇
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣼⡿⠀⠀⠀⣰⣿⣀⠀⠀⠀⠀⢹⡤⡄⠀⠀⠀⠀⣸⣿⡀⣶⣶⣷⣶⣿⣿⣿⣿⡟⠁
-⠀⠀⠀⠀⠀⠀⣀⡠⠶⠋⣸⣗⠀⠀⢀⣿⣻⣿⡦⠤⠤⠤⠿⣷⠇⠀⠀⠀⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠏⠀⠀
-⠀⣀⡴⠖⠋⠉⠉⢀⣀⡴⣿⡏⠀⢀⣸⡟⠛⠀⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀⣾⣿⣿⣿⣿⣿⣿⣿⣿⠟⠁⠀⠀⠀
-⠘⢿⣷⣤⡤⠶⠚⠋⠁⢀⡟⠀⠀⣾⣿⣁⣀⠀⠀⠀⠀⠀⠀⣿⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⠿⠛⠁⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⢀⣀⠴⢞⡿⠀⠀⢴⡿⠋⠉⠉⠉⠛⠲⠶⠤⣤⣿⠀⠀⢰⣿⣿⣿⠿⠟⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⢀⣠⣶⡊⠉⢀⣠⠞⠁⠀⢀⡾⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⢸⣯⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠈⠉⠻⠶⣶⡟⠃⡴⠀⢀⡞⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⠏⠀⠀⢸⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠠⣿⣄⣾⣄⡷⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡿⠀⠀⠀⢸⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠈⠁⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣼⡁⠀⠀⠀⢸⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣏⡇⠀⡶⠀⣸⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠹⣇⣴⠷⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠛⠑⠀⠀⠀⢸⠇⠀⠀⠀⠀⢀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 
 */
 #include <bits/stdc++.h>
@@ -127,31 +93,231 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-
+int pot(int b, int e, int m)
+{
+    int res = 1;
+    while(e)
+    {
+        if(e & 1) res = res * b % m;
+        b = b * b % m;
+        e /= 2;
+    }
+    return res;
+}
+int k;
+vi phi(tam);
+vi robo(tam);
+int dodo(vector<vector<vi>> &ci, int n, int ite)
+{
+    int cana = 0;
+    for(int i = n; i > 0; i--)
+    {
+        // cout<<i<<' '<<sz(ci[i])<<'\n';
+        
+        while(sz(ci[i]) > 1)
+        {
+            vi a = ci[i].back();
+            ci[i].pop_back();
+            vi b = ci[i].back();
+            ci[i].pop_back();
+            vi c;
+            fore(j, 0, i)
+                c.pb(a[j]), c.pb(b[j]), robo[a[j]]++, robo[b[j]]++;//, cout<<a[j]<<' '<<b[j]<<'\n';
+            
+            ci[2 * i].pb(c);
+            cana++;
+        }
+        if(sz(ci[i]) == 1)
+        {
+            if(i % (1<<ite) == 0)
+                return 0;
+        }
+    }
+    // cout<<cana<<'\n';
+    return cana == 0 ? 1 : 2;
+}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+    fore(i, 0, tam) phi[i] = i;
+    fore(i, 2, tam)
+        if(phi[i] == i)
+            forg(j, i, tam, i)
+                phi[j] -= phi[j] / i;
+	int t;
+    cin>>t;
+    bool baba = false;
+    fore(cas, 0, t)
+    {
+        int n;
+        cin>>n>>k;
+        if(cas == 0 && n == 42) baba = true;
+        vector<vector<vi>> ci(n + 1);
+        vi ar(n);
+        // cout<<"asfdfsa\n";
+        // cout<<n<<'\n';
+        fore(i, 0, n) cin>>ar[i], ar[i]--;
+        // cout<<"sadfadsfsf";
+        auto calci = [&]()
+        {
+            fore(i, 1, n + 1) ci[i].clear();
+            vi vis(n);
+            fore(i, 0, n)
+            {
+                if(!vis[i])
+                {
+                    int con = 0;
+                    vi cil;
+                    int ax = i;
+                    do
+                    {
+                        vis[ax] = 1;
+                        cil.pb(ax);
+                        ax = ar[ax];
+                    }
+                    while(ax != i);
+                    ci[sz(cil)].pb(cil);
+                }
+            }
+        };
+        auto printo = [&](){
+            // RAYA;
+            // fore(i, 1, n + 1)
+            // {
+            //     cout<<'$'<<i<<'\n';
+            //     fore(j, 0, sz(ci[i]))
+            //     {
+            //         fore(k, 0, i)
+            //             cout<<ci[i][j][k] + 1<<' ';
+            //         cout<<'\n';
+            //     }
+            // }
+        };
+        bool bo = true;        
+        int cuan = 0;
+        calci();
+        printo();
+        fore(i, 0, k)
+        {
+            int x = dodo(ci, n, i + 1);
+            // cout<<"##### "<<i<<' '<<x<<' '<<cuan<<'\n';
+            printo();
+            if(x == 0)
+            {
+                bo = false;
+                break;
+            }
+            if(x == 1)
+            {
+                // cout<<"deberia breakear\n";
+                cuan--;
+                break;
+            }
+        }
+
+        // if(baba)
+        // {
+        //     if(cas != 313) continue;
+        //     cout<<n<<' '<<k<<'\n';
+        //     cout<<cuan<<'\n';
+        //     fore(i, 0, n) cout<<ar[i] + 1<<' ';
+        //     cout<<'\n';
+        // }
+            calci();
+            printo();
+        // cout<<cuan<<' '<<k<<'\n';
+            fore(i, 1, n + 1)
+            {
+                if(i & 1)
+                {
+                    // cout<<k - cuan<<'\n';
+                    // cout<<"****"<<phi[i] - 1<<'\n';
+                    // cout<<"@@@@"<<i<<' '<<pas<<'\n';
+                    int ax = k;
+                    fore(k, 0, sz(ci[i]))
+                    {
+                        if(ax == robo[ci[i][k][0]]) continue;
+                        int pas = pot(pot(2, phi[i] - 1, i), ax - robo[ci[i][k][0]], i);
+                        vi neo;
+                        // cout<<"!!!!"<<k<<'\n';
+                        fore(j, 0, i)
+                        {
+                            // cout<<(-j * pas % i + i) % i<<' ';
+                            neo.pb(ci[i][k][j * pas % i]);
+                        }
+                        // cout<<'\n';
+                        swap(ci[i][k], neo);
+                    }
+                }
+            }
+            printo();
+        // cout<<cuan<<' '<<k<<'\n';
+        //     fore(i, 1, n + 1)
+        //     {
+        //         cout<<'$'<<i<<'\n';
+        //         fore(j, 0, sz(ci[i]))
+        //         {
+        //             fore(k, 0, i)
+        //                 cout<<ci[i][j][k] + 1<<' ';
+        //             cout<<'\n';
+        //         }
+        //     }
+            fore(i, 0, k)
+            {
+                // cout<<i<<'\n';
+                int x = dodo(ci, n, i + 1);
+                if(x == 0)
+                {
+                    bo = false;
+                    break;
+                }
+                if(x == 1)
+                    break;
+            }
+        // fore(i, 1, n + 1)
+        // {
+        //     cout<<'$'<<i<<'\n';
+        //     fore(j, 0, sz(ci[i]))
+        //     {
+        //         fore(k, 0, i)
+        //             cout<<ci[i][j][k] + 1<<' ';
+        //         cout<<'\n';
+        //     }
+        // }
+        // cout<<cuan<<'\n';
+        // if(t == 10000 && cas != 2101) continue;
+        // if(cas == 2101)
+        // {
+        //     cout<<n<<' '<<k<<'\n';
+        //     fore(i, 0, n) cout<<ar[i]<<' ';
+        //     cout<<'\n';
+        // }
+        fore(i, 0, n) robo[i] = 0;
+        if(!bo)
+        {
+            cout<<"NO\n";
+            continue;
+        }
+        printo();
+        fore(i, 1, n + 1)
+        {
+            fore(j, 0, sz(ci[i]))
+            {
+                // cout<<i<<' '<<j<<' '<<sz(ci[i])<<' '<<sz(ci[i][j])<<'\n';
+                fore(k, 0, i)
+                    ar[ci[i][j][k]] = ci[i][j][(k + 1) % i];
+            }
+        }
+        cout<<"YES\n";
+        fore(i, 0, n)
+            cout<<ar[i] + 1<<' ';
+        cout<<'\n';
+    }
 	return 0;
 }
-// 30067266499541040
+
 // Se vuelve más fácil,
 // cada día es un poco más fácil, pero tienes que hacerlo cada día,
 // es la parte difícil, pero se vuelve más fácil.

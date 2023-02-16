@@ -127,28 +127,85 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-
+int dis[tam], papa[tam];
+vii g[tam];
+void dfs(int node, int pa, int di)
+{
+    dis[node] = di;
+    for(ii x : g[node])
+        if(x.f != pa)
+            dfs(x.f, node, di + x.s);
+}
+int a[tam], b[tam], dp[tam];
+struct per_hull{
+    const int logtam = 18;
+    vector<int> k, m;
+    vector<vector<int>> pars;
+    per_hull(){pars.push_back(vi(logtam)), k.push_back(0), m.push_back(0);}
+    int query(int x, int head)
+    {
+        auto f = [&](int x, int head) {
+            return x * k[head] + m[head];
+        };
+        for(int i = logtam - 1; i > -1; i--)
+            if(f(x, pars[head][i]) < f(x, pars[pars[head][i]][1]))
+                head = pars[pars[head][i]][1];
+        return f(x, head);
+    }
+    int add(int k1, int m1, int head)
+    {
+        for(int i = logtam - 1; i > -1; i--)
+        {
+            if(pars[head][i] == 0) continue;
+            int b = pars[head][i];
+            int a = pars[pars[head][i]][1];
+            if((__int128)(m[b] - m[a]) * (k[a] - k1) > (__int128)(m1 - m[a]) * (k[a] - k[b]))
+                head = pars[pars[head][i]][1];
+        }
+        int node = k.size();
+        k.push_back(k1), m.push_back(m1);
+        pars.push_back(vector<int>(logtam));
+        pars[node][0] = node;
+        pars[node][1] = head;
+        for(int i = 2; i < logtam; i++)
+            pars[node][i] = pars[pars[node][i - 1]][i - 1];
+        return node;
+    }
+};
+per_hull hull;
+void dfs1(int node, int pa, int head)
+{
+    if(node != 0)
+    {
+        dp[node] = a[node] + b[node] * dis[node] - hull.query(b[node], head);
+        head = hull.add(dis[node], -dp[node], head);
+    }
+    for(ii x : g[node])
+        if(x.f != pa)
+            dfs1(x.f, node, head);
+}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+	int n;
+    cin>>n;
+    // vi dp(n);
+    fore(i, 0, n - 1)
+    {
+        int a, b, c;
+        cin>>a>>b>>c;
+        a--, b--;
+        g[a].pb({b, c});
+        g[b].pb({a, c});
+    }
+    fore(i, 1, n) cin>>a[i]>>b[i];
+    dfs(0, -1, 0);
+    dfs1(0, -1, 0);
+    fore(i, 1, n)
+        cout<<dp[i]<<' ';
+    cout<<'\n';
 	return 0;
 }
 // 30067266499541040
@@ -158,6 +215,7 @@ signed main()
 // Crecer duele.
 // La única manera de pasar esa barrera es pasandola.
 // efe no más.
+// Las chicas lindas son cyanes
 // Si no vá por todo, andá pa' allá bobo.
 // No sirve de nada hacer sacrificios si no tienes disciplina.
 // Cae 7 veces, levántate 8.

@@ -128,30 +128,38 @@ const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
 
+int pref[27][tam];
+
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+    int n,k;
+    cin>>n>>k;
+    string s;
+    cin>>s;
+    for(int i=0;i<26;i++){
+        for(int l=0;l<n;l++){
+            if(l)pref[i][l]=pref[i][l-1];
+            if('A'+i==s[l]){
+                pref[i][l]++;
+            }
+        }
+    }
+    int res=1e9;
+    for(int i=0;i<26;i++){
+        for(int l=0;l<n;l++){
+            if(l+k-1>=n)break;
+            int cant=pref[i][l+k-1];
+            if(l)cant-=pref[i][l-1];
+            res=min(res,k-cant);
+        }
+    }
+    cout<<res<<"\n";
+	
 	return 0;
 }
-// 30067266499541040
 // Se vuelve más fácil,
 // cada día es un poco más fácil, pero tienes que hacerlo cada día,
 // es la parte difícil, pero se vuelve más fácil.
@@ -161,5 +169,4 @@ signed main()
 // Si no vá por todo, andá pa' allá bobo.
 // No sirve de nada hacer sacrificios si no tienes disciplina.
 // Cae 7 veces, levántate 8.
-// Ale perdóname por favor :,v
 // LA DISCIPLINA es el puente entre tus metas y tus logros.

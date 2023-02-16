@@ -133,33 +133,53 @@ signed main()
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+	int n, m;
+    cin>>n>>m;
+    vector<string> tab(n);
+    vi can(10);
+    fore(i, 0, n) 
+    {
+        cin>>tab[i];
+        fore(j, 0, m) tab[i][j] -= '0', can[tab[i][j]]++;
+    }
+    int res = MOD;
+    vector<vi> der(n, vi(m)), up(n, vi(m));
+    auto cost = [&](int col, int quien)
+    {
+        if(quien > col)
+            return col + 10 - quien;
+        return col - quien;
+    };
+    fore(col, 0, 10)
+    {
+        vi neg(m), mi(m);
+        fore(i, 0, m)
+            mi[i] = cost(col, tab[0][i]) + cost(col, tab[1][i]);
+        fore(i, 1, n)
+        {
+            int mim = cost(col, tab[i][m - 1]) + cost(col, tab[i][m - 2]), nega = 0;
+            for(int j = m - 2; j > -1; j--)
+            {
+                res = min(res, mim + mi[j] + can[col] - cost(col, tab[i][j]) - nega - neg[j] - (tab[i][j] == col) - (tab[i-1][j] == col) - (tab[i][j + 1] == col));
+                if(j > 0)
+                    nega += tab[i][j + 1] == col, mim = cost(col, tab[i][j - 1]) + min(mim, nega + cost(col, tab[i][j]));
+            }
+            if(i < n - 1)
+                fore(j, 0, m)
+                    neg[j] += tab[i - 1][j] == col, mi[j] = cost(col, tab[i + 1][j]) + min(mi[j], neg[j] + cost(col, tab[i][j]));
+        }
+    }
+    cout<<res<<'\n';
 	return 0;
 }
-// 30067266499541040
 // Se vuelve más fácil,
 // cada día es un poco más fácil, pero tienes que hacerlo cada día,
 // es la parte difícil, pero se vuelve más fácil.
 // Crecer duele.
 // La única manera de pasar esa barrera es pasandola.
+// Las chicas lindas son cyanes
 // efe no más.
 // Si no vá por todo, andá pa' allá bobo.
 // No sirve de nada hacer sacrificios si no tienes disciplina.
 // Cae 7 veces, levántate 8.
-// Ale perdóname por favor :,v
 // LA DISCIPLINA es el puente entre tus metas y tus logros.

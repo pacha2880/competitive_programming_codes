@@ -133,22 +133,28 @@ signed main()
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+	int n; cin>>n;
+    string s,t; cin>>s>>t;
+    vector<set<int>> vec(30);
+    forn(i,26){
+        char letra = i+'a';
+        forn(j,sz(s)){
+            //int pos = s[j];
+            //int donde = letra - 'a';
+            //vec[donde].insert(pos);
+            char let = s[j];
+            if(let == letra) vec[letra-'a'].insert(j);
+        }
+        forn(j,sz(t)){
+            char let = t[j];
+            if(let == letra) vec[letra-'a'].insert(j);
+        }
+    }
+    int ans = 0;
+    forn(i,26){
+        ans = max(ans, sz(vec[i]));
+    }
+    cout<<ans<<endl;
 	return 0;
 }
 // 30067266499541040
