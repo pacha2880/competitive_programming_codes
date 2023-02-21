@@ -121,66 +121,68 @@ typedef vector<ll>      vll;
 // find_by_order kth largest  order_of_key <
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 200010;
-const int MOD = 1000000007;
+const int MOD = 1000003;
+const int tam = MOD;
 const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-int basis[30];
-set<int> bas;
-void add(int x)
+// evaluar un "polinomio interpolado" en o(nlogMOD) 
+// debe cumplir xi+1 - xi = xj+1 - xj for all i, j < n
+// recibe vector de ys tal que f(i) = y[i]
+int pot(int b, int e)
 {
-    for(int i = 29; i > -1; i--)
-        if(x & (1<<i))
-        {
-            if(basis[i])
-                x ^= basis[i];
-        }
-    // cout<<'#'<<x<<'\n';
-    for(int i = 29; i > -1; i--)
-        if(x & (1<<i))
-        {
-            basis[i] = x;
-            bas.insert(i);
-            fore(j, 0, 30)
-                if(j != i && (basis[j] & (1<<i)))
-                    basis[j] ^= x;
-            break;
-        }
-}
-int query(int x)
-{
-    int res = 0;
-    int poto = sz(bas) - 1;
-    if(poto == -1) return 0;
-    for(auto it = --bas.end(); poto > -1; poto--, it--)
+    int res = 1;
+    while(e)
     {
-        if(basis[*it])
-        {
-            // cout<<x<<' '<<(1<<poto)<<' '<<basis[*it]<<' '<<*it<<' '<<res<<endl;
-            if(x > (1<<poto))
-                res ^= basis[*it], x -= 1<<poto;
-        }
+        if(e & 1) res = res * b % MOD;
+        b = b * b % MOD;
+        e >>= 1;
     }
     return res;
+}
+vi fac(tam), sig(tam), facin(tam);
+ll eval(vll &ys, ll x) {
+	int n = ys.size();
+	if(x < n) return ys[x];
+	ll upi, dowi, res = 0;
+    vi pre(n), suf(n);
+    pre[0] = 1, suf[n - 1] = 1;
+    fore(i, 1, n)
+    {
+        pre[i] = pre[i - 1] * (x - i + 1) % MOD;
+        suf[n - i - 1] = suf[n - i] * (x - n + i) % MOD;
+    }
+	fore(i, 1, n) {
+        upi = pre[i] * suf[i] % MOD;
+        dowi = facin[n - i - 1] * facin[i - 1] % MOD * sig[n - i - 1] % MOD;
+		res = (res + ys[i] * upi % MOD * dowi) % MOD;
+	}
+	return res;
 }
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n;
-    cin>>n;
-    while(n--)
+    fac[0] = 1, facin[0] = 1;
+    fore(i, 1, MOD) fac[i] = fac[i - 1] * i % MOD, facin[i] = pot(fac[i], MOD - 2);
+    fore(i, 0, MOD) sig[i] = (i & 1 ? MOD - 1 : 1) % MOD;
+	vi ar(12);
+    fore(i, 0, 12)
     {
-        int a, b;
-        cin>>a>>b;
-        if(a == 1) 
-            add(b);
-        else
-            cout<<query(b)<<'\n';
+        cout<<"? "<<i<<endl;
+        cin>>ar[i];
     }
+    fore(i, 0, MOD)
+    {
+        if(eval(ar, i) == 0)
+        {
+            cout<<"! "<<i<<endl;
+            return 0;
+        }
+    }
+    cout<<"! -1"<<endl; 
 	return 0;
 }
 // Se vuelve más fácil,
@@ -193,7 +195,4 @@ signed main()
 // No sirve de nada hacer sacrificios si no tienes disciplina.
 // Cae 7 veces, levántate 8.
 // LA DISCIPLINA es el puente entre tus metas y tus logros.
-// Cultivate your hunger before you idealize,
-// Motivate your anger to make them all realize
-// Climbing the mountain, never coming down
-// Break into the contents, never falling down
+// Take a sad song and make it better

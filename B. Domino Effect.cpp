@@ -127,44 +127,7 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-int basis[30];
-set<int> bas;
-void add(int x)
-{
-    for(int i = 29; i > -1; i--)
-        if(x & (1<<i))
-        {
-            if(basis[i])
-                x ^= basis[i];
-        }
-    // cout<<'#'<<x<<'\n';
-    for(int i = 29; i > -1; i--)
-        if(x & (1<<i))
-        {
-            basis[i] = x;
-            bas.insert(i);
-            fore(j, 0, 30)
-                if(j != i && (basis[j] & (1<<i)))
-                    basis[j] ^= x;
-            break;
-        }
-}
-int query(int x)
-{
-    int res = 0;
-    int poto = sz(bas) - 1;
-    if(poto == -1) return 0;
-    for(auto it = --bas.end(); poto > -1; poto--, it--)
-    {
-        if(basis[*it])
-        {
-            // cout<<x<<' '<<(1<<poto)<<' '<<basis[*it]<<' '<<*it<<' '<<res<<endl;
-            if(x > (1<<poto))
-                res ^= basis[*it], x -= 1<<poto;
-        }
-    }
-    return res;
-}
+
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
@@ -172,14 +135,47 @@ signed main()
 	// freopen("qwe.txt", "w", stdout);
 	int n;
     cin>>n;
-    while(n--)
+    string s;
+    cin>>s;
+    int res = 0;
+    int ini = -1;
+    fore(i, 0, n)
     {
-        int a, b;
-        cin>>a>>b;
-        if(a == 1) 
-            add(b);
-        else
-            cout<<query(b)<<'\n';
+        if(s[i] != '.')
+        {
+            ini = i;
+            if(s[i] == 'R')
+                res += i;
+            break;
+        }
+    }
+    if(ini == -1)
+        cout<<n<<'\n';
+    else
+    {
+        for(int i = n - 1; i > -1; i--)
+        {
+            if(s[i] != '.')
+            {
+                if(s[i] == 'L')
+                    res += n - i - 1;
+                break;
+            }
+        }
+        // cout<<ini<<' '<<res<<'\n';
+        fore(i, ini + 1, n)
+        {
+            if(s[i] != '.')
+            {
+                // cout<<s[i]<<' '<<i<<' '<<ini<<'\n';
+                if(s[i] == 'R')
+                    res += i - ini - 1;
+                else
+                    res += (i - ini) % 2 == 0;
+                ini = i;
+            }
+        }
+        cout<<res<<'\n';
     }
 	return 0;
 }

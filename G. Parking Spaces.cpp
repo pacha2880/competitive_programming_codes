@@ -128,25 +128,90 @@ const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
 
-
-//>
-const int N = 1e6+10;
-int vis[N];
-int n,a,b;
-
-void f(int donde){
-    //if(donde < 0 || donde > n) return 0;
-    //if(dp[donde] != -1) return dp[donde];
-    if(donde - a >= 0 && !vis[donde-a]){ 
-        vis[donde-a] = 1;
-        //ans = max(ans, f(donde-a)+a);
-        f(donde-a);
+int f(int n, int k)
+{
+    // cout<<n<<' '<<k<<endl;
+    if(k > 0)
+    {
+        int can = 1, pot = 1, lu = 0, li = 0;
+        int ax = n;
+        // cout<<"%"<<n<<'\n';
+        while(ax)
+        {
+            // cout<<can<<' '<<lu<<'\n';
+            if(ax % 10 == k)
+                can = pot, li = lu;
+            lu = 9 * lu + pot;
+            pot *= 10;
+            ax /= 10;
+        }
+        // cout<<can<<' '<<li<<'\n';
+        int la = li, con = n % can, po = can;
+        n /= can;
+        // cout<<"@@@@@ "<<n<<' '<<con<<' '<<po<<' '<<la<<' '<<can<<'\n';
+        while(n)
+        {
+            int nla;
+            if(n%10 > k)
+                nla = k * la + po + (n % 10 - k - 1) * la;
+            else if(n%10 == k)
+                nla = n % 10 * la + 1;
+            else
+                nla = n % 10 * la;
+            // cout<<n<<' '<<po<<' '<<nla<<' '<<la<<endl;
+            con += nla;
+            la = 9 * la + po;
+            po *= 10;
+            n /= 10;
+        }
+        return con;
     }
-    if(n-donde >= b && !vis[donde+b]){
-        vis[donde+b] = 1;
-        //ans = max(ans, f(donde+b)-b);
-        f(donde+b);
+    else
+    {
+        int can = 1, pot = 1, lu = 0, li = 0;
+        int ax = n;
+        // cout<<"+++ "<<n<<'\n';
+        while(ax)
+        {
+            lu = pot + 9 * lu;
+            // cout<<lu<<'\n';
+            pot *= 10;
+            if(ax % 10 == k)
+                can = pot, li = lu;
+            ax /= 10;
+        }
+        int la = li, con = n % can, po = can;
+        n /= can;
+        // cout<<"@@@@@ "<<n<<' '<<con<<' '<<po<<' '<<la<<' '<<can<<'\n';
+        while(n)
+        {
+            if(n < 10)
+            {
+                // cout<<la<<' '<<n<<' '<<po<<'\n';
+                con += la * (n - 1);
+                // cout<<con<<'\n';
+                while(po > 1)
+                {
+                    po /= 10;
+                    la = (la - po) / 9;
+                    con += 9 * la;
+                    if(po == 1)
+                        con++;
+                }
+                // cout<<con<<'\n';
+                break;
+            }
+            if(la > 0)
+            con += po + la * (n % 10 - 1);
+
+            // cout<<n<<' '<<con<<' '<<po<<' '<<la<<'\n';
+            la = po + 9 * la;
+            po *= 10;
+            n /= 10;
+        }
+        return con;
     }
+    return 0;
 }
 
 signed main()
@@ -154,17 +219,21 @@ signed main()
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-    cin>>n>>a>>b;
-    forn(i,n+1) vis[i] = 0;
-    f(n);
-    int ans = 0;
-    forn(i,n+1){
-        if(vis[i] == 1){
-            ans = i;
-            break;
-        }
+	int n, k;
+    cin>>n>>k;
+    int b = n, e = 100 * n, mid, res;
+    while(b <= e)
+    {
+        mid = (b + e) / 2;
+        // cout<<mid<<endl;
+        int efe = f(mid, k);
+        // cout<<"#### "<<mid<<' '<<efe<<' '<<mid - efe<<endl;
+        if(mid - efe >= n)
+            res = mid, e = mid - 1;
+        else
+            b = mid + 1;
     }
-    cout<<n-ans<<endl;
+    cout<<res<<'\n';
 	return 0;
 }
 // Se vuelve más fácil,
@@ -173,7 +242,6 @@ signed main()
 // Crecer duele.
 // La única manera de pasar esa barrera es pasandola.
 // efe no más.
-// Si me sueltan la perrea yo arranco pa la perrera
 // Si no vá por todo, andá pa' allá bobo.
 // No sirve de nada hacer sacrificios si no tienes disciplina.
 // Cae 7 veces, levántate 8.

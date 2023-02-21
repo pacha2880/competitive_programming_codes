@@ -79,7 +79,7 @@ EL PEMRRITO MALVADO
 // #include <ext/pb_ds/assoc_container.hpp>
 // #include <ext/pb_ds/tree_policy.hpp>
 // #include <ext/rope>
-#define int ll
+// #define int ll
 #define mp				make_pair
 #define pb				push_back
 #define all(a)			(a).begin(), (a).end()
@@ -127,59 +127,101 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-int basis[30];
-set<int> bas;
-void add(int x)
+struct trie
 {
-    for(int i = 29; i > -1; i--)
-        if(x & (1<<i))
+    int ce, un, mi;
+    trie(): ce(-1), un(-1), mi(MOD){}
+    trie(int ce, int un) : ce(ce), un(un) {}
+};
+vector<trie> tri;
+void add(int root, int x)
+{
+    tri[root].mi = min(tri[root].mi, x);
+    for(int i = 16; i >= 0; i--)
+    {
+        if(x & 1 << i)
         {
-            if(basis[i])
-                x ^= basis[i];
+            if(tri[root].un == -1)
+            {
+                tri[root].un = sz(tri);
+                tri.pb(trie());
+            }
+            root = tri[root].un;
         }
-    // cout<<'#'<<x<<'\n';
-    for(int i = 29; i > -1; i--)
-        if(x & (1<<i))
-        {
-            basis[i] = x;
-            bas.insert(i);
-            fore(j, 0, 30)
-                if(j != i && (basis[j] & (1<<i)))
-                    basis[j] ^= x;
-            break;
+        else{
+            if(tri[root].ce == -1)
+            {
+                tri[root].ce = sz(tri);
+                tri.pb(trie());
+            }
+            root = tri[root].ce;
         }
+        tri[root].mi = min(tri[root].mi, x);
+    }
 }
-int query(int x)
+int query(int root, int x, int s)
 {
     int res = 0;
-    int poto = sz(bas) - 1;
-    if(poto == -1) return 0;
-    for(auto it = --bas.end(); poto > -1; poto--, it--)
+    for(int i = 16; i >= 0; i--)
     {
-        if(basis[*it])
+        if(x & 1 << i)
         {
-            // cout<<x<<' '<<(1<<poto)<<' '<<basis[*it]<<' '<<*it<<' '<<res<<endl;
-            if(x > (1<<poto))
-                res ^= basis[*it], x -= 1<<poto;
+            if(tri[root].ce != -1 && tri[tri[root].ce].mi <= s)
+                root = tri[root].ce;
+            else if(tri[root].un != -1 && tri[tri[root].un].mi <= s)
+                res += 1<<i, root = tri[root].un;
+            else
+                return -1;
+        }
+        else
+        {
+            if(tri[root].un != -1 && tri[tri[root].un].mi <= s)
+                res += 1<<i, root = tri[root].un;
+            else if(tri[root].ce != -1 && tri[tri[root].ce].mi <= s)
+                root = tri[root].ce;
+            else
+                return -1;
         }
     }
-    return res;
+    return res ? res : -1;
 }
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
+    fore(i, 1, tam)
+    {
+        tri.pb(trie());
+    }
 	int n;
     cin>>n;
     while(n--)
     {
-        int a, b;
-        cin>>a>>b;
-        if(a == 1) 
-            add(b);
+        int x;
+        cin>>x;
+        if(x == 1)
+        {
+            cin>>x;
+            for(int i = 1; i * i <= x; i++)
+            {
+                if(x % i == 0)
+                {
+                    add(i, x);
+                    if(i * i != x)
+                        add(x / i, x);
+                }
+            }
+        }
         else
-            cout<<query(b)<<'\n';
+        {
+            int k, s;
+            cin>>x>>k>>s;
+            if(x % k == 0 && x < s)
+                cout<<query(k, x, s - x)<<'\n';
+            else
+                cout<<-1<<'\n';
+        }
     }
 	return 0;
 }
@@ -193,7 +235,4 @@ signed main()
 // No sirve de nada hacer sacrificios si no tienes disciplina.
 // Cae 7 veces, levántate 8.
 // LA DISCIPLINA es el puente entre tus metas y tus logros.
-// Cultivate your hunger before you idealize,
-// Motivate your anger to make them all realize
-// Climbing the mountain, never coming down
-// Break into the contents, never falling down
+// Take a sad song and make it better

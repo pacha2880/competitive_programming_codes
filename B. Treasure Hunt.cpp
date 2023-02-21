@@ -127,43 +127,22 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-int basis[30];
-set<int> bas;
-void add(int x)
+int cal(string s, int k)
 {
-    for(int i = 29; i > -1; i--)
-        if(x & (1<<i))
-        {
-            if(basis[i])
-                x ^= basis[i];
-        }
-    // cout<<'#'<<x<<'\n';
-    for(int i = 29; i > -1; i--)
-        if(x & (1<<i))
-        {
-            basis[i] = x;
-            bas.insert(i);
-            fore(j, 0, 30)
-                if(j != i && (basis[j] & (1<<i)))
-                    basis[j] ^= x;
-            break;
-        }
-}
-int query(int x)
-{
-    int res = 0;
-    int poto = sz(bas) - 1;
-    if(poto == -1) return 0;
-    for(auto it = --bas.end(); poto > -1; poto--, it--)
+    int n = s.size();
+    vi ar(52);
+    for(char ch : s)
     {
-        if(basis[*it])
-        {
-            // cout<<x<<' '<<(1<<poto)<<' '<<basis[*it]<<' '<<*it<<' '<<res<<endl;
-            if(x > (1<<poto))
-                res ^= basis[*it], x -= 1<<poto;
-        }
+        if(ch >= 'a' && ch <= 'z')
+            ar[ch - 'a']++;
+        else
+            ar[ch - 'A' + 26]++;
     }
-    return res;
+    int ma = 0;
+    fore(i, 0, 52) ma = max(ma, ar[i]);
+    if(k == 1)
+        return ma == n? n - 1 : ma + 1;
+    return min(n, ma + k);
 }
 signed main()
 {
@@ -172,15 +151,19 @@ signed main()
 	// freopen("qwe.txt", "w", stdout);
 	int n;
     cin>>n;
-    while(n--)
-    {
-        int a, b;
-        cin>>a>>b;
-        if(a == 1) 
-            add(b);
-        else
-            cout<<query(b)<<'\n';
-    }
+    string a;
+    cin>>a;
+    int aa = cal(a, n);
+    cin>>a;
+    int bb = cal(a, n);
+    cin>>a;
+    int cc = cal(a, n);
+    // cout<<aa<<' '<<bb<<' '<<cc<<'\n';
+    if(aa > bb && aa > cc) cout<<"Kuro\n";
+    else if(bb > aa && bb > cc) cout<<"Shiro\n";
+    else if(cc > aa && cc > bb) cout<<"Katie\n";
+    else cout<<"Draw\n";
+
 	return 0;
 }
 // Se vuelve más fácil,
@@ -193,7 +176,4 @@ signed main()
 // No sirve de nada hacer sacrificios si no tienes disciplina.
 // Cae 7 veces, levántate 8.
 // LA DISCIPLINA es el puente entre tus metas y tus logros.
-// Cultivate your hunger before you idealize,
-// Motivate your anger to make them all realize
-// Climbing the mountain, never coming down
-// Break into the contents, never falling down
+// Take a sad song and make it better

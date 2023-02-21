@@ -127,60 +127,54 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-int basis[30];
-set<int> bas;
+int si = 0;
+int basis[20];
 void add(int x)
 {
-    for(int i = 29; i > -1; i--)
-        if(x & (1<<i))
+    fore(i, 0, 20)
+        if(x & 1 << i)
         {
             if(basis[i])
                 x ^= basis[i];
-        }
-    // cout<<'#'<<x<<'\n';
-    for(int i = 29; i > -1; i--)
-        if(x & (1<<i))
-        {
-            basis[i] = x;
-            bas.insert(i);
-            fore(j, 0, 30)
-                if(j != i && (basis[j] & (1<<i)))
-                    basis[j] ^= x;
-            break;
+            else
+            {
+                basis[i] = x;
+                si++;
+                break;
+            }
         }
 }
-int query(int x)
+bool can(int x)
 {
-    int res = 0;
-    int poto = sz(bas) - 1;
-    if(poto == -1) return 0;
-    for(auto it = --bas.end(); poto > -1; poto--, it--)
-    {
-        if(basis[*it])
-        {
-            // cout<<x<<' '<<(1<<poto)<<' '<<basis[*it]<<' '<<*it<<' '<<res<<endl;
-            if(x > (1<<poto))
-                res ^= basis[*it], x -= 1<<poto;
-        }
-    }
-    return res;
+    fore(i, 0, 20)
+        if(x & 1 << i)
+            x ^= basis[i];
+    return x == 0;
 }
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n;
-    cin>>n;
-    while(n--)
+	int n, q;
+    cin>>n>>q;
+    vi ar(n);
+    vi res(q);
+    vector<pair<int, ii>> que(q);
+    fore(i, 0, n) cin>>ar[i];
+    fore(i, 0, q) cin>>que[i].f>>que[i].s.f, que[i].s.s = i;
+    sort(all(que));
+    int po = 0;
+    vi pot(n + 1);
+    pot[0] = 1;
+    fore(i, 1, n + 1) pot[i] = pot[i - 1] * 2 % MOD;
+    fore(i, 0, q)
     {
-        int a, b;
-        cin>>a>>b;
-        if(a == 1) 
-            add(b);
-        else
-            cout<<query(b)<<'\n';
+        while(po < que[i].f)
+            add(ar[po++]);
+        res[que[i].s.s] = can(que[i].s.f) * pot[po - si];
     }
+    fore(i, 0, q) cout<<res[i]<<'\n';
 	return 0;
 }
 // Se vuelve más fácil,

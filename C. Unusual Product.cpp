@@ -127,44 +127,7 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-int basis[30];
-set<int> bas;
-void add(int x)
-{
-    for(int i = 29; i > -1; i--)
-        if(x & (1<<i))
-        {
-            if(basis[i])
-                x ^= basis[i];
-        }
-    // cout<<'#'<<x<<'\n';
-    for(int i = 29; i > -1; i--)
-        if(x & (1<<i))
-        {
-            basis[i] = x;
-            bas.insert(i);
-            fore(j, 0, 30)
-                if(j != i && (basis[j] & (1<<i)))
-                    basis[j] ^= x;
-            break;
-        }
-}
-int query(int x)
-{
-    int res = 0;
-    int poto = sz(bas) - 1;
-    if(poto == -1) return 0;
-    for(auto it = --bas.end(); poto > -1; poto--, it--)
-    {
-        if(basis[*it])
-        {
-            // cout<<x<<' '<<(1<<poto)<<' '<<basis[*it]<<' '<<*it<<' '<<res<<endl;
-            if(x > (1<<poto))
-                res ^= basis[*it], x -= 1<<poto;
-        }
-    }
-    return res;
-}
+
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
@@ -172,14 +135,31 @@ signed main()
 	// freopen("qwe.txt", "w", stdout);
 	int n;
     cin>>n;
-    while(n--)
+    vector<vi> mat(n, vi(n));
+    fore(i, 0, n)
+        fore(j, 0, n)
+        {
+            int x;
+            cin>>x;
+            mat[i][j] = x;
+        }
+    int res = 0;
+    fore(i, 0, n) res ^= mat[i][i];
+    int q;
+    cin>>q;
+    while(q--)
     {
-        int a, b;
-        cin>>a>>b;
-        if(a == 1) 
-            add(b);
-        else
-            cout<<query(b)<<'\n';
+        int a;
+        cin>>a;
+        if(a == 3)
+            cout<<res;
+        else 
+        {
+            int b;
+            cin>>b;
+            b--;
+            res ^= 1;
+        }
     }
 	return 0;
 }

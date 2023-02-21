@@ -127,60 +127,31 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-int basis[30];
-set<int> bas;
-void add(int x)
-{
-    for(int i = 29; i > -1; i--)
-        if(x & (1<<i))
-        {
-            if(basis[i])
-                x ^= basis[i];
-        }
-    // cout<<'#'<<x<<'\n';
-    for(int i = 29; i > -1; i--)
-        if(x & (1<<i))
-        {
-            basis[i] = x;
-            bas.insert(i);
-            fore(j, 0, 30)
-                if(j != i && (basis[j] & (1<<i)))
-                    basis[j] ^= x;
-            break;
-        }
-}
-int query(int x)
-{
-    int res = 0;
-    int poto = sz(bas) - 1;
-    if(poto == -1) return 0;
-    for(auto it = --bas.end(); poto > -1; poto--, it--)
-    {
-        if(basis[*it])
-        {
-            // cout<<x<<' '<<(1<<poto)<<' '<<basis[*it]<<' '<<*it<<' '<<res<<endl;
-            if(x > (1<<poto))
-                res ^= basis[*it], x -= 1<<poto;
-        }
-    }
-    return res;
-}
+
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n;
-    cin>>n;
-    while(n--)
+	int n, m;
+    cin>>n>>m;
+    vi ar(n);
+    fore(i, 0, n) cin>>ar[i];
+    int g = 0;
+    fore(i, 1, n)
+        g = __gcd(g, ar[i] - ar[i - 1]);
+    fore(i, 1, m + 1)
     {
-        int a, b;
-        cin>>a>>b;
-        if(a == 1) 
-            add(b);
-        else
-            cout<<query(b)<<'\n';
+        int x;
+        cin>>x;
+        if(g % x == 0)
+        {
+            cout<<"YES\n";
+            cout<<ar[0]<<" "<<i<<'\n';
+            return 0;
+        }
     }
+    cout<<"NO\n";
 	return 0;
 }
 // Se vuelve más fácil,
@@ -193,7 +164,4 @@ signed main()
 // No sirve de nada hacer sacrificios si no tienes disciplina.
 // Cae 7 veces, levántate 8.
 // LA DISCIPLINA es el puente entre tus metas y tus logros.
-// Cultivate your hunger before you idealize,
-// Motivate your anger to make them all realize
-// Climbing the mountain, never coming down
-// Break into the contents, never falling down
+// Take a sad song and make it better

@@ -1,3 +1,4 @@
+// https://codeforces.com/contest/1155/problem/F
 /*
 messi siemppre esta arriba
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡞⠉⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -127,59 +128,106 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-int basis[30];
-set<int> bas;
-void add(int x)
+vi g[20];
+int dp[1<<14];
+int can[14][14][1<<14];
+int go[14][14][1<<14];
+int mat[20][20];
+vi maskus[1<<14];
+int toto;
+int f(int mask)
 {
-    for(int i = 29; i > -1; i--)
-        if(x & (1<<i))
-        {
-            if(basis[i])
-                x ^= basis[i];
-        }
-    // cout<<'#'<<x<<'\n';
-    for(int i = 29; i > -1; i--)
-        if(x & (1<<i))
-        {
-            basis[i] = x;
-            bas.insert(i);
-            fore(j, 0, 30)
-                if(j != i && (basis[j] & (1<<i)))
-                    basis[j] ^= x;
-            break;
-        }
-}
-int query(int x)
-{
-    int res = 0;
-    int poto = sz(bas) - 1;
-    if(poto == -1) return 0;
-    for(auto it = --bas.end(); poto > -1; poto--, it--)
-    {
-        if(basis[*it])
-        {
-            // cout<<x<<' '<<(1<<poto)<<' '<<basis[*it]<<' '<<*it<<' '<<res<<endl;
-            if(x > (1<<poto))
-                res ^= basis[*it], x -= 1<<poto;
-        }
-    }
-    return res;
+    if(mask == toto) return 0;
+    if(dp[mask] != -1) return dp[mask];
+    dp[mask] = MOD;
+    int anti = toto ^ mask;
+    fore(i, 0, sz(maskus[mask]))
+        fore(j, i, sz(maskus[mask]))
+            for(int k = anti; k; k = (k - 1) & anti)
+                if(can[maskus[mask][i]][maskus[mask][j]][k])
+                    dp[mask] = min(dp[mask], f(mask | k) + __builtin_popcount(k) + 1);
+    return dp[mask];
 }
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n;
-    cin>>n;
-    while(n--)
+	int n, m;
+    cin>>n>>m;
+    forn(i, m)
     {
         int a, b;
         cin>>a>>b;
-        if(a == 1) 
-            add(b);
-        else
-            cout<<query(b)<<'\n';
+        a--, b--;
+        g[a].pb(b);
+        g[b].pb(a);
+        can[a][b][0] = can[b][a][0] = 1;
+        mat[a][b] = mat[b][a] = 1;
+    }
+    toto = (1<<n) - 1;
+    mem(dp, -1);
+    fore(i, 0, 1<<n)
+        fore(j, 0, n)
+            if(i & 1 << j)
+                maskus[i].pb(j);
+    fore(i, 1, n)
+        fore(j, 0, 1<<n)
+            if(__builtin_popcount(j) == i)
+            {
+                fore(i, 0, n)
+                    if(~j & (1<<i))
+                        fore(k, 0, n)
+                            if(~j & (1<<k))
+                            {
+                                if(i != k)
+                                {
+                                    fore(l, 0, n)
+                                        if((j & 1<< l) && can[i][l][j ^ (1<<l)] && mat[l][k])
+                                            can[i][k][j] = 1, go[i][k][j] = l;
+                                }
+                                else
+                                {
+                                    fore(l, 0, n)
+                                        if((j & 1<< l) && can[i][l][j ^ (1<<l)] && mat[l][k] && __builtin_popcount(j) > 1)
+                                            can[i][k][j] = 1, go[i][k][j] = l;
+                                }
+                            }
+            }
+
+    auto print_pato = [&](int a, int b, int mask)
+    {
+        // cout<<"$$$\n";
+        while(mask)
+        {
+            int c = go[a][b][mask];
+            cout<<b + 1<<' '<<c + 1<<'\n';
+            // cout<<'%'<<a<<' '<<b<<' '<<c<<'\n';
+            mask ^= 1<<c;
+            b = c;
+        }
+        cout<<a + 1<<' '<<b + 1<<'\n';
+    };
+    ii res = {MOD, -1};
+    forn(i, n)
+    {
+        // cout<<i<<' '<<f(1<<i)<<'\n';
+        res = min(res, {f(1<<i), 1<<i});
+    }
+    int mask = res.s;
+    cout<<res.f<<'\n';
+    // cout<<res.s<<'\n';
+    while(mask != toto)
+    {
+        pair<ii, ii> mimi = {{MOD, 0}, {0, 0}};
+        int anti = toto ^ mask;
+        fore(i, 0, sz(maskus[mask]))
+            fore(j, i, sz(maskus[mask]))
+                for(int k = anti; k; k = (k - 1) & anti)
+                    if(can[maskus[mask][i]][maskus[mask][j]][k])
+                        mimi = min(mimi, {{dp[mask | k] + __builtin_popcount(k) + 1, k}, {maskus[mask][i], maskus[mask][j]}});
+        print_pato(mimi.s.f, mimi.s.s, mimi.f.s);
+        mask |= mimi.f.s;
     }
 	return 0;
 }
@@ -193,7 +241,4 @@ signed main()
 // No sirve de nada hacer sacrificios si no tienes disciplina.
 // Cae 7 veces, levántate 8.
 // LA DISCIPLINA es el puente entre tus metas y tus logros.
-// Cultivate your hunger before you idealize,
-// Motivate your anger to make them all realize
-// Climbing the mountain, never coming down
-// Break into the contents, never falling down
+// Take a sad song and make it better

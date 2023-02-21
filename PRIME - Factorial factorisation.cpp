@@ -128,8 +128,11 @@ const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
 int pri[tam];
+// prime factors of single numbers
 map<int, int> factura[tam];
+// prime factors of factorials
 map<int, int> facturas[tam];
+// function that telss if a map is a subset of another map
 bool contiene(map<int, int> &a, map<int, int> &b)
 {
     for(auto cat : b)
@@ -142,33 +145,48 @@ bool contiene(map<int, int> &a, map<int, int> &b)
 }
 vi rosa;
 vi rus;
+// recursive function that builds the solution
+// using backtracking given a map of prime factors,
+// it checks the factorial of the greatest prime factor
+// until it reaches another prime factor
+
 void build(map<int, int> &mob)
 {
     if(mob.empty())
     {
+        // check if the buit solution is better than the current one
         if(sz(rus) < sz(rosa))
             rosa = rus;
     }
     else
     {
+        // gettin the factorial of the greatest prime factor
         int canda = (--mob.end())->f;
         do
         {
+            // if the factorial is a subset of the map
             if(contiene(mob, facturas[canda]))
             {
+                // add it to the solution
                 rus.pb(canda);
+                // remove the factorial from the map
                 for(auto cat : facturas[canda])
                 {
                     mob[cat.f] -= cat.s;
                     if(mob[cat.f] == 0)
                         mob.erase(cat.f);
                 }
+                // recursive call
                 build(mob);
+                // add the factorial back to the map
                 for(auto cat : facturas[canda])
                     mob[cat.f] += cat.s;
+                // remove the factorial from the solution
                 rus.pop_back();
             }
+            // get the next factorial
             canda++;
+        // loop until we reach a prime factor
         } while (!pri[canda]);
     }
 }
@@ -179,6 +197,7 @@ signed main()
 	// freopen("qwe.txt", "w", stdout);
 	int n;
     cin>>n;
+    // get the prime factors of the numbers
     fore(i, 2, tam)
     {
         int di = 0;
@@ -189,28 +208,39 @@ signed main()
             if(ax % j == 0)
             {
                 di++;
+                // increase the number of times the prime factor appears
                 while(ax % j == 0)
                     ax /= j, factura[i][j]++, facturas[i][j]++;
             }
         }
+        // if the number is prime
         if(ax > 1)
             factura[i][ax]++, facturas[i][ax]++;
+        // if the number is prime
         if(di == 0)
             pri[i] = 1;
     }
     map<int, int> mop;
     vi ras(30);
+    // try all factorials until we reach a prime number
     for(int i = n - 1; !pri[i + 1]; i--)
     {
+        // build initial map
         for(auto cat : factura[i + 1])
             mop[cat.f] += cat.s;
+        // initialize solution with a size bigger than all expected solucion
         rosa.resize(30);
+        // add it to the solution
         rus.pb(i);  
+        // recursive call
         build(mop);
+                // remove the factorial from the solution
         rus.pop_back();
+        // check if the buit solution is better than the current one
         if(sz(rosa) < sz(ras))
             ras = rosa;
     }
+    // print solution
     if(sz(ras) < 30)
     {
         sort(all(ras));

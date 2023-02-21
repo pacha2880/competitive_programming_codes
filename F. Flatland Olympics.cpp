@@ -121,69 +121,120 @@ typedef vector<ll>      vll;
 // find_by_order kth largest  order_of_key <
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 200010;
+const int tam = 100010;
 const int MOD = 1000000007;
 const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-int basis[30];
-set<int> bas;
-void add(int x)
+struct point
 {
-    for(int i = 29; i > -1; i--)
-        if(x & (1<<i))
-        {
-            if(basis[i])
-                x ^= basis[i];
-        }
-    // cout<<'#'<<x<<'\n';
-    for(int i = 29; i > -1; i--)
-        if(x & (1<<i))
-        {
-            basis[i] = x;
-            bas.insert(i);
-            fore(j, 0, 30)
-                if(j != i && (basis[j] & (1<<i)))
-                    basis[j] ^= x;
-            break;
-        }
-}
-int query(int x)
+    ll x, y;
+    point() {}
+    point(ll x, ll y) : x(x), y(y) {}
+    point operator -(point p) {return {x - p.x, y - p.y};}
+    point operator +(point p) {return {x + p.x, y + p.y};}
+    ll operator ^(point p) {return x * p.y - y * p.x;}
+    ll operator *(point p) {return x * p.x + y * p.y;}
+    ll normsq() {return x * x + y * y;}
+};
+int res = 0;
+int ar[tam], t[4 * tam];
+void init(int b, int e, int node)
 {
-    int res = 0;
-    int poto = sz(bas) - 1;
-    if(poto == -1) return 0;
-    for(auto it = --bas.end(); poto > -1; poto--, it--)
+    if(b == e)
     {
-        if(basis[*it])
-        {
-            // cout<<x<<' '<<(1<<poto)<<' '<<basis[*it]<<' '<<*it<<' '<<res<<endl;
-            if(x > (1<<poto))
-                res ^= basis[*it], x -= 1<<poto;
-        }
+        t[node] = ar[b];
+        return;
     }
-    return res;
+    index;
+    init(b, mid, l);
+    init(mid + 1, e, r);
+    t[node] = t[l] + t[r];
+}
+int query(int b, int e, int node, int i, int j)
+{
+    if(b >= i && e <= j)
+        return t[node];
+    index;
+    if(mid >= j)
+        return query(b, mid, l, i, j);
+    if(mid < i)
+        return query(mid + 1, e, r, i, j);
+    return query(b, mid, l, i, j) + query(mid + 1, e, r, i, j);
+}
+void update(int b, int e, int node, int pos, int val)
+{
+    if(b == e)
+    {
+        t[node] = val;
+        return;
+    }
+    index;
+    if(mid >= pos)
+        update(b, mid, l, pos, val);
+    else
+        update(mid + 1, e, r, pos, val);
+    t[node] = t[l] + t[r];
+}
+void calcu(point a, point b, vector<point> potos)
+{
+    if(potos.empty()) return;
+    point puti = a;
+    bool men = true;
+    auto cmp = [&](pair<point, int> &x, pair<point, int> &y){
+        ll cruzeiro = (y.f - puti) ^ (x.f - puti);
+        return cruzeiro == 0 ? (x.f - puti).normsq() < (y.f - puti).normsq() == men : cruzeiro < 0;
+    };
+    int n = sz(potos);
+    fore(i, 0, sz(potos)) ar[i] = 1;
+    init(0, n - 1, 0);
+    vector<pair<point, int>> namas(n);
+    fore(i, 0, n) namas[i].f = potos[i];
+    sort(all(namas), cmp);
+    fore(i, 0, n) namas[i].s = i;
+    puti = b;
+    men = false;
+    sort(all(namas), cmp);
+    fore(i, 0, n)
+    {
+        update(0, n - 1, 0, namas[i].s, 0);
+        res += query(0, n - 1, 0, 0, namas[i].s);
+    }
 }
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n;
+	int popo = 0, papa = 0;
+    point a, b;
+    cin>>a.x>>a.y>>b.x>>b.y;
+    vector<point> izquierdin, derechin;
+    int n;
     cin>>n;
-    while(n--)
+    point vecta = b - a;
+    fore(i, 0, n)
     {
-        int a, b;
-        cin>>a>>b;
-        if(a == 1) 
-            add(b);
+        point p;
+        cin>>p.x>>p.y;
+        int cruzada = vecta ^ (p - a);
+        if(cruzada > 0)
+            izquierdin.pb(p);
+        else if(cruzada < 0)
+            derechin.pb(p);
+        else if((vecta * (p - a)) > 0)
+            popo++;
         else
-            cout<<query(b)<<'\n';
+            papa++;
     }
-	return 0;
+    res += popo * (popo - 1) / 2 + papa * (papa - 1) / 2;
+    calcu(a, b, izquierdin);
+    calcu(b, a, derechin);
+    cout<<res<<'\n';
+
+    return 0;
 }
-// Se vuelve más fácil,
 // cada día es un poco más fácil, pero tienes que hacerlo cada día,
 // es la parte difícil, pero se vuelve más fácil.
 // Crecer duele.
@@ -193,7 +244,4 @@ signed main()
 // No sirve de nada hacer sacrificios si no tienes disciplina.
 // Cae 7 veces, levántate 8.
 // LA DISCIPLINA es el puente entre tus metas y tus logros.
-// Cultivate your hunger before you idealize,
-// Motivate your anger to make them all realize
-// Climbing the mountain, never coming down
-// Break into the contents, never falling down
+// Take a sad song and make it better

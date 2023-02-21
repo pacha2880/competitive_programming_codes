@@ -127,59 +127,69 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-int basis[30];
-set<int> bas;
-void add(int x)
-{
-    for(int i = 29; i > -1; i--)
-        if(x & (1<<i))
-        {
-            if(basis[i])
-                x ^= basis[i];
-        }
-    // cout<<'#'<<x<<'\n';
-    for(int i = 29; i > -1; i--)
-        if(x & (1<<i))
-        {
-            basis[i] = x;
-            bas.insert(i);
-            fore(j, 0, 30)
-                if(j != i && (basis[j] & (1<<i)))
-                    basis[j] ^= x;
-            break;
-        }
-}
-int query(int x)
-{
-    int res = 0;
-    int poto = sz(bas) - 1;
-    if(poto == -1) return 0;
-    for(auto it = --bas.end(); poto > -1; poto--, it--)
-    {
-        if(basis[*it])
-        {
-            // cout<<x<<' '<<(1<<poto)<<' '<<basis[*it]<<' '<<*it<<' '<<res<<endl;
-            if(x > (1<<poto))
-                res ^= basis[*it], x -= 1<<poto;
-        }
-    }
-    return res;
-}
+
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n;
-    cin>>n;
-    while(n--)
+	int n, x;
+    cin>>n>>x;
+    vi ar(n);
+    fore(i, 0, n) cin>>ar[i];
+    auto cadan = [&](vi ar)
     {
-        int a, b;
-        cin>>a>>b;
-        if(a == 1) 
-            add(b);
-        else
-            cout<<query(b)<<'\n';
+        pair<int, ii> res{0, {MOD, 0}};
+        int su = 0;
+        int ini = 0;
+        fore(i, 0, n)
+        {
+            su += ar[i];
+            res = max(res, {su, {ini, i}});
+            if(su < 0)
+                su = 0, ini = i + 1;
+        }
+        return res;
+    };
+    if(x > 0)
+    {
+        cout<<cadan(ar).f * x<<'\n';
+    }
+    else if(x <= 0)
+    {
+        auto calu = [&](vi ar){
+        vi cadunis(n + 1), cada(n);
+        int su = 0;
+        for(int i = n - 1; i > -1; i--)
+        {
+            su += ar[i];
+            if(su < 0) su = 0;
+            cadunis[i] = su;
+        }
+        su = 0;
+        fore(i, 0, n)
+        {
+            su += ar[i];
+            if(su < 0) su = 0;
+            cada[i] = su;
+        }
+        int pozo = 0;
+        su = 0;
+        int res = 0;
+        fore(i, 0, n)
+        {
+            su += ar[i];
+            if(cada[i] > su * x + pozo) su = 0, pozo = cada[i];
+            res = max(res, su * x + pozo + cadunis[i + 1]);
+            // cout<<su<<' '<<pozo<<' '<<cadunis[i + 1]<<'\n';
+        }
+        return res;
+        };
+        int res = calu(ar);
+        // cout<<res<<'\n';
+        reverse(all(ar));
+        res = max(res, calu(ar));
+        cout<<res<<'\n';
     }
 	return 0;
 }
@@ -193,7 +203,4 @@ signed main()
 // No sirve de nada hacer sacrificios si no tienes disciplina.
 // Cae 7 veces, levántate 8.
 // LA DISCIPLINA es el puente entre tus metas y tus logros.
-// Cultivate your hunger before you idealize,
-// Motivate your anger to make them all realize
-// Climbing the mountain, never coming down
-// Break into the contents, never falling down
+// Take a sad song and make it better

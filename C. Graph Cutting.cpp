@@ -127,60 +127,57 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-int basis[30];
-set<int> bas;
-void add(int x)
+vi g[tam];
+set<int> blo[tam];
+vector<pair<int, pair<int, int>>> res;
+int vis[tam];
+int dfs(int node)
 {
-    for(int i = 29; i > -1; i--)
-        if(x & (1<<i))
-        {
-            if(basis[i])
-                x ^= basis[i];
-        }
-    // cout<<'#'<<x<<'\n';
-    for(int i = 29; i > -1; i--)
-        if(x & (1<<i))
-        {
-            basis[i] = x;
-            bas.insert(i);
-            fore(j, 0, 30)
-                if(j != i && (basis[j] & (1<<i)))
-                    basis[j] ^= x;
-            break;
-        }
-}
-int query(int x)
-{
-    int res = 0;
-    int poto = sz(bas) - 1;
-    if(poto == -1) return 0;
-    for(auto it = --bas.end(); poto > -1; poto--, it--)
+    vis[node] = 1;
+    vi rem;
+    for(int x : g[node])
     {
-        if(basis[*it])
+        if(!blo[node].count(x))
         {
-            // cout<<x<<' '<<(1<<poto)<<' '<<basis[*it]<<' '<<*it<<' '<<res<<endl;
-            if(x > (1<<poto))
-                res ^= basis[*it], x -= 1<<poto;
+            blo[x].insert(node);
+            blo[node].insert(x);
+            int ra = vis[x] ? -1 : dfs(x);
+            if(ra == -1)
+                rem.pb(x);
+            else
+                res.pb({node, {x, ra}});
         }
     }
-    return res;
+    // cout<<node<<' '<<sz(rem)<<'\n';
+    forg(i, 1, sz(rem), 2)
+        res.pb({rem[i - 1], {node, rem[i]}});
+    if(sz(rem) & 1)
+        return rem.back();
+    return -1;
 }
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n;
-    cin>>n;
-    while(n--)
+	int n, m;
+    cin>>n>>m;
+    fore(i, 0, m)
     {
         int a, b;
         cin>>a>>b;
-        if(a == 1) 
-            add(b);
-        else
-            cout<<query(b)<<'\n';
+        a--, b--;
+        g[a].pb(b);
+        g[b].pb(a);
     }
+    if(dfs(0) == -1)
+    {
+        // cout<<res.size()<<'\n';
+        for(auto cat : res)
+            cout<<cat.f + 1<<' '<<cat.s.f + 1<<' '<<cat.s.s + 1<<'\n';
+    }
+    else
+        cout<<"No solution\n";
 	return 0;
 }
 // Se vuelve más fácil,
