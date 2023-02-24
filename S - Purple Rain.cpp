@@ -1,3 +1,4 @@
+// https://codeforces.com/gym/101652
 /*
 messi siemppre esta arriba
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡞⠉⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -127,29 +128,32 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-int dp[300][300];
-int ar[300];
-int h;
-int f(int l, int r)
-{
-	if(l == r) return h;
-	if(dp[l][r] != -1) return dp[l][r];
-	int res = MOD * MOD;
-	int minato_sensei = max(0ll, h + 1 - (ar[r] - ar[l] + 1) / 2);
-	fore(i, l, r)
-		res = min(res, f(l, i)+ f(i + 1, r) - minato_sensei);
-	return dp[l][r] = res;
-}
+
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n;
-	cin>>n>>h;
-	fore(i, 0, n) cin>>ar[i];
-	mem(dp, -1);
-	cout<<f(0, n - 1)<<'\n';
+    string s;
+    cin>>s;
+    int n = s.size();
+    ii ma = {0, -1}, mi{0, 1};
+    pair<int, ii> res = {-1, {0, 0}};
+    int su = 0;
+    fore(i, 0, n)
+    {
+        if(s[i] == 'R')
+            su++;
+        else
+            su--;
+        // cout<<i<<' '<<su<<' '<<ma.f<<' '<<mi.f<<'\n';
+        res = max(res, {abs(su - ma.f), {-i - 1, -ma.s}});
+        res = max(res, {abs(su - mi.f), {-i - 1, mi.s}});
+        // cout<<res.f<<' '<<-res.s.f<<' '<<res.s.s<<'\n';
+        ma = max(ma, {su, -i - 2});
+        mi = min(mi, {su, i + 2});
+    }
+    cout<<res.s.s<<' '<<-res.s.f<<'\n';
 	return 0;
 }
 // Se vuelve más fácil,

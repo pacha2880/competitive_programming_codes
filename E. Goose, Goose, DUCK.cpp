@@ -1,3 +1,4 @@
+// https://codeforces.com/gym/104172/problem/E
 /*
 messi siemppre esta arriba
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡞⠉⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -119,37 +120,176 @@ typedef vector<ii>      vii;
 typedef vector<ll>      vll;
 // typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_update> ordered_set;
 // find_by_order kth largest  order_of_key <
-// mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 200010;
+const int tam = 1000010;
 const int MOD = 1000000007;
 const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-int dp[300][300];
-int ar[300];
-int h;
-int f(int l, int r)
+int ar[tam];
+ii t[4 * tam];
+int l[4 * tam];
+ii join(ii a, ii b)
 {
-	if(l == r) return h;
-	if(dp[l][r] != -1) return dp[l][r];
-	int res = MOD * MOD;
-	int minato_sensei = max(0ll, h + 1 - (ar[r] - ar[l] + 1) / 2);
-	fore(i, l, r)
-		res = min(res, f(l, i)+ f(i + 1, r) - minato_sensei);
-	return dp[l][r] = res;
+    if(a.f == b.f)
+        a.s += b.s;
+    else
+        a = min(a, b);
+    return a;
+}
+void push(int b, int e, int node)
+{
+    if(l[node])
+    {
+        t[node].f += l[node];
+        if(b < e)
+            l[node * 2 + 1] += l[node], l[node * 2 + 2] += l[node];
+        l[node] = 0;
+    }
+}
+void init(int b, int e, int node)
+{
+    l[node] = 0;
+    if(b == e)
+    {
+        t[node] = {0, 1};
+        return;
+    }
+    index;
+    init(b, mid, l);
+    init(mid + 1, e, r);
+    t[node] = join(t[l], t[r]);
+}
+ii query(int b, int e, int node, int i, int j)
+{
+    push(b, e, node);
+    if(b >= i && e <= j)
+        return t[node];
+    index;
+    if(mid >= j)
+        return query(b, mid, l, i, j);
+    if(mid < i)
+        return query(mid + 1, e, r, i, j);
+    return join(query(b, mid, l, i, j), query(mid + 1, e, r, i, j));
+}
+void update(int b, int e, int node, int i, int j, int val)
+{
+    if(b > e) return;
+    push(b, e, node);
+    if(e < i || b > j)
+        return;
+    if(b >= i && e <= j)
+    {
+        l[node] += val;
+        push(b, e, node);
+        return;
+    }
+    index;
+    update(b, mid, l, i, j, val);
+    update(mid + 1, e, r, i, j, val);
+    t[node] = join(t[l], t[r]);
 }
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n;
-	cin>>n>>h;
-	fore(i, 0, n) cin>>ar[i];
-	mem(dp, -1);
-	cout<<f(0, n - 1)<<'\n';
+    int tas = 1e6;
+    // int tas = 40;
+        vector<queue<int>> colos(tas);
+    // fore(i, 1, 30)
+    // {
+    //     fore(asdfadfsf, 0, 100)
+    //     {
+	int n, k;
+        cin>>n>>k;
+            // n = i, k = rng() % i + 1;
+            // int li = rng() % n + 1;
+        // vector<queue<int>> colos(tas);
+        vi culos(n, n);
+        vi ar(n);
+        fore(i, 0, n)
+        {
+            int x;
+            // x = rng() % li + 1;
+            cin>>x;
+            x--;
+            ar[i] = x;
+            colos[x].push(i);
+            if(sz(colos[x]) == k)
+            {
+                culos[colos[x].front()] = i;
+                colos[x].pop();
+            }
+        }
+
+        fore(i, 0, tas) while(!colos[i].empty()) colos[i].pop();
+        vi culitos(n, n);
+        // cout<<"$$$$\n";
+        fore(i, 0, n)
+        {
+            int x = ar[i];
+            colos[x].push(i); 
+            // cout<<x<<' '<<sz(colos[x])<<'\n';  
+            if(sz(colos[x]) == k + 1)
+            {
+                culitos[colos[x].front()] = i;
+                colos[x].pop();
+            }
+        }
+    // cout<<n<<'\n';
+    init(0, n - 1, 0);
+    int res = 0;
+    // cout<<'%'<<t[0].f<<' '<<t[0].s<<'\n';
+    
+        // ii q = query(0, n - 1, 0, n - 1, n - 1);
+        // cout<<'$'<<q.f<<' '<<q.s<<'\n';
+    vi la(tas, n);
+    for(int i = n - 1; i > -1; i--)
+    {
+        // cout<<i<<'\n';
+        // cout<<culos[i]<<' '<<culitos[i]<<'\n';
+        if(culos[i] != n)
+            update(0, n - 1, 0, culos[i], culitos[i] - 1, 1);
+        if(culitos[i] != n)
+        {
+            update(0, n - 1, 0, culitos[i], la[ar[i]] - 1, -1);
+            la[ar[i]] = culitos[i];
+        }
+        ii q = query(0, n - 1, 0, i, n - 1);
+        // cout<<'$'<<q.f<<' '<<q.s<<'\n';
+        if(q.f == 0)
+            res += q.s;
+    }
+    cout<<res<<'\n';
+//     fore(i, 0, tas) while(!colos[i].empty()) colos[i].pop();
+//         // cout<<res<<'\n';
+//         int ras = 0;
+//         int kas = 0;
+//         fore(i, 0, n)
+//         {
+//             vi frec(tas);
+//             kas = 0;
+//             fore(j, i, n)
+//             {
+//                 frec[ar[j]]++;
+//                 if(frec[ar[j]] == k) kas++;
+//                 if(frec[ar[j]] == k + 1) kas--;
+//                 if(kas == 0)
+//                 ras++;
+//             }
+//         }
+//         if(ras != res)
+//         {
+//             cout<<n<<' '<<k<<'\n';
+//             fore(i, 0, n) cout<<ar[i]<<' ';
+//             cout<<'\n';
+//             cout<<ras<<' '<<res<<'\n';
+//             return 0;
+//         }
+// }}
 	return 0;
 }
 // Se vuelve más fácil,

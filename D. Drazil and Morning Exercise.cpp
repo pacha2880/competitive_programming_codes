@@ -127,18 +127,43 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-int dp[300][300];
-int ar[300];
-int h;
-int f(int l, int r)
+struct unionFind {
+  vi p, si;
+  unionFind(int n) : p(n, -1), si(n, 1) {}
+  int findParent(int v) {
+    if (p[v] == -1) return v;
+    return p[v] = findParent(p[v]);
+  }
+  bool join(int a, int b) {
+    a = findParent(a);
+    b = findParent(b);
+    if (a == b) return false;
+    p[a] = b;
+    si[b] += si[a];
+    return true;
+  }
+};
+vi par(tam);
+vi dis(tam);
+vii g[tam];
+void dfs(int node, int pa)
 {
-	if(l == r) return h;
-	if(dp[l][r] != -1) return dp[l][r];
-	int res = MOD * MOD;
-	int minato_sensei = max(0ll, h + 1 - (ar[r] - ar[l] + 1) / 2);
-	fore(i, l, r)
-		res = min(res, f(l, i)+ f(i + 1, r) - minato_sensei);
-	return dp[l][r] = res;
+    par[node] = pa;
+    for(auto cat : g[node])
+        if(cat.f != pa)
+            dfs(cat.f, node);
+}
+ii dfs(int node, int pa, int di)
+{
+    dis[node] = max(dis[node], di);
+    ii res(0, node);
+    for(auto cat : g[node])
+        if(cat.f != pa)
+        {
+            auto lala = dfs(cat.f, node, di + cat.s);
+            res = max(res, {lala.f + cat.s, lala.s});
+        }
+    return res;
 }
 signed main()
 {
@@ -146,10 +171,49 @@ signed main()
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
 	int n;
-	cin>>n>>h;
-	fore(i, 0, n) cin>>ar[i];
-	mem(dp, -1);
-	cout<<f(0, n - 1)<<'\n';
+    cin>>n;
+    fore(i, 0, n - 1)
+    {
+        int a, b, c;
+        cin>>a>>b>>c;
+        a--, b--;
+        g[a].pb({b, c});
+        g[b].pb({a, c});
+    }
+    ii lalu = dfs(0, -1, 0);
+    lalu = dfs(lalu.s, -1, 0);
+    dfs(lalu.s, -1, 0);
+    ii rat = {MOD * MOD, 0};
+    fore(i, 0, n) rat = min(rat, {dis[i], i});
+    dfs(rat.s, -1);
+    vii vaca(n);
+    fore(i, 0, n)
+        vaca[i] = {dis[i], i};
+    sort(all(vaca));
+    reverse(all(vaca));
+    int q;
+    cin>>q;
+    while(q--)
+    {
+        int l;
+        cin>>l;
+        unionFind ufi(n);
+        int limiti = 0;
+        int res = 0;
+        fore(i, 0, n)
+        {
+            for(auto cat : g[vaca[i].s])
+                if(cat.f != par[vaca[i].s])
+                    ufi.join(vaca[i].s, cat.f);
+            while(vaca[limiti].f - vaca[i].f > l)
+            {
+                ufi.si[ufi.findParent(vaca[limiti].s)]--;
+                limiti++;
+            }
+            res = max(res, ufi.si[ufi.findParent(vaca[i].s)]);
+        }
+        cout<<res<<'\n';
+    }
 	return 0;
 }
 // Se vuelve más fácil,

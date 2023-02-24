@@ -127,29 +127,116 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-int dp[300][300];
-int ar[300];
-int h;
-int f(int l, int r)
+int ar[tam], t[4 * tam], l[4 * tam];
+void push(int b, int e, int node)
 {
-	if(l == r) return h;
-	if(dp[l][r] != -1) return dp[l][r];
-	int res = MOD * MOD;
-	int minato_sensei = max(0ll, h + 1 - (ar[r] - ar[l] + 1) / 2);
-	fore(i, l, r)
-		res = min(res, f(l, i)+ f(i + 1, r) - minato_sensei);
-	return dp[l][r] = res;
+    if(l[node])
+    {
+        t[node] += l[node];
+        if(b < e)
+            l[node * 2 + 1] += l[node], l[node * 2 + 2] += l[node];
+        l[node] = 0;
+    }
+}
+void init(int b, int e, int node)
+{
+    if(b == e)
+    {
+        t[node] = ar[b];
+        return;
+    }
+    index;
+    init(b, mid, l);
+    init(mid + 1, e, r);
+    t[node] = max(t[l], t[r]);
+}
+int query(int b, int e, int node, int i, int j)
+{
+    push(b, e, node);
+    if(b >= i && e <= j)
+        return t[node];
+    index;
+    if(mid >= j)
+        return query(b, mid, l, i, j);
+    if(mid < i)
+        return query(mid + 1, e, r, i, j);
+    return max(query(b, mid, l, i, j), query(mid + 1, e, r, i, j));
+}
+void update(int b, int e, int node, int i, int j, int val)
+{
+    if(b > e) return;
+    push(b, e, node);
+    if(e < i || b > j)
+        return;
+    if(b >= i && e <= j)
+    {
+        l[node] += val;
+        push(b, e, node);
+        return;
+    }
+    index;
+    update(b, mid, l, i, j, val);
+    update(mid + 1, e, r, i, j, val);
+    t[node] = max(t[l], t[r]);
 }
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n;
-	cin>>n>>h;
-	fore(i, 0, n) cin>>ar[i];
-	mem(dp, -1);
-	cout<<f(0, n - 1)<<'\n';
+	int n, m;
+    cin>>n>>m;
+    vi dis(n), h(n);
+    fore(i, 0, n) cin>>dis[i];
+    fore(i, 0, n) cin>>h[i], h[i] *= 2;
+    vi pref(2 * n);
+    fore(i, 1, 2 * n)
+        pref[i] = pref[i - 1] + dis[(i - 1) % n];
+    fore(i, 0, n) h.pb(h[i]);
+    fore(i, 0, 2 * n) ar[i] = h[i] - pref[i];
+    // fore(i, 0, 2 * n) cout<<ar[i]<<'\n';
+    init(0, 2*n - 1, 0);
+    // fore(i, 0, 2 * n) cout<<i<<' '<<query(0, 2 * n - 1, 0, i, i)<<'\n';
+    vector<pair<ii, int>> que(m);
+    vi res(m);
+    fore(i, 0, m)
+    {
+        int a, b;
+        cin>>a>>b;
+        a--, b--;
+        if(a <= b)
+            que[i] = {{a + n - 1, b + 1}, i};
+        else
+            que[i] = {{a - 1, b + 1}, i};
+    }
+    sort(all(que));
+    int popus = 0;
+    vector<pair<int, ii>> mayos;
+    fore(i, 0, m)
+    {
+        // cout<<que[i].f.s<<' '<<que[i].f.f<<' '<<que[i].s<<' '<<query(0, 2 * n - 1, 0, que[i].f.s, que[i].f.f - 1)<<'\n';
+        while(popus <= que[i].f.f)
+        {
+            if(popus > 0)
+            {
+                int po = popus - 1, al = popus - 1, valu = h[popus] + pref[popus];
+                update(0, 2 * n - 1, 0, po, po, valu);
+                while(!mayos.empty() && mayos.back().f < valu)
+                {
+                    auto cat = mayos.back();
+                    mayos.pop_back();
+                    al = cat.s.f;
+                    update(0, 2 * n - 1, 0, cat.s.f, cat.s.s, valu - cat.f);
+                }
+                mayos.pb({valu, {al, po}});
+            }
+            popus++;
+        }
+        // cout<<que[i].f.s<<' '<<que[i].f.f<<' '<<que[i].s<<' '<<query(0, 2 * n - 1, 0, que[i].f.s, que[i].f.f - 1)<<'\n';
+        res[que[i].s] = query(0, 2 * n - 1, 0, que[i].f.s, que[i].f.f - 1);
+    }
+    fore(i, 0, m)
+        cout<<res[i]<<'\n';
 	return 0;
 }
 // Se vuelve más fácil,

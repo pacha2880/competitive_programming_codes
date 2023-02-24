@@ -1,3 +1,4 @@
+// https://codeforces.com/gym/101652
 /*
 messi siemppre esta arriba
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡞⠉⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -127,29 +128,121 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-int dp[300][300];
-int ar[300];
-int h;
-int f(int l, int r)
+vii build()
 {
-	if(l == r) return h;
-	if(dp[l][r] != -1) return dp[l][r];
-	int res = MOD * MOD;
-	int minato_sensei = max(0ll, h + 1 - (ar[r] - ar[l] + 1) / 2);
-	fore(i, l, r)
-		res = min(res, f(l, i)+ f(i + 1, r) - minato_sensei);
-	return dp[l][r] = res;
+    vector<pair<int, ii>> sat;
+    vii chil(10000);
+    vi par(10000);
+    sat.pb({1e11, {0, 0}});
+    string s;
+    int x = 1;
+    while(true)
+    {
+        cout<<'\n';
+        // for(auto cat : sat)
+        //     cout<<cat.f<<' '<<cat.s.f<<' '<<cat.s.s<<'\n';
+        // cout<<"#######\n";
+        vector<pair<int, ii>> neo;
+        cin>>s;
+        // cout<<s<<'\n';
+        if(s == "E") break;
+        if(s == "D")
+        {
+            int pos;
+            cin>>pos;
+            int con = 0;
+            fore(i, 0, sat.size())
+            {
+                int la = con;
+                con += sat[i].f;
+                if(con >= pos)
+                {
+                    int dif = con - pos;
+                    if(sat[i].s.f == 0)
+                    {
+                        if(pos - la > 1)
+                            neo.pb({pos - la - 1, {0, x++}});
+                        if(pos < con)
+                            neo.pb({con - pos, {0, x++}});
+                    }
+                    else if(!neo.empty() && neo.back().s.s == chil[sat[i].s.s].f && sat[i + 1].s.s == chil[sat[i].s.s].s)
+                    {
+                        int n = sz(neo) - 1;
+                        neo[n].f += sat[i + 1].f;
+                        neo[n].s.s = par[sat[i].s.s];
+                        i++;
+                    }
+                    fore(j, i + 1, sat.size())
+                        neo.pb(sat[j]);
+                    break;
+                }
+                neo.pb(sat[i]);
+            }
+        }
+        else
+        {
+            int pos;
+            cin>>pos;
+            char ch;
+            cin>>ch;
+            int con = 0;
+            fore(i, 0, sat.size())
+            {
+                int la = con;
+                con += sat[i].f;
+                if(con >= pos)
+                {
+                    int dif = con - pos;
+                    if(sat[i].s.f == 0)
+                    {
+                        bool ba = true;
+                        if(pos - la > 1)
+                        {
+                            neo.pb({pos - la - 1, {0, x++}});
+                            par[x] = sat[i].s.s;
+                            chil[x].f = x - 1;
+                        }
+                        else if(i > 0 && sat[i - 1].s.f != 0)
+                            par[x] = par[sat[i - 1].s.s], chil[x] = chil[sat[i - 1].s.s];
+                        neo.pb({1, {ch, x++}});
+                        chil[x - 1].s = x;
+                        neo.pb({con - pos + 1, {0, x++}});
+                    }
+                    else
+                    {
+                        par[x] = par[sat[i].s.s];
+                        chil[x] = chil[sat[i].s.s];
+                        neo.pb({1, {ch, x++}});
+                        neo.pb(sat[i]);
+                    }
+                    fore(j, i + 1, sat.size())
+                        neo.pb(sat[j]);
+                    break;
+                }
+                neo.pb(sat[i]);
+            }
+        }
+        swap(sat, neo);
+    }
+        // cout<<'\n';
+        // for(auto cat : sat)
+        //     cout<<cat.f<<' '<<cat.s.f<<' '<<cat.s.s<<'\n';
+        // cout<<"#######\n";
+    vii raza;
+    for(auto cat : sat)
+        raza.pb({cat.f, cat.s.f});
+    return raza;
 }
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n;
-	cin>>n>>h;
-	fore(i, 0, n) cin>>ar[i];
-	mem(dp, -1);
-	cout<<f(0, n - 1)<<'\n';
+	vii sat = build(), sot = build();
+    if(sat == sot)
+        cout<<0<<'\n';
+    else
+        cout<<1<<'\n';
 	return 0;
 }
 // Se vuelve más fácil,

@@ -127,29 +127,69 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-int dp[300][300];
-int ar[300];
-int h;
-int f(int l, int r)
+char tab[31][31];
+int dp[31][31];
+int n, m;
+int f(int x, int y)
 {
-	if(l == r) return h;
-	if(dp[l][r] != -1) return dp[l][r];
-	int res = MOD * MOD;
-	int minato_sensei = max(0ll, h + 1 - (ar[r] - ar[l] + 1) / 2);
-	fore(i, l, r)
-		res = min(res, f(l, i)+ f(i + 1, r) - minato_sensei);
-	return dp[l][r] = res;
+    // cout<<x<<' '<<y<<'\n';
+    if(y == -1) return 1;
+    if(dp[x][y] != -1) return dp[x][y];
+    dp[x][y] = 0;
+    if(x == n || tab[x][y] == 'R') dp[x][y] = f(x, y - 1);
+    else if(tab[x][y] == '.')
+        dp[x][y] = f(x, y - 1) + f(x + 1, y);
+    else
+        dp[x][y] = f(x + 1, y);
+    // cout<<x<<' '<<y<<' '<<dp[x][y]<<'\n';
+    return dp[x][y];
 }
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n;
-	cin>>n>>h;
-	fore(i, 0, n) cin>>ar[i];
-	mem(dp, -1);
-	cout<<f(0, n - 1)<<'\n';
+    // int n, m;
+    cin>>n>>m;
+    fore(i, 0, n) fore(j, 0,m ) cin>>tab[i][j];
+    fore(i, 0, n)
+        fore(j, 0, m)
+        {
+            if(tab[i][j] == 'B')
+            {
+                fore(k, 0, i + 1)
+                    fore(l, 0, j + 1)
+                        if(tab[k][l] == 'R')
+                        {
+                            cout<<0<<'\n';
+                            return 0;
+                        }
+                        else
+                            tab[k][l] = 'B';
+            }
+            if(tab[i][j] == 'R')
+            {
+                fore(k, i, n)
+                    fore(l, j, m)
+                        if(tab[k][l] == 'B')
+                        {
+                            cout<<0<<'\n';
+                            return 0;
+                        }
+                        else
+                            tab[k][l] = 'R';
+            }
+        }
+    mem(dp, -1);
+    // fore(i, 0, n)
+    // {
+    //     fore(j, 0, m)
+    //     {
+    //         cout<<tab[i][j];
+    //     }
+    //     cout<<'\n';
+    // }
+    cout<<f(0, m - 1)<<'\n';
 	return 0;
 }
 // Se vuelve más fácil,

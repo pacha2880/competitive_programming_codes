@@ -127,29 +127,23 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-int dp[300][300];
-int ar[300];
-int h;
-int f(int l, int r)
-{
-	if(l == r) return h;
-	if(dp[l][r] != -1) return dp[l][r];
-	int res = MOD * MOD;
-	int minato_sensei = max(0ll, h + 1 - (ar[r] - ar[l] + 1) / 2);
-	fore(i, l, r)
-		res = min(res, f(l, i)+ f(i + 1, r) - minato_sensei);
-	return dp[l][r] = res;
-}
+
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
 	int n;
-	cin>>n>>h;
-	fore(i, 0, n) cin>>ar[i];
-	mem(dp, -1);
-	cout<<f(0, n - 1)<<'\n';
+    cin>>n;
+    vi ar(n);
+    int g = 0;
+    fore(i, 0, n) cin>>ar[i], g = __gcd(g, ar[i]);
+    sort(all(ar));
+    if(ar[0] <= (ar[1] - 1) / 2)
+        g = max(g, ar[0]);
+    else
+        g = max(g, (ar[0]) / 2);
+    cout<<g<<'\n';
 	return 0;
 }
 // Se vuelve más fácil,

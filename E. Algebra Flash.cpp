@@ -127,29 +127,58 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-int dp[300][300];
-int ar[300];
-int h;
-int f(int l, int r)
-{
-	if(l == r) return h;
-	if(dp[l][r] != -1) return dp[l][r];
-	int res = MOD * MOD;
-	int minato_sensei = max(0ll, h + 1 - (ar[r] - ar[l] + 1) / 2);
-	fore(i, l, r)
-		res = min(res, f(l, i)+ f(i + 1, r) - minato_sensei);
-	return dp[l][r] = res;
-}
+
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n;
-	cin>>n>>h;
-	fore(i, 0, n) cin>>ar[i];
-	mem(dp, -1);
-	cout<<f(0, n - 1)<<'\n';
+	int n, m;
+    cin>>n>>m;
+    vi col(n);
+    fore(i, 0, n) cin>>col[i], col[i]--;
+    vi co(m);
+    fore(i, 0, m) cin>>co[i];
+    vi aus(m);
+    fore(i, 1, n) aus[col[i]] |= 1<<col[i - 1], aus[col[i - 1]] |= 1<<col[i];
+    aus[col[0]] |= 1<<col[0];
+    aus[col[n - 1]] |= 1<<col[n - 1];
+    // fore(i, 0, m) cout<<i<<' '<<aus[i]<<'\n';
+    int hal = m / 2;
+    vi dp(1<<hal, MOD);
+    fore(i, 0, 1 <<(m - hal))
+    {
+        int su = 0;
+        int must = 0;
+        fore(j, 0, m - hal)
+            if(i & 1 << j)
+                su += co[j + hal];
+            else
+                must |= aus[j + hal];
+        if(((must >> hal) | i) != i) continue;
+        must &= (1<<hal) - 1;
+        // cout<<i<<' '<<must<<' '<<su<<'\n';
+        dp[must] = min(dp[must], su);
+    }
+    fore(i, 0, hal) fore(j, 0, 1<<hal) if(!(j & 1 << i)) dp[j | (1<<i)] = min(dp[j | (1<<i)], dp[j]);
+    int res = MOD;
+    fore(i, 0, 1<<hal)
+    {
+        int su = 0;
+        int must = 0;
+        fore(j, 0, hal)
+            if(i & 1 << j)
+                su += co[j];
+            else
+                must |= aus[j];
+        // cout<<must<<'\n';
+        must &= (1<<hal) - 1;
+        // cout<<i<<' '<<must<<'\n';
+        if((must | i) != i) continue;
+        // cout<<"#"<<dp[i]<<'\n';;
+        res = min(res, dp[i] + su); 
+    }
+    cout<<res<<'\n';
 	return 0;
 }
 // Se vuelve más fácil,

@@ -79,7 +79,7 @@ EL PEMRRITO MALVADO
 // #include <ext/pb_ds/assoc_container.hpp>
 // #include <ext/pb_ds/tree_policy.hpp>
 // #include <ext/rope>
-#define int ll
+// #define int ll
 #define mp				make_pair
 #define pb				push_back
 #define all(a)			(a).begin(), (a).end()
@@ -121,35 +121,98 @@ typedef vector<ll>      vll;
 // find_by_order kth largest  order_of_key <
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 200010;
+const int tam = 3010;
 const int MOD = 1000000007;
 const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-int dp[300][300];
-int ar[300];
-int h;
-int f(int l, int r)
+char tab[3000][3000];
+int veci[3000][3000];
+int n, m;
+int dir[2][4] = {{1, 0, -1, 0}, {0, 1, 0, -1}};
+int val(int x, int y){
+    return x >= 0 && y >= 0 && x < n && y < m && tab[x][y] == '.';
+}
+void go(int i, int j)
 {
-	if(l == r) return h;
-	if(dp[l][r] != -1) return dp[l][r];
-	int res = MOD * MOD;
-	int minato_sensei = max(0ll, h + 1 - (ar[r] - ar[l] + 1) / 2);
-	fore(i, l, r)
-		res = min(res, f(l, i)+ f(i + 1, r) - minato_sensei);
-	return dp[l][r] = res;
+    if(veci[i][j] != 1) return;
+    veci[i][j] = 0;
+    fore(k, 0, 4)
+    {
+        int x = i + dir[0][k], y = j + dir[1][k];
+        if(val(x, y) && veci[x][y] > 0)
+        {
+            veci[x][y] = 0;
+            if(j < y) tab[i][j] = '<', tab[x][y] = '>';
+            else if(y < j) tab[x][y] = '<', tab[i][j] = '>';
+            else if(x < i) tab[x][y] = '^', tab[i][j] = 'v';
+            else tab[i][j] = '^', tab[x][y] = 'v';
+            vii gas;
+            fore(k, 0, 4)
+            {
+                int xx = x + dir[0][k], yy = y + dir[1][k];
+                if(val(xx, yy))
+                {
+                    // cout<<'$'<<xx<<' '<<yy<<' '<<veci[xx][yy]<<'\n';
+                    veci[xx][yy]--;
+                    if(veci[xx][yy] == 1)
+                        gas.pb({xx, yy});
+                }
+            }
+            for(ii cat : gas)
+                go(cat.f, cat.s);
+        }
+    }
 }
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n;
-	cin>>n>>h;
-	fore(i, 0, n) cin>>ar[i];
-	mem(dp, -1);
-	cout<<f(0, n - 1)<<'\n';
+	// int n, m;
+    cin>>n>>m;
+    fore(i, 0, n)
+    fore(j, 0, m) cin>>tab[i][j];
+    // vii go;
+    fore(i, 0, n)
+    fore(j, 0, m)
+    {
+        if(tab[i][j] == '.')
+        {
+            fore(k, 0, 4)
+            {
+                int x = i + dir[0][k], y = j + dir[1][k];
+                veci[i][j] += val(x, y);
+            }
+        }
+    }
+    fore(i, 0, n)
+        fore(j, 0, m)
+            if(veci[i][j] == 1)
+            {
+                go(i, j);
+    //             cout<<i<<' '<<j<<'\n';
+    // fore(i, 0, n)
+    // {
+    //     fore(j, 0, m)
+    //         cout<<tab[i][j];
+    //     cout<<'\n';
+    // }
+            }
+    fore(i, 0, n)
+        fore(j, 0, m)
+            if(tab[i][j] == '.')
+            {
+                cout<<"Not unique\n";
+                return 0;
+            }
+    fore(i, 0, n)
+    {
+        fore(j, 0, m)
+            cout<<tab[i][j];
+        cout<<'\n';
+    }
 	return 0;
 }
 // Se vuelve más fácil,

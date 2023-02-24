@@ -1,3 +1,4 @@
+// https://codeforces.com/gym/104172/problem/A
 /*
 messi siemppre esta arriba
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡞⠉⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -127,29 +128,44 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-int dp[300][300];
-int ar[300];
-int h;
-int f(int l, int r)
+vi g[tam];
+int dfs(int node)
 {
-	if(l == r) return h;
-	if(dp[l][r] != -1) return dp[l][r];
-	int res = MOD * MOD;
-	int minato_sensei = max(0ll, h + 1 - (ar[r] - ar[l] + 1) / 2);
-	fore(i, l, r)
-		res = min(res, f(l, i)+ f(i + 1, r) - minato_sensei);
-	return dp[l][r] = res;
+    int ma = 0, sma = 0;
+    for(int x : g[node])
+    {
+        int y = dfs(x);
+        if(y >= ma)
+            sma = ma, ma = y;
+        else
+            sma = max(sma, y);
+        // cout<<'%'<<node + 1<<' '<<x + 1<<' '<<y<<' '<<ma<<' '<<sma<<'\n';
+    }
+    // cout<<node + 1<<' '<<ma<<' '<<sma<<'\n';
+    if(ma == 0)
+        return 1;
+    return max(ma, sma + 1);
 }
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
+    int t;
+    cin>>t;
+    while(t--){
 	int n;
-	cin>>n>>h;
-	fore(i, 0, n) cin>>ar[i];
-	mem(dp, -1);
-	cout<<f(0, n - 1)<<'\n';
+    cin>>n;
+    int x;
+    cin>>x;
+    fore(i, 1, n)
+    {
+        cin>>x;
+        g[x - 1].pb(i);
+    }
+    cout<<dfs(0)<<'\n';
+    fore(i, 0, n) g[i].clear();
+    }
 	return 0;
 }
 // Se vuelve más fácil,

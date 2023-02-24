@@ -127,29 +127,112 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-int dp[300][300];
-int ar[300];
-int h;
-int f(int l, int r)
+auto add(vi&a, vi&b)
 {
-	if(l == r) return h;
-	if(dp[l][r] != -1) return dp[l][r];
-	int res = MOD * MOD;
-	int minato_sensei = max(0ll, h + 1 - (ar[r] - ar[l] + 1) / 2);
-	fore(i, l, r)
-		res = min(res, f(l, i)+ f(i + 1, r) - minato_sensei);
-	return dp[l][r] = res;
+    if(a.empty())
+    {
+        swap(a, b);
+        return;
+    }
+    if(b.empty()) return;
+    int aca = 0;
+    // for(int x : a) cout<<x;
+    // cout<<'+';
+    // for(int x : b) cout<<x;
+    while(sz(b) < sz(a)) b.pb(0);
+    while(sz(a) < sz(b)) a.pb(0);
+    fore(i, 0, sz(b))
+    {
+        a[i] += aca + b[i];
+        aca = a[i] / 10;
+        a[i] %= 10;
+    }
+
+    if(aca)
+        a.pb(aca);
+    // cout<<'=';
+    while(a.back() == 0) a.pop_back();
+    // for(int x : a) cout<<x;
+    // cout<<'\n';
+}
+bool les(vi&a, vi&b)
+{
+    if(sz(a) < sz(b))
+        return true;
+    if(sz(b) < sz(a))
+        return false;
+    for(int i = sz(a) - 1; i > -1; i--)
+    {
+        if(a[i] < b[i]) return true;
+        if(a[i] > b[i]) return false;
+    }
+    return false;
 }
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n;
-	cin>>n>>h;
-	fore(i, 0, n) cin>>ar[i];
-	mem(dp, -1);
-	cout<<f(0, n - 1)<<'\n';
+	int t;
+    cin>>t;
+    while(t--)
+    {
+        int n, k;
+        cin>>n>>k;
+        string s;
+        cin>>s;
+        vi res(n, 9);
+        k++;
+        int con = n % k;
+        int cana = (n + k - 1) / k;
+        int pot = 1;
+        int popo = 3;
+        fore(i, 0, k) pot *= popo;
+        vi sus({-2, -1, 0});
+        // if(popo == 3) sus = vi({{-1, 0, 1}});
+        // cout<<"%%%%^%^%^%^%\n"<<pot<<'\n';
+        fore(i, 0, pot)
+        {
+            int ax = i, su = 0, mo;
+            fore(j, 0, k)
+            {
+                su += cana + sus[ax % popo];
+                ax /= popo;
+            }
+            if(su != n) continue;
+            // if(__builtin_popcount(i) == con)
+            // {
+                // cout<<"$$$$\n";
+                int po = 0;
+                vi acu;
+                ax = i;
+                fore(j, 0, k)
+                {
+                    vi ado;
+                    // cout<<po<<endl;
+                    int au = cana + sus[ax%popo];
+                    ax /= popo;
+                    // cout<<au<<' '<<po + au<<'\n';
+                    fore(i, po, po + au)
+                        ado.pb(s[i] - '0');
+                    po += au;
+                    // for(int x : ado)
+                    //     cout<<x;
+                    // cout<<'\n';
+                    reverse(all(ado));
+                    // cout<<"#####\n";
+                    add(acu, ado);
+                }
+                if(po >= n)
+                if(les(acu, res))
+                    swap(res, acu);
+            // }
+        }
+        reverse(all(res));
+        for(int x : res)
+            cout<<x;
+        cout<<'\n';
+    }
 	return 0;
 }
 // Se vuelve más fácil,

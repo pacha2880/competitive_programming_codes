@@ -1,3 +1,4 @@
+// https://codeforces.com/gym/101652
 /*
 messi siemppre esta arriba
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡞⠉⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -121,35 +122,53 @@ typedef vector<ll>      vll;
 // find_by_order kth largest  order_of_key <
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 200010;
+const int tam = 1000010;
 const int MOD = 1000000007;
 const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-int dp[300][300];
-int ar[300];
-int h;
-int f(int l, int r)
-{
-	if(l == r) return h;
-	if(dp[l][r] != -1) return dp[l][r];
-	int res = MOD * MOD;
-	int minato_sensei = max(0ll, h + 1 - (ar[r] - ar[l] + 1) / 2);
-	fore(i, l, r)
-		res = min(res, f(l, i)+ f(i + 1, r) - minato_sensei);
-	return dp[l][r] = res;
-}
+
 signed main()
 {
-	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+	// ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n;
-	cin>>n>>h;
-	fore(i, 0, n) cin>>ar[i];
-	mem(dp, -1);
-	cout<<f(0, n - 1)<<'\n';
+	int a, b;
+    cin>>a>>b;
+    vi ar(tam), pri(tam, 1), sus(tam, 1);
+    fore(i, 0, b - a + 2)
+        ar[i] = i + a;
+    fore(i, 2, tam)
+    {
+        // cout<<i<<'\n';
+        if(pri[i])
+        {
+            forg(j, i + i, tam, i)
+                pri[j] = 0;
+            for(int j = a - a % i + !!(a % i) * i - a; j < b - a + 2; j+= i)
+            {
+                // cout<<j<<endl;
+                int po = i;
+                while(ar[j] % i == 0) {
+                    // cout<<j<<' '<<ar[j]<<' '<<i<<'\n';
+                    po *= i, ar[j] /= i;
+
+                }
+                sus[j] *= (po - 1) / (i - 1);
+            }
+
+        }
+    }
+    // cout<<"##\n";
+    fore(i, 0, b - a + 1)
+        if(ar[i] > 1)
+            sus[i] *= ar[i] + 1;
+    // cout<<"$$$";
+    int res = 0;
+    fore(i, 0, b - a + 1)
+        res += sus[i];//, cout<<i<<' '<<sus[i]<<'\n';
+    cout<<res<<'\n';
 	return 0;
 }
 // Se vuelve más fácil,

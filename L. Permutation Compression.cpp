@@ -121,35 +121,113 @@ typedef vector<ll>      vll;
 // find_by_order kth largest  order_of_key <
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 200010;
 const int MOD = 1000000007;
 const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-int dp[300][300];
-int ar[300];
-int h;
-int f(int l, int r)
-{
-	if(l == r) return h;
-	if(dp[l][r] != -1) return dp[l][r];
-	int res = MOD * MOD;
-	int minato_sensei = max(0ll, h + 1 - (ar[r] - ar[l] + 1) / 2);
-	fore(i, l, r)
-		res = min(res, f(l, i)+ f(i + 1, r) - minato_sensei);
-	return dp[l][r] = res;
+const int tam=200005;
+int T[tam];
+int n;
+void update(int pos, int x){
+    while(pos<=n){
+        T[pos]+=x;
+        pos+=pos&-pos;
+    }
+}
+int queryB(int pos){
+    int res=0;
+    while(pos>0){
+        res+=T[pos];
+        pos-=pos&-pos;
+    }
+    return res;
+}
+int query(int izq, int der){
+    return queryB(der)-queryB(izq-1);
 }
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n;
-	cin>>n>>h;
-	fore(i, 0, n) cin>>ar[i];
-	mem(dp, -1);
-	cout<<f(0, n - 1)<<'\n';
+    int t,m,k,x;
+    cin>>t;
+    while(t--){
+        cin>>n>>m>>k;
+        for(int i=0;i<=n+1;i++)T[i]=0;
+        for(int i=1;i<=n;i++){
+            update(i,1);
+        }
+        vector<pair<int,int> >v;
+        vi a,b;
+        for(int i=0;i<n;i++){
+            cin>>x;
+            v.pb({x,i+1});
+            a.pb(x);
+        }
+        map<int,int>st;
+        for(int i=0;i<m;i++){
+            cin>>x;
+            st[x]=i;
+            b.pb(x);
+        }
+        multiset<int>L;
+        for(int i=0;i<k;i++){
+            cin>>x;
+            L.insert(x);
+        }
+        bool laschicaslindassoncyanes=true;
+        int pos=0;
+        for(int i=0;i<n;i++){
+            if(pos==m)break;
+            if(a[i]==b[pos])pos++;
+        }
+        if(pos!=m){
+            cout<<"NO"<<endl;
+            continue;
+        }
+        set<int>paredes;
+        paredes.insert(0);
+        paredes.insert(n+1);
+        sort(v.begin(),v.end());
+        reverse(v.begin(),v.end());
+        for(int i=0;i<n;i++){
+            int val=v[i].f;
+            int pos=v[i].s;
+            if(st.find(val)!=st.end()){
+                // no puedo eliminar, pongo paredes
+                paredes.insert(pos);
+                update(pos,-1);
+            }else{
+                //tengo que eliminar con la mas larga posible
+                auto it=paredes.lower_bound(pos);
+                it--;
+                int izq=(*it) + 1;
+                it++;
+                int der=(*it)-1;
+                int cant=query(izq,der);
+                it=L.upper_bound(cant);
+                if(L.empty()){
+                    laschicaslindassoncyanes=false;
+                    break;
+                }
+                if(it==L.begin()){
+                    laschicaslindassoncyanes=false;
+                    break;
+                }
+                it--;
+                L.erase(it);
+                update(pos,-1);
+            }
+        }
+        if(laschicaslindassoncyanes){
+            cout<<"YES"<<endl;
+        }else{
+            cout<<"NO"<<endl;
+        }
+    }
+    
 	return 0;
 }
 // Se vuelve más fácil,

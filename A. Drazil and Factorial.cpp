@@ -127,29 +127,118 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-int dp[300][300];
-int ar[300];
-int h;
-int f(int l, int r)
+int pri[tam];
+// prime factors of single numbers
+map<int, int> factura[tam];
+// prime factors of factorials
+map<int, int> facturas[tam];
+// function that telss if a map is a subset of another map
+bool contiene(map<int, int> &a, map<int, int> &b)
 {
-	if(l == r) return h;
-	if(dp[l][r] != -1) return dp[l][r];
-	int res = MOD * MOD;
-	int minato_sensei = max(0ll, h + 1 - (ar[r] - ar[l] + 1) / 2);
-	fore(i, l, r)
-		res = min(res, f(l, i)+ f(i + 1, r) - minato_sensei);
-	return dp[l][r] = res;
+    for(auto cat : b)
+    {
+        auto it = a.find(cat.f);
+        if(it == a.end() || it->s < cat.s)
+            return false;
+    }
+    return true;
+}
+vi rosa;
+vi rus;
+// recursive function that builds the solution
+// using backtracking given a map of prime factors,
+// it checks the factorial of the greatest prime factor
+// until it reaches another prime factor
+
+bool build(map<int, int> &mob)
+{
+    if(mob.empty())
+    {
+        // check if the buit solution is better than the current one
+        if(sz(rus) > sz(rosa))
+            rosa = rus;
+        return true;
+    }
+    else
+    {
+        // gettin the factorial of the greatest prime factor
+        int canda = (--mob.end())->f;
+        bool builded = false;
+        do
+        {
+            // if the factorial is a subset of the map
+            if(contiene(mob, facturas[canda]))
+            {
+                // add it to the solution
+                rus.pb(canda);
+                // remove the factorial from the map
+                for(auto cat : facturas[canda])
+                {
+                    mob[cat.f] -= cat.s;
+                    if(mob[cat.f] == 0)
+                        mob.erase(cat.f);
+                }
+                // recursive call
+                builded = build(mob);
+                // add the factorial back to the map
+                for(auto cat : facturas[canda])
+                    mob[cat.f] += cat.s;
+                // remove the factorial from the solution
+                rus.pop_back();
+            }
+            // get the next factorial
+            canda++;
+            if(builded) return true;
+            // break;
+        // loop until we reach a prime factor
+        } while (!pri[canda]);
+    }
 }
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n;
-	cin>>n>>h;
-	fore(i, 0, n) cin>>ar[i];
-	mem(dp, -1);
-	cout<<f(0, n - 1)<<'\n';
+	
+    fore(i, 2, 15)
+    {
+        int di = 0;
+        int ax = i;
+        facturas[i] = facturas[i - 1];
+        for(int j = 2; j * j <= i; j++)
+        {
+            if(ax % j == 0)
+            {
+                di++;
+                // increase the number of times the prime factor appears
+                while(ax % j == 0)
+                    ax /= j, factura[i][j]++, facturas[i][j]++;
+            }
+        }
+        // if the number is prime
+        if(ax > 1)
+            factura[i][ax]++, facturas[i][ax]++;
+        // if the number is prime
+        if(di == 0)
+            pri[i] = 1;
+    }
+    int n;
+    cin>>n;
+    string s;
+    cin>>s;
+    map<int, int> mop;
+    fore(i, 0, n)
+    {
+        int n = s[i] - '0';
+        for(auto cat : facturas[n])
+            mop[cat.f] += cat.s;
+    }
+    build(mop);
+    sort(all(rosa));
+    reverse(all(rosa));
+    for(int x : rosa)
+        cout<<x;
+    cout<<'\n';
 	return 0;
 }
 // Se vuelve más fácil,

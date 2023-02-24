@@ -121,35 +121,90 @@ typedef vector<ll>      vll;
 // find_by_order kth largest  order_of_key <
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 200010;
+// const int tam = 200010;
 const int MOD = 1000000007;
 const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-int dp[300][300];
-int ar[300];
-int h;
-int f(int l, int r)
+vector<int> kmp(string s)
 {
-	if(l == r) return h;
-	if(dp[l][r] != -1) return dp[l][r];
-	int res = MOD * MOD;
-	int minato_sensei = max(0ll, h + 1 - (ar[r] - ar[l] + 1) / 2);
-	fore(i, l, r)
-		res = min(res, f(l, i)+ f(i + 1, r) - minato_sensei);
-	return dp[l][r] = res;
+	int n = s.size();
+	vector<int> pi(n, 0);
+	for(int i = 1; i < n; i++)
+	{
+		int j = pi[i-1];
+		while(j > 0 && s[j] != s[i])
+			j = pi[j-1];
+		if(s[j] == s[i])
+			j++;
+		pi[i] = j;
+  	}
+  	return pi;
 }
+
+const int tam = 1e5 + 10;
+int aut[tam][26];
+
+void genAut(string &s) {
+    mem(aut, 0);
+    vi pi = kmp(s);
+    int n = s.size();
+    fore(i, 0, n) {
+        aut[i][s[i]-'a'] = i+1;
+    }
+    fore(i, 0, n+1) {
+        for (int c = 0; c < 26; c++) {
+            if (aut[i][c]) continue;
+            if (i < n && s[i] == 'a' + c) aut[i][c] = i+1;
+            else if (i > 0) aut[i][c] = aut[pi[i-1]][c];
+            else aut[i][c] = 0;
+        }
+    }
+}
+
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n;
-	cin>>n>>h;
-	fore(i, 0, n) cin>>ar[i];
-	mem(dp, -1);
-	cout<<f(0, n - 1)<<'\n';
+	string s, t;
+    cin>>s>>t;
+    int n, m;
+    n = sz(s), m = sz(t);
+    if(m > n)
+    {
+        cout<<0<<'\n';
+        return 0;
+    }
+    genAut(t);
+    vector<vi> dp(m + 1, vi(n + 1, -1));
+    dp[0][0] = 0;
+    fore(i, 0, n)
+    {
+        fore(j, 0, m + 1)
+        {
+            if(dp[j][i] != -1)
+            {
+                if(s[i] == '?')
+                {
+                    fore(k, 0, 26)
+                    {
+                        int go = aut[j][k];
+                        dp[go][i + 1] = max(dp[go][i + 1], dp[j][i] + (go == m));
+                    }
+                }
+                else
+                {
+                    int go = aut[j][s[i] - 'a'];
+                    dp[go][i + 1] = max(dp[go][i + 1], dp[j][i] + (go == m));
+                }
+            }
+        }
+    }
+    int res = 0;
+    fore(i, 0, m + 1) res = max(res, dp[i][n]);
+    cout<<res<<'\n';
 	return 0;
 }
 // Se vuelve más fácil,
