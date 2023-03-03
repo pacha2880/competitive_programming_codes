@@ -127,33 +127,25 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-auto add(vi&a, vi&b)
+vi add(vi&a, vi&b)
 {
-    if(a.empty())
+    int n = sz(a), m = sz(b);
+    vi res(max(n, m));
+    int acu = 0;
+    fore(i, 0, max(n, m))
     {
-        swap(a, b);
-        return;
+        res[i] = acu;
+        if(i < n)
+            res[i] += a[i];
+        if(i < m)
+            res[i] += b[i];
+        if(res[i] > 9)
+            res[i] -= 10, acu = 1;
+        else
+            acu = 0;
     }
-    if(b.empty()) return;
-    int aca = 0;
-    // for(int x : a) cout<<x;
-    // cout<<'+';
-    // for(int x : b) cout<<x;
-    while(sz(b) < sz(a)) b.pb(0);
-    while(sz(a) < sz(b)) a.pb(0);
-    fore(i, 0, sz(b))
-    {
-        a[i] += aca + b[i];
-        aca = a[i] / 10;
-        a[i] %= 10;
-    }
-
-    if(aca)
-        a.pb(aca);
-    // cout<<'=';
-    while(a.back() == 0) a.pop_back();
-    // for(int x : a) cout<<x;
-    // cout<<'\n';
+    if(acu) res.pb(acu);
+    return res;
 }
 bool les(vi&a, vi&b)
 {
@@ -179,58 +171,35 @@ signed main()
     {
         int n, k;
         cin>>n>>k;
+        k++;
         string s;
         cin>>s;
-        vi res(n, 9);
-        k++;
-        int con = n % k;
-        int cana = (n + k - 1) / k;
-        int pot = 1;
-        int popo = 3;
-        fore(i, 0, k) pot *= popo;
-        vi sus({-2, -1, 0});
-        // if(popo == 3) sus = vi({{-1, 0, 1}});
-        // cout<<"%%%%^%^%^%^%\n"<<pot<<'\n';
-        fore(i, 0, pot)
-        {
-            int ax = i, su = 0, mo;
-            fore(j, 0, k)
+        fore(i, 0, n) s[i] -= '0';
+        int cana = max(n / k - 1, 1ll);
+        vector<vector<vi>> dp(k + 1, vector<vi>(n + 1));
+        dp[0][0] = {0};
+        fore(i, 0, n) fore(j, 0, k) if(!dp[j][i].empty()){
+            if(i + cana > n) break;
+            vi adi;
+            fore(k, i, i + cana)
+                adi.pb(s[k]);
+            reverse(all(adi));
+            for(int k = 0; i + k + cana <= n && k < 4; k++)
             {
-                su += cana + sus[ax % popo];
-                ax /= popo;
-            }
-            if(su != n) continue;
-            // if(__builtin_popcount(i) == con)
-            // {
-                // cout<<"$$$$\n";
-                int po = 0;
-                vi acu;
-                ax = i;
-                fore(j, 0, k)
+                int target = i + cana + k;
+                if(k)
                 {
-                    vi ado;
-                    // cout<<po<<endl;
-                    int au = cana + sus[ax%popo];
-                    ax /= popo;
-                    // cout<<au<<' '<<po + au<<'\n';
-                    fore(i, po, po + au)
-                        ado.pb(s[i] - '0');
-                    po += au;
-                    // for(int x : ado)
-                    //     cout<<x;
-                    // cout<<'\n';
-                    reverse(all(ado));
-                    // cout<<"#####\n";
-                    add(acu, ado);
+                    reverse(all(adi));
+                    adi.pb(s[target - 1]);
+                    reverse(all(adi));
                 }
-                if(po >= n)
-                if(les(acu, res))
-                    swap(res, acu);
-            // }
+                vi su = add(dp[j][i], adi);
+                if(dp[j + 1][target].empty() || les(su, dp[j+1][target]))
+                    dp[j + 1][target] = su;
+            }
         }
-        reverse(all(res));
-        for(int x : res)
-            cout<<x;
+        for(int i = sz(dp[k][n]) - 1; i > -1; i--)
+            cout<<dp[k][n][i];
         cout<<'\n';
     }
 	return 0;

@@ -1,4 +1,5 @@
 /*
+messi siemppre esta arriba
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡞⠉⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⣀⡠⠖⠒⠓⣦⢀⡞⠀⢰⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⣴⣪⠟⢙⣶⣴⣿⣿⣿⠟⠀⢲⡎⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -37,13 +38,46 @@
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠓⠄⠀⠀⠀⠀⢀⠄⠀⠈⠧⣼⠁⠀⠀⠀⠀⠀⠀⠀⠀⡃⠀⣠⡾⠀⠀⠀⠀⠀⢿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⢸⣄⠀⠀⠀⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⣻⣴⠏⡇⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠲⠀⠀⠀⠀⠀⠈⠛⠳⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡞⠍⠁⠀⠒⡇⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠛⠑⠀⠀⠀⢸⠇⠀⠀⠀⠀⢀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠛⠑⠀⠀⠀⢸⠇⠀⠀⠀⠀⢀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+gracias por el perrito cheems
+EL PEMRRITO MALVADO
+
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⠀⠀⠀⠀⢀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣏⡽⠷⠾⠭⠍⠉⣯⣿⣶⢶⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⠞⣿⣦⣴⣤⣀⠀⠉⣛⠹⣮⡇⣿⣿⢶⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⣴⠃⣴⣿⡯⠟⠀⠈⢀⠀⠹⡄⠙⣷⣿⣿⠶⣿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣴⣿⡟⠀⣰⣬⣿⣾⠗⠀⠀⠐⢯⠛⣧⠀⢘⢷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⣰⣿⣿⣿⡴⠀⠙⠉⠉⠈⠀⠀⠀⠀⠀⠀⣼⣶⠾⢾⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⢀⣴⣿⣿⣿⠻⠁⠀⠀⠀⠀⠀⠀⠀⢀⠀⠀⣠⣿⠙⣄⠾⠿⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⢠⣿⣿⣿⡿⠥⠀⠀⢀⣴⠀⠀⠀⠀⠀⣨⠀⠴⠋⠀⠘⠁⠀⣠⣿⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠈⠙⠿⣿⣧⣤⣯⣿⡿⠋⠀⠀⠀⣤⠞⠀⠀⠀⠀⠀⠀⠀⠀⠟⠁⠘⢦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⠛⠁⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀⢀⣴⠀⠀⠀⠀⠀⠀⠀⢳⣄⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠹⡦⠀⣀⣴⠏⠀⠀⠀⠀⠀⠀⠀⣀⣿⠙⢦⡀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣄⠀⠀⠀⠀⠀⠀⠀⠳⠖⠉⠀⠀⠀⠀⠀⠀⠁⠀⣴⠟⠩⠀⢠⣿⢦⡀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⠋⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣤⠀⠿⠀⠁⠀⠀⢀⣸⡯⠙⢷⡀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⠤⠐⠈⠀⠀⠀⠀⠀⠀⠀⣠⠟⠃⠀⢸⣇⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⢖⠀⠀⠀⠀⠀⠀⠀⠐⠚⠉⠀⠀⠀⠀⡴⡋⠀⠀⠀⠀⣦⡏⠀⠀⠀⣾⣿⡄⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⣿⠷⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⢪⡞⠁⠀⠀⠀⠀⠁⠀⠀⠀⣶⠏⣿⣿⡄⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢿⡦⡌⠳⠤⠀⠀⠀⠀⠀⠀⠀⠀⢀⣰⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⠋⠀⣻⣹⣿⡄
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠰⠋⠀⠀⠀⠀⠀⠀⢀⣾⠀⠀⠀⠀⣾⠀⠹⢿⣿⣷
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⠀⠀⠀⠀⣶⠀⠀⠀⠀⠀⣆⠀⠟⠀⠀⠀⠀⠀⡾⠃⠀⢠⡠⠀⢠⣾⣾⣿⣿⡇
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣼⡿⠀⠀⠀⣰⣿⣀⠀⠀⠀⠀⢹⡤⡄⠀⠀⠀⠀⣸⣿⡀⣶⣶⣷⣶⣿⣿⣿⣿⡟⠁
+⠀⠀⠀⠀⠀⠀⣀⡠⠶⠋⣸⣗⠀⠀⢀⣿⣻⣿⡦⠤⠤⠤⠿⣷⠇⠀⠀⠀⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠏⠀⠀
+⠀⣀⡴⠖⠋⠉⠉⢀⣀⡴⣿⡏⠀⢀⣸⡟⠛⠀⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀⣾⣿⣿⣿⣿⣿⣿⣿⣿⠟⠁⠀⠀⠀
+⠘⢿⣷⣤⡤⠶⠚⠋⠁⢀⡟⠀⠀⣾⣿⣁⣀⠀⠀⠀⠀⠀⠀⣿⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⠿⠛⠁⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⢀⣀⠴⢞⡿⠀⠀⢴⡿⠋⠉⠉⠉⠛⠲⠶⠤⣤⣿⠀⠀⢰⣿⣿⣿⠿⠟⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⢀⣠⣶⡊⠉⢀⣠⠞⠁⠀⢀⡾⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⢸⣯⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠈⠉⠻⠶⣶⡟⠃⡴⠀⢀⡞⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⠏⠀⠀⢸⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠠⣿⣄⣾⣄⡷⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡿⠀⠀⠀⢸⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠈⠁⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣼⡁⠀⠀⠀⢸⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣏⡇⠀⡶⠀⣸⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠹⣇⣴⠷⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 
 */
 #include <bits/stdc++.h>
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
+// #include <ext/pb_ds/assoc_container.hpp>
+// #include <ext/pb_ds/assoc_container.hpp>
+// #include <ext/pb_ds/tree_policy.hpp>
 // #include <ext/rope>
 #define int ll
 #define mp				make_pair
@@ -68,8 +102,8 @@
 
 
 using namespace std;
-using namespace __gnu_pbds;
-using namespace __gnu_cxx;
+// using namespace __gnu_pbds;
+// using namespace __gnu_cxx;
 
 // #pragma GCC target ("avx2")
 // #pragma GCC optimization ("O3")
@@ -83,9 +117,9 @@ typedef pair<pair<int, int>, int> iii;
 typedef vector<int>     vi;
 typedef vector<ii>      vii;
 typedef vector<ll>      vll;
-typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_update> ordered_set;
+// typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_update> ordered_set;
 // find_by_order kth largest  order_of_key <
-// mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
 const int tam = 200010;
 const int MOD = 1000000007;
@@ -93,122 +127,72 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-const int logTam = 21;
-int N; 
-int ari[3 * tam], table[logTam][3 * tam];
-void inispar()
+struct flowEdge
 {
-	fore(i, 0, N) table[0][i] = ari[i];
-	for(int k = 0; (1 << k) < N; k++)
-		for(int i = 0; i + (1 << k) < N; i++)
-			table[k + 1][i] = min(table[k][i], table[k][i + (1 << k)]);
-}
-int query(int b, int e)
-{
-	int lev = 31 - __builtin_clz(e - b + 1);	
-	return min(table[lev][b], table[lev][e - (1 << lev) + 1]);	
-}
-struct basis
-{
-    vi base;
-    basis(){base.assign(30, 0);}
-    void add(int x)
-    {
-        for(int i = 29; i > -1; i--)
-        {
-            if(x & 1 << i)
-            {
-                if(base[i])
-                    x ^= base[i];
-                else
-                {
-                    base[i] = x;
-                    break;
-                }
-            }
-        }
-    }
-    int maximus_decimus_meridius()
-    {
-        int res = 0;
-        for(int i = 29; i > -1; i--)
-            if(base[i] && !(res & 1 <<i))
-                res ^= base[i];
-        return res;
-    }
+    int to, rev, f, cap;
 };
-basis join(basis a, basis b)
-{
-    fore(i, 0, 30)
-        if(b.base[i])
-            a.add(b.base[i]);
-    return a;
+
+vector<vector<flowEdge> > G;
+
+// Añade arista (st -> en) con su capacidad
+void addEdge(int st, int en, int cap) {
+    flowEdge A = {en, (int)G[en].size(), 0, cap};
+    flowEdge B = {st, (int)G[st].size(), 0, 0};
+    G[st].pb(A);
+    G[en].pb(B);
 }
-vector<vector<basis>> saya(tam);
-vector<basis> subi;
-vi inpar(tam);
-vi g[tam];
-int inas[tam];
-int ar[tam];
-ordered_set posas[tam];
-int con;
-vi tururu;
-void dfs(int node, int par)
-{
-    subi[node].add(ar[node]);
-    fore(i, 0, sz(g[node]))
-    {
-        int x = g[node][i];
-        if(x != par)
-        {
-            dfs(x, node);
-            subi[node] = join(subi[node], subi[x]);
+
+int nodes, S, T; // asignar estos valores al armar el grafo G
+                 // nodes = nodos en red de flujo. Hacer G.clear(); G.resize(nodes);
+vi work, lvl;
+int Q[200010];
+
+bool bfs() {
+    int qt = 0;
+    Q[qt++] = S;
+    lvl.assign(nodes, -1);
+    lvl[S] = 0;
+    for (int qh = 0; qh < qt; qh++) {
+        int v = Q[qh];
+        for (flowEdge &e : G[v]) {
+            int u = e.to;
+            if (e.cap <= e.f || lvl[u] != -1) continue;
+            lvl[u] = lvl[v] + 1;
+            Q[qt++] = u;
         }
-        else
-            inpar[node] = i;
     }
+    return lvl[T] != -1;
 }
-void paraon(int node, int par, basis parugo)
-{
-    int n = g[node].size();
-    vector<basis> locas(n);
-    locas[inpar[node]] = parugo;
-    vector<basis> pre(n), suf(n);
-    saya[node].assign(n, basis());
-    fore(i, 0, n)
-    {
-        int x = g[node][i];
-        if(x != par)
-            locas[i] = subi[x];
+
+int dfs(int v, int f) {
+    if (v == T || f == 0) return f;
+    for (int &i = work[v]; i < G[v].size(); i++) {
+        flowEdge &e = G[v][i];
+        int u = e.to;
+        if (e.cap <= e.f || lvl[u] != lvl[v] + 1) continue;
+        int df = dfs(u, min(f, e.cap - e.f));
+        if (df) {
+            e.f += df;
+            G[u][e.rev].f -= df;
+            return df;
+        }
     }
-    pre[0].add(ar[node]);
-    fore(i, 1, n)
-        pre[i] = join(pre[i - 1], locas[i - 1]),
-        suf[n - i - 1] = join(suf[n - i], locas[n - i]);
-    fore(i, 0, n)
-    {
-        int x = g[node][i];
-        saya[node][i] = join(pre[i], suf[i]);
-        if(x != par)
-            paraon(x, node, saya[node][i]);
-    }
+    return 0;
 }
-int trabuco[3 * tam];
-void tur(int node, int pa)
-{
-    trabuco[con] = node;
-    inas[node] = con;
-    tururu.pb(con);
-    con++;
-    for(int x : g[node])
-    {
-        if(x != pa)
-            tur(x, node);
-        posas[node].insert(con);
-        tururu.pb(inas[node]);
-        con++;
+
+int maxFlow() {
+    int flow = 0;
+    while (bfs()) {
+        work.assign(nodes, 0);
+        while (true) {
+            int df = dfs(S, MOD);
+            if (df == 0) break;
+            flow += df;
+        }
     }
+    return flow;
 }
+
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
@@ -218,63 +202,126 @@ signed main()
     cin>>t;
     while(t--)
     {
-        // cout<<"$$$ "<<t<<'\n';
+        // cout<<t<<'\n';
         int n;
         cin>>n;
-        subi.assign(n, basis());
-        fore(i, 0, n) cin>>ar[i];
-        fore(i, 0, n - 1)
+        vi ar(n);
+        fore(i, 0, n) cin>>ar[i], ar[i]--;
+        bool eterno_retorno = false;
+        nodes = n * 2 + 2;
+        G.clear();
+        G.resize(nodes);
+        S = 2 * n, T = 2 * n + 1;
+        vi usadas(n);
+        set<int> st;
+        unordered_set<int> ari, prohi;
+        fore(i, 0, n) st.insert(i);
+        fore(i, 0, n)
         {
-            int a , b;
-            cin>>a>>b;
-            a--;
-            b--;
-            g[a].pb(b);
-            g[b].pb(a);
-        }
-        con = 0;
-        tururu.clear();
-        tur(0, -1);
-        assert(con < 3 * tam);
-        fore(i, 0, con) ari[i] = tururu[i];
-        N = con;
-        // cout<<"asdfafsd\n";
-        inispar();
-        dfs(0, -1);
-        paraon(0, -1, basis());
-        int q;
-        cin>>q;
-        while(q--)
-        {
-            // cout<<"%%%\n";
-            int a, b;
-            cin>>a>>b;
-            a--, b--;
-            if(a == b)  
+            // cout<<i<<' '<<'\n';
+            addEdge(S, i, 1);
+            addEdge(i + n, T, 1);
+            int x = ar[i];
+            int a = i, b = x;
+            int con = 0;
+            // cout<<'$'<<i<<' '<<x<<'\n';
+            int la = -1;
+            prohi.insert(x + (x<<32));
+            prohi.insert(x + (i<<32));
+            st.erase(x); st.erase(i);
+            fore(asdf, 0, 2){
+                if(st.empty()) break;
+            for(auto it = st.lower_bound(rng() % (*--st.end() + 1)); con < 2 ;)
             {
-                cout<<subi[0].maximus_decimus_meridius()<<'\n';
-            }
-            else
-            {
-                // cout<<a<<' '<<b<<'\n';z
-                // cout<<'@'<<inas[a]<<' '<<inas[b]<<'\n';
-                int lca = trabuco[query(min(inas[a], inas[b]), max(inas[a], inas[b]))];
-                // cout<<"lca: "<<lca + 1<<'\n';
-                int indi;
-                if(lca != b)
-                    indi = inpar[b];
+                if(it == st.end()) it = st.begin();
+                if(*it != la)
+                {
+                    addEdge(x, n + *it, 1);
+                    ari.insert(x + (*it<<32));
+                    // cout<<x + 1<<' '<<*it + 1<<'\n';
+                    con++;
+                    usadas[*it]++;
+                    la = *it;
+                    if(usadas[*it] == 2)
+                        st.erase(it);
+                }
                 else
-                    indi = posas[b].order_of_key(inas[a]);
-                // cout<<"el indio es: "<<indi<<' '<<g[b][indi] + 1<<'\n';
-                cout<<saya[b][indi].maximus_decimus_meridius()<<'\n';
-            }
-            // return 0;
+                {
+                    if(it != st.begin())
+                    {
+                        it--;
+                        addEdge(x, n + *it, 1);
+                    ari.insert(x + (*it<<32));
+                        // cout<<x + 1<<' '<<*it + 1<<'\n';
+                        con++;
+                        usadas[*it]++;
+                        la = *it;
+                        if(usadas[*it] == 2)
+                            st.erase(it);
+                    }
+                    else if(++it != st.end())
+                    {
+                        it--;
+                        addEdge(x, n + *it, 1);
+                    ari.insert(x + (*it<<32));
+                        // cout<<x + 1<<' '<<*it + 1<<'\n';
+                        con++;
+                        usadas[*it]++;
+                        la = *it;
+                        if(usadas[*it] == 2)
+                            st.erase(it);
+                    }
+                }
+                break;
+            }}
+            if(eterno_retorno) break;
+            if(usadas[x] < 2) st.insert(x);
+            if(usadas[i] < 2) st.insert(i);
         }
-        fore(i, 0, n) g[i].clear(), saya[i].clear(), posas[i].clear();
+        if(eterno_retorno) continue;
+        // cout<<"####\n";
+        // fore(i, 0, nodes)
+        // {
+        //     for(auto cat : G[i])
+        //         if(cat.cap > 0)
+        //         cout<<i<<' '<<cat.to<<'\n';
+        // }
+        fore(i, 0, n * 20)
+        {
+            int a = rng() % n, b = rng() % n;
+            int ara = a + (b<<32);
+            if(prohi.count(ara) == 0 && !ari.count(ara))
+            {
+                addEdge(a, b + n, 1);
+                ari.insert(ara);
+            }
+        }
+        int flow = maxFlow();
+        if(flow == n)
+        {
+            cout<<"Possible\n";
+            vi bebe(n);
+            fore(i, 0, n)
+            {
+                for(auto cat : G[i])
+                    if(cat.to != S && cat.f == 1)
+                        bebe[i] = cat.to - n;
+            }
+            fore(i, 0, n)
+                cout<<bebe[i] + 1<<' ';
+            cout<<'\n';
+            vi ruru(n);
+            // fore(i, 0, n) cout<<ar[i]<<' '<<ar[bebe[i]]<<'\n';
+            fore(i, 0, n)
+                ruru[ar[bebe[i]]] = i;
+            fore(i, 0, n) cout<<ruru[i] + 1<<' ';
+            cout<<'\n';
+        }
+        else
+            cout<<"Impossible\n";
     }
 	return 0;
 }
-
 // Se vuelve más fácil,
 // cada día es un poco más fácil, pero tienes que hacerlo cada día,
 // es la parte difícil, pero se vuelve más fácil.
@@ -284,5 +331,5 @@ signed main()
 // Si no vá por todo, andá pa' allá bobo.
 // No sirve de nada hacer sacrificios si no tienes disciplina.
 // Cae 7 veces, levántate 8.
-// Ale perdóname por favor :,v
 // LA DISCIPLINA es el puente entre tus metas y tus logros.
+// Take a sad song and make it better

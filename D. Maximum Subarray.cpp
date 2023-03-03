@@ -1,4 +1,5 @@
 /*
+messi siemppre esta arriba
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡞⠉⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⣀⡠⠖⠒⠓⣦⢀⡞⠀⢰⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⣴⣪⠟⢙⣶⣴⣿⣿⣿⠟⠀⢲⡎⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -37,13 +38,46 @@
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠓⠄⠀⠀⠀⠀⢀⠄⠀⠈⠧⣼⠁⠀⠀⠀⠀⠀⠀⠀⠀⡃⠀⣠⡾⠀⠀⠀⠀⠀⢿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⢸⣄⠀⠀⠀⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⣻⣴⠏⡇⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠲⠀⠀⠀⠀⠀⠈⠛⠳⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡞⠍⠁⠀⠒⡇⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠛⠑⠀⠀⠀⢸⠇⠀⠀⠀⠀⢀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠛⠑⠀⠀⠀⢸⠇⠀⠀⠀⠀⢀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+gracias por el perrito cheems
+EL PEMRRITO MALVADO
+
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⠀⠀⠀⠀⢀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣏⡽⠷⠾⠭⠍⠉⣯⣿⣶⢶⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⠞⣿⣦⣴⣤⣀⠀⠉⣛⠹⣮⡇⣿⣿⢶⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⣴⠃⣴⣿⡯⠟⠀⠈⢀⠀⠹⡄⠙⣷⣿⣿⠶⣿⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣴⣿⡟⠀⣰⣬⣿⣾⠗⠀⠀⠐⢯⠛⣧⠀⢘⢷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⣰⣿⣿⣿⡴⠀⠙⠉⠉⠈⠀⠀⠀⠀⠀⠀⣼⣶⠾⢾⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⢀⣴⣿⣿⣿⠻⠁⠀⠀⠀⠀⠀⠀⠀⢀⠀⠀⣠⣿⠙⣄⠾⠿⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⢠⣿⣿⣿⡿⠥⠀⠀⢀⣴⠀⠀⠀⠀⠀⣨⠀⠴⠋⠀⠘⠁⠀⣠⣿⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠈⠙⠿⣿⣧⣤⣯⣿⡿⠋⠀⠀⠀⣤⠞⠀⠀⠀⠀⠀⠀⠀⠀⠟⠁⠘⢦⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⠛⠁⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀⢀⣴⠀⠀⠀⠀⠀⠀⠀⢳⣄⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀⠀⠀⠀⠀⠹⡦⠀⣀⣴⠏⠀⠀⠀⠀⠀⠀⠀⣀⣿⠙⢦⡀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣄⠀⠀⠀⠀⠀⠀⠀⠳⠖⠉⠀⠀⠀⠀⠀⠀⠁⠀⣴⠟⠩⠀⢠⣿⢦⡀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣼⠋⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣤⠀⠿⠀⠁⠀⠀⢀⣸⡯⠙⢷⡀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⠤⠐⠈⠀⠀⠀⠀⠀⠀⠀⣠⠟⠃⠀⢸⣇⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⢖⠀⠀⠀⠀⠀⠀⠀⠐⠚⠉⠀⠀⠀⠀⡴⡋⠀⠀⠀⠀⣦⡏⠀⠀⠀⣾⣿⡄⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⣿⠷⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⢪⡞⠁⠀⠀⠀⠀⠁⠀⠀⠀⣶⠏⣿⣿⡄⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢿⡦⡌⠳⠤⠀⠀⠀⠀⠀⠀⠀⠀⢀⣰⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⠋⠀⣻⣹⣿⡄
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠰⠋⠀⠀⠀⠀⠀⠀⢀⣾⠀⠀⠀⠀⣾⠀⠹⢿⣿⣷
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⠀⠀⠀⠀⣶⠀⠀⠀⠀⠀⣆⠀⠟⠀⠀⠀⠀⠀⡾⠃⠀⢠⡠⠀⢠⣾⣾⣿⣿⡇
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣼⡿⠀⠀⠀⣰⣿⣀⠀⠀⠀⠀⢹⡤⡄⠀⠀⠀⠀⣸⣿⡀⣶⣶⣷⣶⣿⣿⣿⣿⡟⠁
+⠀⠀⠀⠀⠀⠀⣀⡠⠶⠋⣸⣗⠀⠀⢀⣿⣻⣿⡦⠤⠤⠤⠿⣷⠇⠀⠀⠀⢠⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠏⠀⠀
+⠀⣀⡴⠖⠋⠉⠉⢀⣀⡴⣿⡏⠀⢀⣸⡟⠛⠀⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀⣾⣿⣿⣿⣿⣿⣿⣿⣿⠟⠁⠀⠀⠀
+⠘⢿⣷⣤⡤⠶⠚⠋⠁⢀⡟⠀⠀⣾⣿⣁⣀⠀⠀⠀⠀⠀⠀⣿⠀⠀⢀⣼⣿⣿⣿⣿⣿⣿⠿⠛⠁⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⢀⣀⠴⢞⡿⠀⠀⢴⡿⠋⠉⠉⠉⠛⠲⠶⠤⣤⣿⠀⠀⢰⣿⣿⣿⠿⠟⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⢀⣠⣶⡊⠉⢀⣠⠞⠁⠀⢀⡾⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⢸⣯⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠈⠉⠻⠶⣶⡟⠃⡴⠀⢀⡞⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⠏⠀⠀⢸⣿⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠠⣿⣄⣾⣄⡷⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡿⠀⠀⠀⢸⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠈⠁⠉⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣼⡁⠀⠀⠀⢸⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣏⡇⠀⡶⠀⣸⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠹⣇⣴⠷⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 
 */
 #include <bits/stdc++.h>
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
+// #include <ext/pb_ds/assoc_container.hpp>
+// #include <ext/pb_ds/assoc_container.hpp>
+// #include <ext/pb_ds/tree_policy.hpp>
 // #include <ext/rope>
 #define int ll
 #define mp				make_pair
@@ -68,8 +102,8 @@
 
 
 using namespace std;
-using namespace __gnu_pbds;
-using namespace __gnu_cxx;
+// using namespace __gnu_pbds;
+// using namespace __gnu_cxx;
 
 // #pragma GCC target ("avx2")
 // #pragma GCC optimization ("O3")
@@ -83,7 +117,7 @@ typedef pair<pair<int, int>, int> iii;
 typedef vector<int>     vi;
 typedef vector<ii>      vii;
 typedef vector<ll>      vll;
-typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_update> ordered_set;
+// typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_update> ordered_set;
 // find_by_order kth largest  order_of_key <
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
@@ -93,121 +127,16 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-const int logTam = 21;
-int N; 
-int ari[3 * tam], table[logTam][3 * tam];
-void inispar()
+int katarina(vi &ar)
 {
-	fore(i, 0, N) table[0][i] = ari[i];
-	for(int k = 0; (1 << k) < N; k++)
-		for(int i = 0; i + (1 << k) < N; i++)
-			table[k + 1][i] = min(table[k][i], table[k][i + (1 << k)]);
-}
-int query(int b, int e)
-{
-	int lev = 31 - __builtin_clz(e - b + 1);	
-	return min(table[lev][b], table[lev][e - (1 << lev) + 1]);	
-}
-struct basis
-{
-    vi base;
-    basis(){base.assign(30, 0);}
-    void add(int x)
+    int n = sz(ar), su = 0, res = 0;
+    for(int x : ar)
     {
-        for(int i = 29; i > -1; i--)
-        {
-            if(x & 1 << i)
-            {
-                if(base[i])
-                    x ^= base[i];
-                else
-                {
-                    base[i] = x;
-                    break;
-                }
-            }
-        }
+        su += x;
+        if(su < 0) su = 0;
+        res = max(res, su);
     }
-    int maximus_decimus_meridius()
-    {
-        int res = 0;
-        for(int i = 29; i > -1; i--)
-            if(base[i] && !(res & 1 <<i))
-                res ^= base[i];
-        return res;
-    }
-};
-basis join(basis a, basis b)
-{
-    fore(i, 0, 30)
-        if(b.base[i])
-            a.add(b.base[i]);
-    return a;
-}
-vector<vector<basis>> saya(tam);
-vector<basis> subi;
-vi inpar(tam);
-vi g[tam];
-int inas[tam];
-int ar[tam];
-ordered_set posas[tam];
-int con;
-vi tururu;
-void dfs(int node, int par)
-{
-    subi[node].add(ar[node]);
-    fore(i, 0, sz(g[node]))
-    {
-        int x = g[node][i];
-        if(x != par)
-        {
-            dfs(x, node);
-            subi[node] = join(subi[node], subi[x]);
-        }
-        else
-            inpar[node] = i;
-    }
-}
-void paraon(int node, int par, basis parugo)
-{
-    int n = g[node].size();
-    vector<basis> locas(n);
-    locas[inpar[node]] = parugo;
-    vector<basis> pre(n), suf(n);
-    saya[node].assign(n, basis());
-    fore(i, 0, n)
-    {
-        int x = g[node][i];
-        if(x != par)
-            locas[i] = subi[x];
-    }
-    pre[0].add(ar[node]);
-    fore(i, 1, n)
-        pre[i] = join(pre[i - 1], locas[i - 1]),
-        suf[n - i - 1] = join(suf[n - i], locas[n - i]);
-    fore(i, 0, n)
-    {
-        int x = g[node][i];
-        saya[node][i] = join(pre[i], suf[i]);
-        if(x != par)
-            paraon(x, node, saya[node][i]);
-    }
-}
-int trabuco[3 * tam];
-void tur(int node, int pa)
-{
-    trabuco[con] = node;
-    inas[node] = con;
-    tururu.pb(con);
-    con++;
-    for(int x : g[node])
-    {
-        if(x != pa)
-            tur(x, node);
-        posas[node].insert(con);
-        tururu.pb(inas[node]);
-        con++;
-    }
+    return res;
 }
 signed main()
 {
@@ -218,63 +147,98 @@ signed main()
     cin>>t;
     while(t--)
     {
-        // cout<<"$$$ "<<t<<'\n';
-        int n;
-        cin>>n;
-        subi.assign(n, basis());
+        int n, k, x;
+        cin>>n>>k>>x;
+        vi ar(n);
         fore(i, 0, n) cin>>ar[i];
-        fore(i, 0, n - 1)
+        if(x == 0)
         {
-            int a , b;
-            cin>>a>>b;
-            a--;
-            b--;
-            g[a].pb(b);
-            g[b].pb(a);
+            cout<<katarina(ar)<<'\n';
+            continue;
         }
-        con = 0;
-        tururu.clear();
-        tur(0, -1);
-        assert(con < 3 * tam);
-        fore(i, 0, con) ari[i] = tururu[i];
-        N = con;
-        // cout<<"asdfafsd\n";
-        inispar();
-        dfs(0, -1);
-        paraon(0, -1, basis());
-        int q;
-        cin>>q;
-        while(q--)
+        if(k == 0)
         {
-            // cout<<"%%%\n";
-            int a, b;
-            cin>>a>>b;
-            a--, b--;
-            if(a == b)  
-            {
-                cout<<subi[0].maximus_decimus_meridius()<<'\n';
-            }
-            else
-            {
-                // cout<<a<<' '<<b<<'\n';z
-                // cout<<'@'<<inas[a]<<' '<<inas[b]<<'\n';
-                int lca = trabuco[query(min(inas[a], inas[b]), max(inas[a], inas[b]))];
-                // cout<<"lca: "<<lca + 1<<'\n';
-                int indi;
-                if(lca != b)
-                    indi = inpar[b];
-                else
-                    indi = posas[b].order_of_key(inas[a]);
-                // cout<<"el indio es: "<<indi<<' '<<g[b][indi] + 1<<'\n';
-                cout<<saya[b][indi].maximus_decimus_meridius()<<'\n';
-            }
-            // return 0;
+            fore(i, 0, n) ar[i] -= x;
+            cout<<katarina(ar)<<'\n';;
+            continue;
         }
-        fore(i, 0, n) g[i].clear(), saya[i].clear(), posas[i].clear();
+        if(x < 0)
+        {
+            fore(i, 0, n - k) ar[i] -= x;
+            fore(i, n - k, n) ar[i] += x;
+            int res = 0;
+            fore(i, 0, k + 1)
+            {
+                res = max(res, katarina(ar));
+                if(i < k)
+                {
+                    ar[i] += 2 * x;
+                    ar[n - k + i] -= 2 * x;
+                }
+            }
+            cout<<res<<'\n';
+            continue;
+        }
+        vi sus(n), sas(n), sisi(n);
+        sus[0] = ar[0] - x;
+        sas[n - 1] = ar[n - 1] - x;
+        // fore(i, 0, n) cout<<sus[i]<<' '<<sas[i]<<'\n';
+        fore(i, 1, n)
+        {
+            sus[i] = sus[i - 1] + ar[i] - x;
+            sas[n - i - 1] = sas[n - i] + ar[n - i - 1] - x;
+        }
+        vi mamut(n), mamat(n);
+        mamut[0] = sas[0], mamat[n - 1] = sus[n - 1];
+        // fore(i, 0, n) cout<<sus[i]<<' '<<sas[i]<<'\n';
+        fore(i, 1, n - 1)
+        {
+            mamut[i] = max(mamut[i - 1], sas[i]);
+            mamat[n - i - 1] = max(mamat[n - i], sus[n - i - 1]);
+        }
+        // cout<<'\n';
+        // fore(i, 0, n) cout<<mamut[i]<<' '<<mamat[i]<<'\n';
+        int res = 0;
+        int axila = k;
+        fore(k, 1, axila + 1)
+        {
+            // cout<<k<<' '<<'\n';
+            int sasori = 0;
+            fore(i, 0, k) sasori += ar[i] + x;
+            fore(i, k, n + 1)
+            {
+                int sa = sasori;
+                // cout<<"&&&\n";
+                if(i - k > 0)
+                {
+                    // cout<<i - k - 1<<' '<<i - k<<'\n';
+                    // cout<<mamut[i - k - 1]<<' '<<sus[i - k]<<'\n';
+                    int mamuti = mamut[i - k - 1] - sas[i - k];
+                    // cout<<"hacia la izquierda "<<mamuti<<'\n';
+                    if(mamuti > 0)
+                        sa += mamuti;
+                }
+                if(i < n - 1)
+                {
+                    // cout<<i<<' '<<mamat[i]<<'\n';
+                    int mamati = mamat[i] - sus[i - 1];
+                    // cout<<"hacia la derecha "<<mamati<<'\n';
+                    if(mamati > 0)
+                        sa += mamati;
+                }
+                // cout<<k<<' '<<i<<' '<<sasori<<' '<<sa<<'\n';
+                res = max(res, sa);
+                if(i < n)
+                {
+                    sasori += ar[i] + x;
+                    sasori -= ar[i - k] + x;
+                }
+            }
+        }
+        cout<<res<<'\n';
     }
 	return 0;
 }
-
 // Se vuelve más fácil,
 // cada día es un poco más fácil, pero tienes que hacerlo cada día,
 // es la parte difícil, pero se vuelve más fácil.
@@ -284,5 +248,5 @@ signed main()
 // Si no vá por todo, andá pa' allá bobo.
 // No sirve de nada hacer sacrificios si no tienes disciplina.
 // Cae 7 veces, levántate 8.
-// Ale perdóname por favor :,v
 // LA DISCIPLINA es el puente entre tus metas y tus logros.
+// Take a sad song and make it better
