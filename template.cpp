@@ -119,7 +119,7 @@ typedef vector<ii>      vii;
 typedef vector<ll>      vll;
 // typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_update> ordered_set;
 // find_by_order kth largest  order_of_key <
-mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+// mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
 const int tam = 200010;
 const int MOD = 1000000007;
@@ -132,8 +132,8 @@ signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
-	// freopen("qwe.txt", "w", stdout);
-	
+	// freopen("qwe.txt", "w", stdout); 
+
 	return 0;
 }
 // Se vuelve más fácil,

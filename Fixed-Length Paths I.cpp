@@ -127,124 +127,91 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-struct flowEdge
+vi g[tam];
+vi siz(tam), cintra(tam);
+int n, k;
+int res = 0;
+void sisi(int node, int pa, int dis, int papazo, vi &chichi)
 {
-    int to, rev, f, cap;
-};
-
-vector<vector<flowEdge> > G;
-
-// Añade arista (st -> en) con su capacidad
-void addEdge(int st, int en, int cap) {
-    flowEdge A = {en, (int)G[en].size(), 0, cap};
-    flowEdge B = {st, (int)G[st].size(), 0, 0};
-    G[st].pb(A);
-    G[en].pb(B);
+    siz[node] = 1;
+    while(dis >= sz(chichi)) chichi.pb(0);
+    chichi[dis]++;
+    for(int x : g[node])
+        if(x != pa && !cintra[x])
+            sisi(x, node, dis + 1, papazo, chichi), siz[node] += siz[x];
 }
-
-int nodes, S, T; // asignar estos valores al armar el grafo G
-                 // nodes = nodos en red de flujo. Hacer G.clear(); G.resize(nodes);
-vi work, lvl;
-int Q[200010];
-
-bool bfs() {
-    int qt = 0;
-    Q[qt++] = S;
-    lvl.assign(nodes, -1);
-    lvl[S] = 0;
-    for (int qh = 0; qh < qt; qh++) {
-        int v = Q[qh];
-        for (flowEdge &e : G[v]) {
-            int u = e.to;
-            if (e.cap <= e.f || lvl[u] != -1) continue;
-            lvl[u] = lvl[v] + 1;
-            Q[qt++] = u;
+int centruida(int node, int pa, int simp)
+{
+    for(int x : g[node])
+        if(x != pa && !cintra[x])
+            if(siz[x] > simp / 2)
+                return centruida(x, node, simp);
+    return node;
+}
+int unicos = 0;
+vi centauros(int node, int pa)
+{
+    vi chichi;
+    sisi(node, -1, 1, pa, chichi);
+    int centris =  centruida(node, -1, siz[node]);
+    if(sz(chichi) > k && pa != -1)
+        unicos += chichi[k];
+    cintra[centris] = 1;
+    vi total_over;
+    vector<vi> totus;
+    for(int x : g[centris])
+        if(!cintra[x])
+        {
+            totus.pb(centauros(x, centris));
+            while(sz(total_over) < sz(totus.back())) total_over.pb(0);
+            fore(i, 0, sz(totus.back()))
+                total_over[i] += totus.back()[i];
         }
-    }
-    return lvl[T] != -1;
-}
-
-int dfs(int v, int f) {
-    if (v == T || f == 0) return f;
-    for (int &i = work[v]; i < G[v].size(); i++) {
-        flowEdge &e = G[v][i];
-        int u = e.to;
-        if (e.cap <= e.f || lvl[u] != lvl[v] + 1) continue;
-        int df = dfs(u, min(f, e.cap - e.f));
-        if (df) {
-            e.f += df;
-            G[u][e.rev].f -= df;
-            return df;
+    // cout<<'$'<<centris + 1<<'\n';
+    // for(auto cat : total_over)
+    //     cout<<cat.f<<' '<<cat.s<<'\n';
+    // cout<<res<<'\n';
+    fore(i, 0, sz(totus))
+        fore(j, 0, sz(totus[i]))
+        {
+            if(k >= j && k - j < sz(total_over))
+            {
+                if(k - j < sz(totus[i]))
+                    total_over[k - j] -= totus[i][k - j];
+                res += totus[i][j] * total_over[k - j];
+                if(k - j < sz(totus[i]))
+                    total_over[k - j] += totus[i][k - j];
+            }
         }
-    }
-    return 0;
+    // cout<<res<<'\n';
+    // cout<<'%'<<node + 1<<'\n';
+    // for(auto cat : chichi)
+    //     cout<<cat.f<<' '<<cat.s<<'\n';
+    return chichi;
 }
-
-int maxFlow() {
-    int flow = 0;
-    while (bfs()) {
-        work.assign(nodes, 0);
-        while (true) {
-            int df = dfs(S, MOD);
-            if (df == 0) break;
-            flow += df;
-        }
-    }
-    return flow;
-}
-
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, m;
-	while(cin>>n && n)
-	{
-		cin>>m;
-		nodes = n + m + 2;
-        G.clear();
-		G.resize(nodes);
-		S = n + m, T = n + m + 1;
-		int toto = 0;
-		fore(i, 0, n)
-		{
-			int x;
-			cin>>x;
-			toto += x;
-			addEdge(S, i, x);
-		}
-		fore(i, 0, m)
-		{
-			int k;
-			addEdge(i + n, T, 1);
-			cin>>k;
-			while(k--)
-			{
-				int x;
-				cin>>x;
-				addEdge(x - 1, i + n, 1);
-			}
-		}
-		if(maxFlow() < toto)
-			cout<<0<<'\n';
-		else
-        {
-			cout<<1<<'\n';
-            fore(i, 0, n)
-            {
-                bool ba = false;
-                for(auto cat : G[i])
-                    if(cat.f == cat.cap && cat.cap > 0)
-                    {
-                        if(ba) cout<<' ';
-                        ba = true;
-                        cout<<cat.to - n + 1;
-                    }
-                cout<<'\n';
-            }
-        }
-	}
+	cin>>n>>k;
+    // k--;
+    fore(i, 0, n - 1)
+    {
+        int a, b;
+        cin>>a>>b;
+        a--, b--;
+        g[a].pb(b);
+        g[b].pb(a);
+    }
+    if(k == 0)
+        cout<<n<<'\n';
+    else
+    {
+        centauros(0, -1);
+        // cout<<res<<' '<<unicos<<'\n';
+        cout<<res / 2 + unicos<<'\n';
+    }
 	return 0;
 }
 // Se vuelve más fácil,

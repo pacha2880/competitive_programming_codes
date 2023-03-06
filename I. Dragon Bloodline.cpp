@@ -127,124 +127,69 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-struct flowEdge
-{
-    int to, rev, f, cap;
-};
-
-vector<vector<flowEdge> > G;
-
-// Añade arista (st -> en) con su capacidad
-void addEdge(int st, int en, int cap) {
-    flowEdge A = {en, (int)G[en].size(), 0, cap};
-    flowEdge B = {st, (int)G[st].size(), 0, 0};
-    G[st].pb(A);
-    G[en].pb(B);
-}
-
-int nodes, S, T; // asignar estos valores al armar el grafo G
-                 // nodes = nodos en red de flujo. Hacer G.clear(); G.resize(nodes);
-vi work, lvl;
-int Q[200010];
-
-bool bfs() {
-    int qt = 0;
-    Q[qt++] = S;
-    lvl.assign(nodes, -1);
-    lvl[S] = 0;
-    for (int qh = 0; qh < qt; qh++) {
-        int v = Q[qh];
-        for (flowEdge &e : G[v]) {
-            int u = e.to;
-            if (e.cap <= e.f || lvl[u] != -1) continue;
-            lvl[u] = lvl[v] + 1;
-            Q[qt++] = u;
-        }
-    }
-    return lvl[T] != -1;
-}
-
-int dfs(int v, int f) {
-    if (v == T || f == 0) return f;
-    for (int &i = work[v]; i < G[v].size(); i++) {
-        flowEdge &e = G[v][i];
-        int u = e.to;
-        if (e.cap <= e.f || lvl[u] != lvl[v] + 1) continue;
-        int df = dfs(u, min(f, e.cap - e.f));
-        if (df) {
-            e.f += df;
-            G[u][e.rev].f -= df;
-            return df;
-        }
-    }
-    return 0;
-}
-
-int maxFlow() {
-    int flow = 0;
-    while (bfs()) {
-        work.assign(nodes, 0);
-        while (true) {
-            int df = dfs(S, MOD);
-            if (df == 0) break;
-            flow += df;
-        }
-    }
-    return flow;
-}
 
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, m;
-	while(cin>>n && n)
-	{
-		cin>>m;
-		nodes = n + m + 2;
-        G.clear();
-		G.resize(nodes);
-		S = n + m, T = n + m + 1;
-		int toto = 0;
-		fore(i, 0, n)
-		{
-			int x;
-			cin>>x;
-			toto += x;
-			addEdge(S, i, x);
-		}
-		fore(i, 0, m)
-		{
-			int k;
-			addEdge(i + n, T, 1);
-			cin>>k;
-			while(k--)
-			{
-				int x;
-				cin>>x;
-				addEdge(x - 1, i + n, 1);
-			}
-		}
-		if(maxFlow() < toto)
-			cout<<0<<'\n';
-		else
+    int t;
+    cin>>t;
+    while(t--)
+    {
+        int n, k;
+        cin>>n>>k;
+        vi ar(n);
+        fore(i, 0, n) cin>>ar[i];
+        // sort(all(ar));
+        // reverse(all(ar));
+        vi trabucos(k);
+        int sasa = 0;
+        // cout<<"$$$$$\n";
+        fore(i, 0, k)
         {
-			cout<<1<<'\n';
-            fore(i, 0, n)
-            {
-                bool ba = false;
-                for(auto cat : G[i])
-                    if(cat.f == cat.cap && cat.cap > 0)
-                    {
-                        if(ba) cout<<' ';
-                        ba = true;
-                        cout<<cat.to - n + 1;
-                    }
-                cout<<'\n';
-            }
+            cin>>trabucos[i];
+            sasa += (1<<i) * trabucos[i];
         }
-	}
+        // cout<<"$$$$$\n";
+        int b = 1, e = sasa / ar.back(), mid, res = 0;
+        while(b <= e)
+        {
+            mid = (b + e) / 2;
+            // cout<<"%%%%%%%"<<mid<<'\n';
+            vi axila = trabucos, arila = ar;
+            fore(i, 0, n) arila[i] *= mid;
+            for(int i = k - 1; i > -1; i--)
+            {
+                int po = 1<<i;
+                fore(j, 0, sz(arila))
+                    if(arila[j] >= po)
+                    {
+                        int can = min(axila[i], arila[j] / po);
+                        // cout<<i<<' '<<j<<' '<<arila[j]<<' '<<axila[i]<<' '<<po<<' '<<can<<'\n';
+                        arila[j] -= can * po;
+                        axila[i] -= can;
+                    }
+                if(axila[i])
+                {
+                    sort(all(arila));
+                    while(axila[i] && !arila.empty()) arila.pop_back(), axila[i]--;
+                }
+                if(arila.empty()) break;
+                // cout<<'#'<<i<<' '<<po<<'\n';
+                // for(int x : arila)
+                //     cout<<x<<' ';
+                // cout<<'\n';
+            }
+            bool bo = true;
+            for(int x : arila) bo &= !(x);
+            if(bo)
+                res = mid, b = mid + 1;
+            else
+                e = mid - 1;
+        }
+        cout<<res<<'\n';
+    }
 	return 0;
 }
 // Se vuelve más fácil,

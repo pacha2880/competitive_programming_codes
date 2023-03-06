@@ -127,124 +127,149 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-struct flowEdge
-{
-    int to, rev, f, cap;
-};
+// O(min(E^2∗V^2, E∗V∗FLOW))
+struct CheapDinitz{
+    const int INF = 1e9 + 7;
 
-vector<vector<flowEdge> > G;
+    CheapDinitz() {}
+    CheapDinitz(int n, int s, int t) {init(n, s, t);}
 
-// Añade arista (st -> en) con su capacidad
-void addEdge(int st, int en, int cap) {
-    flowEdge A = {en, (int)G[en].size(), 0, cap};
-    flowEdge B = {st, (int)G[st].size(), 0, 0};
-    G[st].pb(A);
-    G[en].pb(B);
-}
+    int nodes, S, T;
+    vector<int> dist;
+    vi pot, curFlow, prevNode, prevEdge, Q, inQueue;
 
-int nodes, S, T; // asignar estos valores al armar el grafo G
-                 // nodes = nodos en red de flujo. Hacer G.clear(); G.resize(nodes);
-vi work, lvl;
-int Q[200010];
+    struct flowEdge{
+        int to, rev, flow, cap, cost;
+    };
+    vector<vector<flowEdge>> G;
+    void init(int n, int s, int t)
+    {
+        nodes = n, S = s, T = t;
+        curFlow.assign(n, 0), prevNode.assign(n, 0), prevEdge.assign(n, 0);
+        Q.assign(n, 0), inQueue.assign(n, 0);
+        G.clear();
+        G.resize(n);
+    }
 
-bool bfs() {
-    int qt = 0;
-    Q[qt++] = S;
-    lvl.assign(nodes, -1);
-    lvl[S] = 0;
-    for (int qh = 0; qh < qt; qh++) {
-        int v = Q[qh];
-        for (flowEdge &e : G[v]) {
-            int u = e.to;
-            if (e.cap <= e.f || lvl[u] != -1) continue;
-            lvl[u] = lvl[v] + 1;
-            Q[qt++] = u;
+    void addEdge(int s, int t, int cap, int cost)
+    {
+        flowEdge a = {t, (int)G[t].size(), 0, cap, cost};
+        flowEdge b = {s, (int)G[s].size(), 0, 0, -cost};
+        G[s].pb(a);
+        G[t].pb(b);
+    }
+
+    void bellmanFord()
+    {
+        pot.assign(nodes, INF);
+        pot[S] = 0;
+        int qt = 0;
+        Q[qt++] = S;
+        for (int qh = 0; (qh - qt) % nodes != 0; qh++)
+        {
+            int u = Q[qh % nodes];
+            inQueue[u] = false;
+            for (int i = 0; i < (int)G[u].size(); i++)
+            {
+                flowEdge &e = G[u][i];
+                if (e.cap <= e.flow) continue;
+                int v = e.to;
+                int newDist = pot[u] + e.cost;
+                if (pot[v] > newDist)
+                {
+                    pot[v] = newDist;
+                    if (!inQueue[v])
+                    {
+                        Q[qt++ % nodes] = v;
+                        inQueue[v] = true;
+                    }
+                }
+            }
         }
     }
-    return lvl[T] != -1;
-}
 
-int dfs(int v, int f) {
-    if (v == T || f == 0) return f;
-    for (int &i = work[v]; i < G[v].size(); i++) {
-        flowEdge &e = G[v][i];
-        int u = e.to;
-        if (e.cap <= e.f || lvl[u] != lvl[v] + 1) continue;
-        int df = dfs(u, min(f, e.cap - e.f));
-        if (df) {
-            e.f += df;
-            G[u][e.rev].f -= df;
-            return df;
-        }
-    }
-    return 0;
-}
-
-int maxFlow() {
-    int flow = 0;
-    while (bfs()) {
-        work.assign(nodes, 0);
-        while (true) {
-            int df = dfs(S, MOD);
-            if (df == 0) break;
+    ii MinCostFlow()
+    {
+        bellmanFord();
+        int flow = 0;
+        int flowCost = 0;
+        while (true) // always a good start for an algorithm :v
+        {
+            set<ii> s;
+            s.insert({0, S});
+            dist.assign(nodes, INF);
+            dist[S] = 0;
+            curFlow[S] = INF;
+            while (s.size() > 0)
+            {
+                int u = s.begin() -> s;
+                int actDist = s.begin() -> f;
+                s.erase(s.begin());
+                if (actDist > dist[u]) continue;
+                for (int i = 0; i < (int)G[u].size(); i++)
+                {
+                    flowEdge &e = G[u][i];
+                    int v = e.to;
+                    if (e.cap <= e.flow) continue;
+                    int newDist = actDist + e.cost + pot[u] - pot[v];
+                    if (newDist < dist[v])
+                    {
+                        dist[v] = newDist;
+                        s.insert({newDist, v});
+                        prevNode[v] = u;
+                        prevEdge[v] = i;
+                        curFlow[v] = min(curFlow[u], e.cap - e.flow);
+                    }
+                }
+            }
+            if (dist[T] == INF) 
+                break;
+            for (int i = 0; i < nodes; i++)
+                pot[i] += dist[i];
+            int df = curFlow[T];
             flow += df;
+            for (int v = T; v != S; v = prevNode[v])
+            {
+                flowEdge &e = G[prevNode[v]][prevEdge[v]];
+                e.flow += df;
+                G[v][e.rev].flow -= df;
+                flowCost += df * e.cost;
+            }
         }
+        return {flow, flowCost};
     }
-    return flow;
-}
+};
 
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, m;
-	while(cin>>n && n)
-	{
-		cin>>m;
-		nodes = n + m + 2;
-        G.clear();
-		G.resize(nodes);
-		S = n + m, T = n + m + 1;
-		int toto = 0;
-		fore(i, 0, n)
-		{
-			int x;
-			cin>>x;
-			toto += x;
-			addEdge(S, i, x);
-		}
-		fore(i, 0, m)
-		{
-			int k;
-			addEdge(i + n, T, 1);
-			cin>>k;
-			while(k--)
-			{
-				int x;
-				cin>>x;
-				addEdge(x - 1, i + n, 1);
-			}
-		}
-		if(maxFlow() < toto)
-			cout<<0<<'\n';
-		else
+	int t;
+    cin>>t;
+    fore(i, 1, t + 1)
+    {
+        int n;
+        cin>>n;
+        CheapDinitz dinc(2 * n + 2, 2 * n, 2 * n + 1);
+        vi ar(n);
+        fore(i, 0, n) cin>>ar[i];
+        fore(i, 0, n)
         {
-			cout<<1<<'\n';
-            fore(i, 0, n)
-            {
-                bool ba = false;
-                for(auto cat : G[i])
-                    if(cat.f == cat.cap && cat.cap > 0)
-                    {
-                        if(ba) cout<<' ';
-                        ba = true;
-                        cout<<cat.to - n + 1;
-                    }
-                cout<<'\n';
-            }
+            dinc.addEdge(dinc.S, i, 1, 0);
+            dinc.addEdge(i + n, dinc.T, 1, 0);
+            int x;
+            cin>>x;
+            fore(j, 0, n) 
+                if(ar[j] > x)
+                    dinc.addEdge(j, i + n, 1, -2);
+                else if(ar[j] == x)
+                    dinc.addEdge(j, i + n, 1, -1);
+                else
+                    dinc.addEdge(j, i + n, 1, 0);
         }
-	}
+        cout<<"Case "<<i<<": "<<-dinc.MinCostFlow().s<<'\n';
+    }
 	return 0;
 }
 // Se vuelve más fácil,

@@ -145,20 +145,22 @@ void addEdge(int st, int en, int cap) {
 int nodes, S, T; // asignar estos valores al armar el grafo G
                  // nodes = nodos en red de flujo. Hacer G.clear(); G.resize(nodes);
 vi work, lvl;
-int Q[200010];
+
 
 bool bfs() {
     int qt = 0;
-    Q[qt++] = S;
+    queue<int> Q;
+    Q.push(S);
     lvl.assign(nodes, -1);
     lvl[S] = 0;
-    for (int qh = 0; qh < qt; qh++) {
-        int v = Q[qh];
+    while(!Q.empty()) {
+        int v = Q.front();
+        Q.pop();
         for (flowEdge &e : G[v]) {
             int u = e.to;
             if (e.cap <= e.f || lvl[u] != -1) continue;
             lvl[u] = lvl[v] + 1;
-            Q[qt++] = u;
+            Q.push(u);
         }
     }
     return lvl[T] != -1;

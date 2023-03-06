@@ -121,130 +121,83 @@ typedef vector<ll>      vll;
 // find_by_order kth largest  order_of_key <
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 200010;
-const int MOD = 1000000007;
-const int MOD1 = 998244353;
+const int tam = 1000010;
+const int MOD1 = 1000000007;
+const int MOD = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-struct flowEdge
+int pot(int b, int e)
 {
-    int to, rev, f, cap;
-};
-
-vector<vector<flowEdge> > G;
-
-// Añade arista (st -> en) con su capacidad
-void addEdge(int st, int en, int cap) {
-    flowEdge A = {en, (int)G[en].size(), 0, cap};
-    flowEdge B = {st, (int)G[st].size(), 0, 0};
-    G[st].pb(A);
-    G[en].pb(B);
-}
-
-int nodes, S, T; // asignar estos valores al armar el grafo G
-                 // nodes = nodos en red de flujo. Hacer G.clear(); G.resize(nodes);
-vi work, lvl;
-int Q[200010];
-
-bool bfs() {
-    int qt = 0;
-    Q[qt++] = S;
-    lvl.assign(nodes, -1);
-    lvl[S] = 0;
-    for (int qh = 0; qh < qt; qh++) {
-        int v = Q[qh];
-        for (flowEdge &e : G[v]) {
-            int u = e.to;
-            if (e.cap <= e.f || lvl[u] != -1) continue;
-            lvl[u] = lvl[v] + 1;
-            Q[qt++] = u;
-        }
+    int res = 1;
+    while(e)
+    {
+        if(e & 1) res = res * b % MOD;
+        b = b * b % MOD;
+        e /= 2;
     }
-    return lvl[T] != -1;
+    return res;
 }
-
-int dfs(int v, int f) {
-    if (v == T || f == 0) return f;
-    for (int &i = work[v]; i < G[v].size(); i++) {
-        flowEdge &e = G[v][i];
-        int u = e.to;
-        if (e.cap <= e.f || lvl[u] != lvl[v] + 1) continue;
-        int df = dfs(u, min(f, e.cap - e.f));
-        if (df) {
-            e.f += df;
-            G[u][e.rev].f -= df;
-            return df;
-        }
-    }
-    return 0;
+map<int, int> primis, mopris;
+int n;
+vi ar;
+int dp[5000][5000];
+int sufi[5000];
+int facin[5000];
+int f(int pos, int cuan)
+{
+    if(pos == sz(ar)) return cuan == n;
+    if(cuan == n) return sufi[pos];
+    if(dp[pos][cuan] != -1) return dp[pos][cuan];
+    return dp[pos][cuan] = (facin[ar[pos]] * f(pos + 1, cuan) % MOD + facin[ar[pos] - 1] * f(pos + 1, cuan + 1) % MOD) % MOD;
 }
-
-int maxFlow() {
-    int flow = 0;
-    while (bfs()) {
-        work.assign(nodes, 0);
-        while (true) {
-            int df = dfs(S, MOD);
-            if (df == 0) break;
-            flow += df;
-        }
-    }
-    return flow;
-}
-
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, m;
-	while(cin>>n && n)
-	{
-		cin>>m;
-		nodes = n + m + 2;
-        G.clear();
-		G.resize(nodes);
-		S = n + m, T = n + m + 1;
-		int toto = 0;
-		fore(i, 0, n)
-		{
-			int x;
-			cin>>x;
-			toto += x;
-			addEdge(S, i, x);
-		}
-		fore(i, 0, m)
-		{
-			int k;
-			addEdge(i + n, T, 1);
-			cin>>k;
-			while(k--)
-			{
-				int x;
-				cin>>x;
-				addEdge(x - 1, i + n, 1);
-			}
-		}
-		if(maxFlow() < toto)
-			cout<<0<<'\n';
-		else
-        {
-			cout<<1<<'\n';
-            fore(i, 0, n)
-            {
-                bool ba = false;
-                for(auto cat : G[i])
-                    if(cat.f == cat.cap && cat.cap > 0)
-                    {
-                        if(ba) cout<<' ';
-                        ba = true;
-                        cout<<cat.to - n + 1;
-                    }
-                cout<<'\n';
-            }
-        }
-	}
+    vi ispri(tam, 1);
+    ispri[0] = ispri[1] = 0;
+    fore(i, 2, tam)
+        if(ispri[i])
+            forg(j, i + i, tam, i)
+                ispri[j] = 0;
+	// int n;
+    cin>>n;
+    vi fac(n + 1);
+    fac[0] = facin[0] = 1;
+    fore(i, 1, n + 1)
+    {
+        fac[i] = fac[i - 1] * i % MOD;
+        facin[i] = pot(fac[i], MOD - 2);
+    }
+    int res = fac[n];
+    fore(i, 0, 2 * n)
+    {
+        int x;
+        cin>>x;
+        if(ispri[x])
+            primis[x]++;
+        else
+            mopris[x]++;
+    }
+    for(auto cat : primis)
+        ar.pb(cat.s);
+    sufi[sz(ar)] = 1;
+    for(int i = sz(ar) - 1; i >= 0; i--)
+    {
+        sufi[i] = sufi[i + 1] * facin[ar[i]] % MOD;
+    }
+    if(sz(primis) < n)
+    {
+        cout<<0<<'\n';
+        return 0;
+    }
+    mem(dp, -1);
+    res = res * f(0, 0) % MOD;
+    for(auto cat : mopris)
+        res = res * facin[cat.s] % MOD;
+    cout<<res<<'\n';
 	return 0;
 }
 // Se vuelve más fácil,

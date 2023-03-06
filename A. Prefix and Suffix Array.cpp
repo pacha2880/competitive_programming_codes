@@ -127,124 +127,37 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-struct flowEdge
-{
-    int to, rev, f, cap;
-};
-
-vector<vector<flowEdge> > G;
-
-// Añade arista (st -> en) con su capacidad
-void addEdge(int st, int en, int cap) {
-    flowEdge A = {en, (int)G[en].size(), 0, cap};
-    flowEdge B = {st, (int)G[st].size(), 0, 0};
-    G[st].pb(A);
-    G[en].pb(B);
-}
-
-int nodes, S, T; // asignar estos valores al armar el grafo G
-                 // nodes = nodos en red de flujo. Hacer G.clear(); G.resize(nodes);
-vi work, lvl;
-int Q[200010];
-
-bool bfs() {
-    int qt = 0;
-    Q[qt++] = S;
-    lvl.assign(nodes, -1);
-    lvl[S] = 0;
-    for (int qh = 0; qh < qt; qh++) {
-        int v = Q[qh];
-        for (flowEdge &e : G[v]) {
-            int u = e.to;
-            if (e.cap <= e.f || lvl[u] != -1) continue;
-            lvl[u] = lvl[v] + 1;
-            Q[qt++] = u;
-        }
-    }
-    return lvl[T] != -1;
-}
-
-int dfs(int v, int f) {
-    if (v == T || f == 0) return f;
-    for (int &i = work[v]; i < G[v].size(); i++) {
-        flowEdge &e = G[v][i];
-        int u = e.to;
-        if (e.cap <= e.f || lvl[u] != lvl[v] + 1) continue;
-        int df = dfs(u, min(f, e.cap - e.f));
-        if (df) {
-            e.f += df;
-            G[u][e.rev].f -= df;
-            return df;
-        }
-    }
-    return 0;
-}
-
-int maxFlow() {
-    int flow = 0;
-    while (bfs()) {
-        work.assign(nodes, 0);
-        while (true) {
-            int df = dfs(S, MOD);
-            if (df == 0) break;
-            flow += df;
-        }
-    }
-    return flow;
-}
 
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, m;
-	while(cin>>n && n)
-	{
-		cin>>m;
-		nodes = n + m + 2;
-        G.clear();
-		G.resize(nodes);
-		S = n + m, T = n + m + 1;
-		int toto = 0;
-		fore(i, 0, n)
-		{
-			int x;
-			cin>>x;
-			toto += x;
-			addEdge(S, i, x);
-		}
-		fore(i, 0, m)
-		{
-			int k;
-			addEdge(i + n, T, 1);
-			cin>>k;
-			while(k--)
-			{
-				int x;
-				cin>>x;
-				addEdge(x - 1, i + n, 1);
-			}
-		}
-		if(maxFlow() < toto)
-			cout<<0<<'\n';
-		else
+	int t;
+    cin>>t;
+    while(t--)
+    {
+        int n;
+        cin>>n;
+        bool bo = true;
+        vector<string> v(n);
+        fore(i, 0, 2 * n - 2)
         {
-			cout<<1<<'\n';
-            fore(i, 0, n)
+            string s;
+            cin>>s;
+            if(v[sz(s)].empty())
+                v[sz(s)] = s;
+            else
             {
-                bool ba = false;
-                for(auto cat : G[i])
-                    if(cat.f == cat.cap && cat.cap > 0)
-                    {
-                        if(ba) cout<<' ';
-                        ba = true;
-                        cout<<cat.to - n + 1;
-                    }
-                cout<<'\n';
+                reverse(all(s));
+                bo &= v[sz(s)] == s;
             }
         }
-	}
+        if(bo)
+            cout<<"YES\n";
+        else
+            cout<<"NO\n";
+    }
 	return 0;
 }
 // Se vuelve más fácil,

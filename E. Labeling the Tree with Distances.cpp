@@ -127,124 +127,171 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-struct flowEdge
+int hush[tam], hach[tam];
+int key = rng() % (MOD-100) + 100;
+vi g[tam];
+int pot[tam];
+void dfs(int node, int pa)
 {
-    int to, rev, f, cap;
-};
-
-vector<vector<flowEdge> > G;
-
-// Añade arista (st -> en) con su capacidad
-void addEdge(int st, int en, int cap) {
-    flowEdge A = {en, (int)G[en].size(), 0, cap};
-    flowEdge B = {st, (int)G[st].size(), 0, 0};
-    G[st].pb(A);
-    G[en].pb(B);
+    vi hachi;
+    for(int x : g[node])
+        if(x != pa)
+            dfs(x, node), hachi.pb(hush[x]);
+    sort(all(hachi));
+    for(int x : hachi)
+        hush[node] = (hush[node] * key  + 2 * x) % MOD;
+    hush[node] = (hush[node] * key + 1) % MOD;
 }
-
-int nodes, S, T; // asignar estos valores al armar el grafo G
-                 // nodes = nodos en red de flujo. Hacer G.clear(); G.resize(nodes);
-vi work, lvl;
-int Q[200010];
-
-bool bfs() {
-    int qt = 0;
-    Q[qt++] = S;
-    lvl.assign(nodes, -1);
-    lvl[S] = 0;
-    for (int qh = 0; qh < qt; qh++) {
-        int v = Q[qh];
-        for (flowEdge &e : G[v]) {
-            int u = e.to;
-            if (e.cap <= e.f || lvl[u] != -1) continue;
-            lvl[u] = lvl[v] + 1;
-            Q[qt++] = u;
+void dufus(int node, int pa, int pacha)
+{
+    vii hachas;
+    if(pacha != -1)
+        hachas.pb({pacha, pa});
+    for(int x : g[node])
+        if(x != pa)
+            hachas.pb({hush[x], x});
+    sort(all(hachas));
+    vi suficiente(sz(hachas));
+    for(ii x : hachas)
+    {
+        hach[node] = (hach[node] * key + 2 * x.f) % MOD;
+        suficiente.pb(hach[node]);
+    }
+    hach[node] = (hach[node] * key + 1) % MOD;
+    fore(i, 0, sz(hachas))
+    {
+        int va = hachas[i].f, x = hachas[i].s;
+        if(x != pa)
+        {
+            int ichibi = ((hach[node] - suficiente[i] * pot[sz(hachas) - i]) % MOD + MOD) % MOD;
+            if(i > 0)
+                ichibi = (ichibi + suficiente[i - 1] * pot[sz(hachas) - i]) % MOD;
+            dufus(x, node, ichibi);
         }
     }
-    return lvl[T] != -1;
+
 }
 
-int dfs(int v, int f) {
-    if (v == T || f == 0) return f;
-    for (int &i = work[v]; i < G[v].size(); i++) {
-        flowEdge &e = G[v][i];
-        int u = e.to;
-        if (e.cap <= e.f || lvl[u] != lvl[v] + 1) continue;
-        int df = dfs(u, min(f, e.cap - e.f));
-        if (df) {
-            e.f += df;
-            G[u][e.rev].f -= df;
-            return df;
-        }
-    }
-    return 0;
+int dimaria[tam];
+ii dfs(int node, int pa, int dis)
+{
+    dimaria[node] = max(dimaria[node], dis);
+    ii res(dis, node);
+    for(int x : g[node])
+        if(x != pa)
+            res = max(res, dfs(x, node, dis + 1));
+    return res;
 }
-
-int maxFlow() {
-    int flow = 0;
-    while (bfs()) {
-        work.assign(nodes, 0);
-        while (true) {
-            int df = dfs(S, MOD);
-            if (df == 0) break;
-            flow += df;
-        }
-    }
-    return flow;
+map<int, int> mamals[tam];
+void daf(int node, int pa, int dis)
+{
+    mamals[node][dis]++;
+    for(int x : g[node])
+        if(x != pa)
+            daf(x, node, dis + 1);
 }
-
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, m;
-	while(cin>>n && n)
-	{
-		cin>>m;
-		nodes = n + m + 2;
-        G.clear();
-		G.resize(nodes);
-		S = n + m, T = n + m + 1;
-		int toto = 0;
-		fore(i, 0, n)
-		{
-			int x;
-			cin>>x;
-			toto += x;
-			addEdge(S, i, x);
-		}
-		fore(i, 0, m)
-		{
-			int k;
-			addEdge(i + n, T, 1);
-			cin>>k;
-			while(k--)
-			{
-				int x;
-				cin>>x;
-				addEdge(x - 1, i + n, 1);
-			}
-		}
-		if(maxFlow() < toto)
-			cout<<0<<'\n';
-		else
+	int n;
+    cin>>n;
+    vi ar(n - 1);
+    map<int, int> ma;
+    fore(i, 0, n - 1) cin>>ar[i], ma[ar[i]]++;
+    sort(all(ar));
+    ar.pb(-1);
+    ar.pb(-1);
+    // vector<vi> g(n);
+    fore(i, 0, n - 1)
+    {
+        int a, b;
+        cin>>a>>b;
+        a--, b--;
+        g[a].pb(b);
+        g[b].pb(a);
+    }
+    vi res;
+    vi vis(n, -1);
+    pot[0] = 1;
+    fore(i, 1, tam)
+    {
+        pot[i] = pot[i - 1] * key % MOD;
+    }
+    dfs(0, -1);
+    dufus(0, -1, -1);
+    unordered_set<int> hachiko, clifort;
+    vi er(n);
+    fore(i, 0, n) er[i] = i;
+    shuffle(all(er), rng);
+    fore(i, 0, min(n, 10ll))
+        daf(er[i], -1, 0);
+    ii asd = dfs(0, -1, 0);
+    asd = dfs(asd.s, -1, 0);
+    dfs(asd.s, -1, 0);
+    // fore(i, 0, n) cout<<i + 1<<' '<<dimaria[i]<<'\n';
+    vii que(n);
+    fore(i, 0, n)
+    {
+        if(dimaria[i] > ar[n - 2] + 1 || dimaria[i] < ar[n - 2]) continue;
+        if(hachiko.count(hach[i]))
         {
-			cout<<1<<'\n';
-            fore(i, 0, n)
-            {
-                bool ba = false;
-                for(auto cat : G[i])
-                    if(cat.f == cat.cap && cat.cap > 0)
-                    {
-                        if(ba) cout<<' ';
-                        ba = true;
-                        cout<<cat.to - n + 1;
-                    }
-                cout<<'\n';
-            }
+            res.pb(i + 1);
+            continue;
         }
-	}
+        if(clifort.count(hach[i]))
+            continue;
+        int can = 0;
+        for(auto cat : mamals[i])
+        {
+            can += max(cat.s - ma[cat.f], 0ll);
+        }
+        if(can > 1)
+        {
+            clifort.insert(hach[i]);
+            continue;
+        }
+        bool bo = true;
+        int pos = 0;
+        bool usa = false;
+        int top = 0, fro = 0;
+        que[top++] = {i, 0};
+        vis[i] = i;
+        while(fro < top)
+        {
+            int node = que[fro].f, dis = que[fro].s;
+            fro++;
+            // cout<<i<<' '<<node<<' '<<dis<<' '<<pos<<' '<<ar[pos]<<'\n';
+            if(ar[pos] == dis)
+                pos++;
+            else if(usa)
+            {
+                bo = false;
+                break;
+            }
+            else
+                usa = true;
+            for(int x : g[node])
+                if(vis[x] != i)
+                {
+                    vis[x] = i;
+                    que[top++] = {x, dis + 1};
+                }
+        }
+        if(bo)
+        {
+            res.pb(i + 1);
+            hachiko.insert(hach[i]);
+        }
+        else
+            clifort.insert(hach[i]);
+    }
+    cout<<sz(res)<<'\n';
+    sort(all(res));
+    for(int x : res)
+        cout<<x<<' ';
+    cout<<'\n';
 	return 0;
 }
 // Se vuelve más fácil,

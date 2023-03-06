@@ -127,124 +127,80 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-struct flowEdge
-{
-    int to, rev, f, cap;
-};
-
-vector<vector<flowEdge> > G;
-
-// Añade arista (st -> en) con su capacidad
-void addEdge(int st, int en, int cap) {
-    flowEdge A = {en, (int)G[en].size(), 0, cap};
-    flowEdge B = {st, (int)G[st].size(), 0, 0};
-    G[st].pb(A);
-    G[en].pb(B);
-}
-
-int nodes, S, T; // asignar estos valores al armar el grafo G
-                 // nodes = nodos en red de flujo. Hacer G.clear(); G.resize(nodes);
-vi work, lvl;
-int Q[200010];
-
-bool bfs() {
-    int qt = 0;
-    Q[qt++] = S;
-    lvl.assign(nodes, -1);
-    lvl[S] = 0;
-    for (int qh = 0; qh < qt; qh++) {
-        int v = Q[qh];
-        for (flowEdge &e : G[v]) {
-            int u = e.to;
-            if (e.cap <= e.f || lvl[u] != -1) continue;
-            lvl[u] = lvl[v] + 1;
-            Q[qt++] = u;
-        }
-    }
-    return lvl[T] != -1;
-}
-
-int dfs(int v, int f) {
-    if (v == T || f == 0) return f;
-    for (int &i = work[v]; i < G[v].size(); i++) {
-        flowEdge &e = G[v][i];
-        int u = e.to;
-        if (e.cap <= e.f || lvl[u] != lvl[v] + 1) continue;
-        int df = dfs(u, min(f, e.cap - e.f));
-        if (df) {
-            e.f += df;
-            G[u][e.rev].f -= df;
-            return df;
-        }
-    }
-    return 0;
-}
-
-int maxFlow() {
-    int flow = 0;
-    while (bfs()) {
-        work.assign(nodes, 0);
-        while (true) {
-            int df = dfs(S, MOD);
-            if (df == 0) break;
-            flow += df;
-        }
-    }
-    return flow;
-}
 
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, m;
-	while(cin>>n && n)
-	{
-		cin>>m;
-		nodes = n + m + 2;
-        G.clear();
-		G.resize(nodes);
-		S = n + m, T = n + m + 1;
-		int toto = 0;
-		fore(i, 0, n)
-		{
-			int x;
-			cin>>x;
-			toto += x;
-			addEdge(S, i, x);
-		}
-		fore(i, 0, m)
-		{
-			int k;
-			addEdge(i + n, T, 1);
-			cin>>k;
-			while(k--)
-			{
-				int x;
-				cin>>x;
-				addEdge(x - 1, i + n, 1);
-			}
-		}
-		if(maxFlow() < toto)
-			cout<<0<<'\n';
-		else
+	int t;
+    cin>>t;
+    while(t--)
+    {
+        int n;
+        cin>>n;
+        vii ar(n);
+        fore(i, 0, n)
+            cin>>ar[i].f>>ar[i].s;
+        if(n < 5)
         {
-			cout<<1<<'\n';
-            fore(i, 0, n)
+            cout<<"NO\n";
+            continue;
+        }
+        bool bo = true;
+        fore(i, 0, 5)
+        {
+            map<ii, vi> ma;
+            map<ii, vi> mami;
+            fore(j, 0, n)
+                if(i != j)
+                {
+                    int x = ar[j].f - ar[i].f, y = ar[j].s - ar[i].s;
+                    int g = abs(__gcd(x, y));
+                    x /= g, y /= g;
+                    mami[{x, y}].pb(j);
+                    if(x < 0)
+                        x *= -1, y *= -1;
+                    if(x == 0)
+                        y = abs(y);
+                    ma[{x, y}].pb(j);
+                }
+            if(sz(mami) >= 4)
             {
-                bool ba = false;
-                for(auto cat : G[i])
-                    if(cat.f == cat.cap && cat.cap > 0)
+                bo = false;
+                cout<<"YES\n";
+                cout<<ar[i].f<<' '<<ar[i].s<<'\n';
+                int con = 0;
+                for(auto it = mami.begin(); con < 4; it++, con++)
+                    cout<<ar[it->s[0]].f<<' '<<ar[it->s[0]].s<<'\n';
+                break;
+            }
+            if(sz(ma) > 1)
+            {
+                for(auto it = ma.begin(); it != ma.end(); it++)
+                {
+                    if(sz(it->s) >= 3)
                     {
-                        if(ba) cout<<' ';
-                        ba = true;
-                        cout<<cat.to - n + 1;
+                        int ind;
+                        cout<<"YES\n";
+                        if(it != ma.begin())
+                            ind = ma.begin()->s[0];
+                        else
+                            ind = (--ma.end())->s[0];
+                        cout<<ar[ind].f<<' '<<ar[ind].s<<'\n';
+                        cout<<ar[i].f<<' '<<ar[i].s<<'\n';
+                        fore(i, 0, 3)
+                            cout<<ar[it->s[i]].f<<' '<<ar[it->s[i]].s<<'\n';
+                        bo = false;
+                        break;
                     }
-                cout<<'\n';
+                }
+                if(!bo) break;
             }
         }
-	}
+        if(bo)
+            cout<<"NO\n";
+    }
 	return 0;
 }
 // Se vuelve más fácil,

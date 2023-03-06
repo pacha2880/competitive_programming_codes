@@ -127,124 +127,66 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-struct flowEdge
+int calculear(vi &a, vi &b)
 {
-    int to, rev, f, cap;
-};
-
-vector<vector<flowEdge> > G;
-
-// Añade arista (st -> en) con su capacidad
-void addEdge(int st, int en, int cap) {
-    flowEdge A = {en, (int)G[en].size(), 0, cap};
-    flowEdge B = {st, (int)G[st].size(), 0, 0};
-    G[st].pb(A);
-    G[en].pb(B);
-}
-
-int nodes, S, T; // asignar estos valores al armar el grafo G
-                 // nodes = nodos en red de flujo. Hacer G.clear(); G.resize(nodes);
-vi work, lvl;
-int Q[200010];
-
-bool bfs() {
-    int qt = 0;
-    Q[qt++] = S;
-    lvl.assign(nodes, -1);
-    lvl[S] = 0;
-    for (int qh = 0; qh < qt; qh++) {
-        int v = Q[qh];
-        for (flowEdge &e : G[v]) {
-            int u = e.to;
-            if (e.cap <= e.f || lvl[u] != -1) continue;
-            lvl[u] = lvl[v] + 1;
-            Q[qt++] = u;
-        }
+    int inu = 0;
+    int su = 0;
+    int res = 0;
+    a.pb(1000000);
+    for(int x : b)
+    {
+        res += x - su;
+        a[su]--;
+        if(a[su] == 0) su++;
     }
-    return lvl[T] != -1;
+    return res;
 }
-
-int dfs(int v, int f) {
-    if (v == T || f == 0) return f;
-    for (int &i = work[v]; i < G[v].size(); i++) {
-        flowEdge &e = G[v][i];
-        int u = e.to;
-        if (e.cap <= e.f || lvl[u] != lvl[v] + 1) continue;
-        int df = dfs(u, min(f, e.cap - e.f));
-        if (df) {
-            e.f += df;
-            G[u][e.rev].f -= df;
-            return df;
-        }
-    }
-    return 0;
-}
-
-int maxFlow() {
-    int flow = 0;
-    while (bfs()) {
-        work.assign(nodes, 0);
-        while (true) {
-            int df = dfs(S, MOD);
-            if (df == 0) break;
-            flow += df;
-        }
-    }
-    return flow;
-}
-
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
-	int n, m;
-	while(cin>>n && n)
-	{
-		cin>>m;
-		nodes = n + m + 2;
-        G.clear();
-		G.resize(nodes);
-		S = n + m, T = n + m + 1;
-		int toto = 0;
-		fore(i, 0, n)
-		{
-			int x;
-			cin>>x;
-			toto += x;
-			addEdge(S, i, x);
-		}
-		fore(i, 0, m)
-		{
-			int k;
-			addEdge(i + n, T, 1);
-			cin>>k;
-			while(k--)
-			{
-				int x;
-				cin>>x;
-				addEdge(x - 1, i + n, 1);
-			}
-		}
-		if(maxFlow() < toto)
-			cout<<0<<'\n';
-		else
+	int t;
+    cin>>t;
+    while(t--)
+    {
+        int n, m;
+        cin>>n>>m;
+        vi nus(n);
+        fore(i, 0, n) cin>>nus[i];
+        sort(all(nus));
+        vii restri(m);
+        fore(i, 0, m) cin>>restri[i].f>>restri[i].s;
+        sort(all(restri));
+        int ponu = 0;
+        int le = 0;
+        int la = -1;
+        int sumatoriedad = 0;
+        vi a, b;
+        fore(i, 0, m)
         {
-			cout<<1<<'\n';
-            fore(i, 0, n)
+            while(ponu < n && nus[ponu] < restri[i].f)
+                b.pb(nus[ponu] - le), ponu++;
+            if(restri[i].s == 0)
             {
-                bool ba = false;
-                for(auto cat : G[i])
-                    if(cat.f == cat.cap && cat.cap > 0)
-                    {
-                        if(ba) cout<<' ';
-                        ba = true;
-                        cout<<cat.to - n + 1;
-                    }
-                cout<<'\n';
+                sumatoriedad += calculear(a, b);
+                a.clear();
+                b.clear();
+                le = restri[i].f + 1;
+                la = restri[i].f;
             }
+            else if(restri[i].f == la + 1)
+                    a.pb(restri[i].s), la++;
         }
-	}
+        while(ponu < n)
+            b.pb(nus[ponu] - le), ponu++;
+        sumatoriedad += calculear(a, b);
+        // cout<<sumatoriedad<<'\n';
+        if(sumatoriedad & 1)
+            cout<<"Pico\n";
+        else
+            cout<<"FuuFuu\n";
+    }
 	return 0;
 }
 // Se vuelve más fácil,
