@@ -127,47 +127,31 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-vi g[tam];
-vector<multiset<int>> primarios(tam);
-multiset<int> segundones;
-int getmimo(int node)
+
+vi get(int n)
 {
-    return sz(primarios[node]) ? *primarios[node].begin() + 1 : 1;
-}
-void dfs(int node, int pa)
-{
-    // cout<<node<<'\n';
-    for(int x : g[node])
-        if(x != pa)
+    int goal = n * (n + 1) / 4;
+    vi re;
+    int number = 0;
+    while(goal)
+    {
+        int lo = 1, hi = n, mid, res;
+        while(lo <= hi)
         {
-            dfs(x, node);
-            primarios[node].insert(getmimo(x));
+            mid = (lo + hi) / 2;
+            if(mid * (mid + 1) / 2 + n - mid - sz(re)<= goal)
+                res = mid, lo = mid + 1;
+            else
+                hi = mid - 1;
         }
-    if(sz(primarios[node]) > 1)
-        segundones.insert(*++primarios[node].begin());
+        // cout<<res<<' '<<goal<<' '<<n<<'\n';
+        goal -= res * (res + 1) / 2;
+        while(res--) re.pb(number);
+        number ^= 1;
+    }
+    return re;
 }
-int res;
-void gimme_love(int node, int pa)
-{
-    res = max(res, min(getmimo(node), *segundones.begin()));
-    for(int x : g[node])
-        if(x != pa)
-        {
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].erase(primarios[node].find(getmimo(x)));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].insert(getmimo(node));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            gimme_love(x, node);
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].erase(primarios[x].find(getmimo(node)));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].insert(getmimo(x));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-        }
-}
+
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
@@ -177,23 +161,32 @@ signed main()
     cin>>t;
     while(t--)
     {
-        int n;
-        cin>>n;
-        fore(i, 0, n - 1)
+        int n, m;
+        cin>>n>>m;
+        if(n * (n + 1) % 4 == 0)
         {
-            int a, b;
-            cin>>a>>b;
-            a--, b--;
-            g[a].pb(b);
-            g[b].pb(a);
+            cout<<"Yes\n";
+            vi res = get(n);
+            fore(i, 0, n)
+            {
+                fore(j, 0, m)
+                    cout<<res[i]<<' ';
+                cout<<'\n';
+            }
         }
-        dfs(0, -1);
-        res = 0;
-        segundones.insert(n);
-        gimme_love(0, -1);
-        cout<<res<<'\n';
-        fore(i, 0, n) g[i].clear(), primarios[i].clear();
-        segundones.clear();
+        else if(m * (m + 1) % 4 == 0)
+        {
+            cout<<"Yes\n";
+            vi res = get(m);
+            fore(i, 0, n)
+            {
+                fore(j, 0, m)
+                    cout<<res[j]<<' ';
+                cout<<'\n';
+            }
+        }
+        else
+            cout<<"No\n";
     }
 	return 0;
 }

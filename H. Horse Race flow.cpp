@@ -127,74 +127,157 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-vi g[tam];
-vector<multiset<int>> primarios(tam);
-multiset<int> segundones;
-int getmimo(int node)
-{
-    return sz(primarios[node]) ? *primarios[node].begin() + 1 : 1;
-}
-void dfs(int node, int pa)
-{
-    // cout<<node<<'\n';
-    for(int x : g[node])
-        if(x != pa)
-        {
-            dfs(x, node);
-            primarios[node].insert(getmimo(x));
+struct Dinitz{
+    const int INF = 1e9 + 7;
+    Dinitz() {}
+    Dinitz(int n, int s, int t) {init(n, s, t);}
+
+    void init(int n, int s, int t)
+    {
+        S = s, T = t;
+        nodes = n;
+        G.clear(), G.resize(n);
+        Q.resize(n);
+    }
+
+    struct flowEdge
+    {
+        int to, rev, f, cap;
+    };
+
+    vector<vector<flowEdge>> G;
+
+    void addEdge(int st, int en, int cap) {
+        // cout<<st<<' '<<en<<' '<<cap<<'\n';
+        flowEdge A = {en, (int)G[en].size(), 0, cap};
+        flowEdge B = {st, (int)G[st].size(), 0, 0};
+        G[st].pb(A);
+        G[en].pb(B);
+    }
+    int nodes, S, T;
+
+    vi work,lvl;
+    vi Q;
+
+    bool bfs() {
+        int qt = 0;
+        Q[qt++] = S;
+        lvl.assign(nodes, -1);
+        lvl[S] = 0;
+        for (int qh = 0; qh < qt; qh++) {
+            int v = Q[qh];
+            for (flowEdge &e : G[v]) {
+                int u = e.to;
+                if(e.cap <= e.f || lvl[u] != -1) continue;
+                lvl[u] = lvl[v] + 1;
+                Q[qt++] = u;
+            }
         }
-    if(sz(primarios[node]) > 1)
-        segundones.insert(*++primarios[node].begin());
-}
-int res;
-void gimme_love(int node, int pa)
-{
-    res = max(res, min(getmimo(node), *segundones.begin()));
-    for(int x : g[node])
-        if(x != pa)
-        {
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].erase(primarios[node].find(getmimo(x)));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].insert(getmimo(node));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            gimme_love(x, node);
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].erase(primarios[x].find(getmimo(node)));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].insert(getmimo(x));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
+        return lvl[T] != -1;
+    }
+
+    int dfs(int v, int f) {
+        if(v == T || f == 0) return f;
+        for (int &i = work[v]; i < G[v].size(); i++){
+            flowEdge &e = G[v][i];
+            int u = e.to;
+            if (e.cap <= e.f || lvl[u] != lvl[v] + 1) continue;
+            int df = dfs(u, min(f, e.cap - e.f));
+            if (df) {
+                e.f += df;
+                G[u][e.rev].f -= df;
+                return df;
+            }
         }
-}
+        return 0;
+    }
+
+    int maxFlow() {
+        int flow = 0;
+        while(bfs()) {
+            work.assign(nodes, 0);
+            while(true) {
+                int df = dfs(S, INF);
+                if (df == 0) break;
+                flow += df;
+            }
+        }
+        return flow;
+    }
+};
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-    int t;
-    cin>>t;
-    while(t--)
+    int n;
+    cin>>n;
+    vector<string> caba(n);
+    map<string, int> pozo;
+    vi mimu(n);
+    fore(i, 0, n)
     {
-        int n;
-        cin>>n;
-        fore(i, 0, n - 1)
-        {
-            int a, b;
-            cin>>a>>b;
-            a--, b--;
-            g[a].pb(b);
-            g[b].pb(a);
-        }
-        dfs(0, -1);
-        res = 0;
-        segundones.insert(n);
-        gimme_love(0, -1);
-        cout<<res<<'\n';
-        fore(i, 0, n) g[i].clear(), primarios[i].clear();
-        segundones.clear();
+        cin>>caba[i];
+        pozo[caba[i]] = i;
     }
+    int q;
+    cin>>q;
+    vector<vi> cant(n, vi(n));
+    vi cuan(n);
+    fore(i, 0, q)
+    {
+        int can;
+        cin>>can;
+        int pos;
+        cin>>pos;
+        pos--;
+        cuan[pos]++;
+        while(can--)
+        {
+            string s;
+            cin>>s;
+            int po = pozo[s];
+            cant[po][pos]++;
+            mimu[po] = max(mimu[po], pos);
+        }
+    }
+    Dinitz dinic(2 * n + 2, 2 * n, 2 * n + 1);
+    fore(i, 0, n)
+    {
+        dinic.addEdge(dinic.S, i, 1);
+        dinic.addEdge(i + n, dinic.T, 1);
+        // cout<<i<<' '<<mimu[i]<<'\n';
+        fore(j, mimu[i], n)
+            if(cuan[j] == cant[i][j])
+                dinic.addEdge(i, j + n, 1);
+    }
+    int flow = dinic.maxFlow();
+    // cout<<flow<<'\n';
+    vector<string> res(n);
+    fore(i, 0, n)
+    {
+        // cout<<"@@@ "<<i<<'\n';
+        for(auto cat : dinic.G[i])
+        {
+            // cout<<cat.cap<<' '<<cat.f<<' '<<cat.to<<'\n';
+            if(cat.cap > 0 && cat.f == cat.cap)
+                res[cat.to - n] = caba[i];
+        }
+        // cout<<'\n';
+    }
+    // fore(i, 0, n)
+    // {
+    //     cout<<"#### "<<i<<'\n';
+    //     for(auto cat : dinic.G[i])
+    //     {
+    //         cat.to<<' '<<cat.cap<<' '<<cat.f<<'\n';
+    //         // if(cat.cap > 0 && cat.f == cat.cap)
+    //         //     res[i] = caba[cat.to - n];
+    //     }
+    // }
+    fore(i, 0, n)
+        cout<<res[i]<<' ';
+    cout<<'\n';
 	return 0;
 }
 // Se vuelve más fácil,

@@ -79,7 +79,7 @@ EL PEMRRITO MALVADO
 // #include <ext/pb_ds/assoc_container.hpp>
 // #include <ext/pb_ds/tree_policy.hpp>
 // #include <ext/rope>
-#define int ll
+// #define int ll
 #define mp				make_pair
 #define pb				push_back
 #define all(a)			(a).begin(), (a).end()
@@ -121,80 +121,162 @@ typedef vector<ll>      vll;
 // find_by_order kth largest  order_of_key <
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 200010;
+const int tam = 100010;
 const int MOD = 1000000007;
 const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-vi g[tam];
-vector<multiset<int>> primarios(tam);
-multiset<int> segundones;
-int getmimo(int node)
+ll pot(ll b, ll e, ll m)
 {
-    return sz(primarios[node]) ? *primarios[node].begin() + 1 : 1;
+    ll res = 1;
+    while(e)
+    {
+        if(e & 1) res = res * b % m;
+        b = b * b % m;
+        e /= 2;
+    }
+    return res;
 }
-void dfs(int node, int pa)
+int p = 997, m[2], in[2];
+struct Hash
 {
-    // cout<<node<<'\n';
-    for(int x : g[node])
-        if(x != pa)
+    vi h[2], inv[2];
+    vi S;
+    int off;
+    Hash(){}
+    Hash(vi s)
+    {
+        off = 0;
+        // fore(i, 0, 2)
+        // {
+        //     h[i].resize(sz(s) + 1);
+        //     inv[i].resize(sz(s) + 1);
+        //     ll acu = 1;
+        //     h[i][0] = 0, inv[i][0] = 1;
+        //     fore(j, 0, sz(s))
+        //     {
+        //         h[i][j + 1] = (h[i][j] + acu * s[j]) % m[i];
+        //         inv[i][j + 1] = (1ll * inv[i][j] * in[i]) % m[i];
+        //         acu = (acu * p) % m[i];
+        //     }
+        // }
+
+        // fore(i, 0, 2)
         {
-            dfs(x, node);
-            primarios[node].insert(getmimo(x));
+            h[0].resize(sz(s) + 1);
+            inv[0].resize(sz(s) + 1);
+            ll acu = 1;
+            h[0][0] = 0, inv[0][0] = 1;
+            fore(j, 0, sz(s))
+            {
+                h[0][j + 1] = (h[0][j] + acu * s[j]) % m[0];
+                inv[0][j + 1] = (1ll * inv[0][j] * in[0]) % m[0];
+                acu = (acu * p) % m[0];
+            }
         }
-    if(sz(primarios[node]) > 1)
-        segundones.insert(*++primarios[node].begin());
-}
-int res;
-void gimme_love(int node, int pa)
+        swap(S, s);
+    }
+    ll get(int b, int e)
+    {
+        b += off;
+        e += off;
+        // ll ha[2]; fore(i, 0, 2)
+        //     ha[i] = ((((h[i][e] - h[i][b]) * (ll)inv[i][b]) % m[i]) + m[i]) % m[i];
+        // return((ha[0] << 32) | ha[1]);
+        return ((((h[0][e] - h[0][b]) * (ll)inv[0][b]) % m[0]) + m[0]) % m[0];
+    }
+};
+Hash ish[tam];
+vi vis[tam];
+vi top(tam);
+bool les(int i, int j)
 {
-    res = max(res, min(getmimo(node), *segundones.begin()));
-    for(int x : g[node])
-        if(x != pa)
-        {
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].erase(primarios[node].find(getmimo(x)));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].insert(getmimo(node));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            gimme_love(x, node);
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].erase(primarios[x].find(getmimo(node)));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].insert(getmimo(x));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-        }
+    if(top[i] == -1) return 0;
+    if(top[j] == -1) return 1;
+    int a = top[i], b = top[j];
+    while(a > -1 && b > -1 && vis[i][a] == vis[j][b]) a--, b--;
+    if(a == -1) return 1;
+    if(b == -1) return 0;
+    return vis[i][a] < vis[j][b];
 }
+int ar[tam], t[4 * tam];
+void init(int b, int e, int node)
+{
+    // cout<<b<<' '<<e<<' '<<node<<'\n';
+    if(b == e)
+    {
+        t[node] = ar[b];
+        // cout<<'$';
+        return;
+    }
+    index;
+    init(b, mid, l);
+    init(mid + 1, e, r);
+    // cout<<"%%\n";
+    if(les(t[l], t[r]))
+        t[node] = t[l];
+    else
+        t[node] = t[r];
+    // cout<<"@@@\n";
+}
+void update(int b, int e, int node, int pos)
+{
+    if(b == e) return;
+    index;
+    if(pos <= mid) update(b, mid, l, pos);
+    else update(mid + 1, e, r, pos);
+    if(les(t[l], t[r]))
+        t[node] = t[l];
+    else
+        t[node] = t[r];
+}
+
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-    int t;
-    cin>>t;
-    while(t--)
+    int n;
+    cin>>n;
+    int can = 0;
+    fore(i, 0, n)
     {
-        int n;
-        cin>>n;
-        fore(i, 0, n - 1)
-        {
-            int a, b;
-            cin>>a>>b;
-            a--, b--;
-            g[a].pb(b);
-            g[b].pb(a);
-        }
-        dfs(0, -1);
-        res = 0;
-        segundones.insert(n);
-        gimme_love(0, -1);
-        cout<<res<<'\n';
-        fore(i, 0, n) g[i].clear(), primarios[i].clear();
-        segundones.clear();
+        ar[i] = i;
+        int k;
+        cin>>k;
+        vis[i].resize(k);
+        can += k;
+        top[i] = k - 1;
+        // vi ar(k);
+        fore(j, 0, k) cin>>vis[i][j];
+        reverse(all(vis[i]));
+        // reverse(all(vis[i]));
+        // reverse(all(ar));
+        // ish[i] = Hash(ar);
+        // cout<<i<<'\n';
     }
+    vi pot(can + 2);
+    pot[0] = 1;
+    fore(i, 1, can + 2)
+        pot[i] = 1ll * pot[i - 1] * 365 % MOD;
+    int res = 0;
+    // cout<<"###\n";
+    init(0, n - 1, 0);
+    // cout<<"$$$$$\n";
+    for(int i = can; i > 0; i--)
+    {
+        // cout<<i<<'\n';
+        int ind = t[0];
+        // cout<<ind<<' '<<ish[ind].S[ish[ind].off]<<' '<<ish[ind].off<<' '<<i<<'\n';
+        // cout<<vis[ind].front()<<'\n';
+        res = (res + 1ll * vis[ind][top[ind]] * pot[i]) % MOD;
+        // ish[ind].off++;
+        top[ind]--;
+        update(0, n - 1, 0, ind);
+    }
+    cout<<res<<'\n';
+
 	return 0;
 }
 // Se vuelve más fácil,

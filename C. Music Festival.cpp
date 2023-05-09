@@ -127,46 +127,51 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-vi g[tam];
-vector<multiset<int>> primarios(tam);
-multiset<int> segundones;
-int getmimo(int node)
+struct st
 {
-    return sz(primarios[node]) ? *primarios[node].begin() + 1 : 1;
+	int val;
+	st* r;
+	st* l;
+	st() {r = l = NULL; val = 0;}
+	st(int v) {r = l = NULL; val = v;}
+	// st(st* L, st* R) {l = L; r = R, val = l->val + r->val;}
+};
+typedef st* pst;
+void update(pst &t, int b, int e, int pos, int val)
+{
+    if(!t) t = new st();
+	if(b == e)
+    {
+		t->val = max(t->val, val);
+        return;
+    }
+	int mid = (b + e) / 2;
+	if(mid >= pos)
+		update(t->l, b, mid, pos, val);
+    else
+        update(t->r, mid + 1, e, pos, val);
+    t->val = max((t->l?t->l->val:0), (t->r?t->r->val:0));
 }
-void dfs(int node, int pa)
+int query(pst t, int b, int e, int i, int j)
 {
-    // cout<<node<<'\n';
-    for(int x : g[node])
-        if(x != pa)
-        {
-            dfs(x, node);
-            primarios[node].insert(getmimo(x));
-        }
-    if(sz(primarios[node]) > 1)
-        segundones.insert(*++primarios[node].begin());
+    if(!t) 
+        return 0;
+	if(b >= i && e <= j)
+		return t->val;
+	int mid = (b + e) / 2;
+	if(mid >= j)
+		return query(t->l, b, mid, i, j);
+	if(mid < i)
+		return query(t->r, mid +1, e, i, j);
+	return max(query(t->l, b, mid, i, j), query(t->r, mid +1, e, i, j));
 }
-int res;
-void gimme_love(int node, int pa)
+void del(pst t)
 {
-    res = max(res, min(getmimo(node), *segundones.begin()));
-    for(int x : g[node])
-        if(x != pa)
-        {
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].erase(primarios[node].find(getmimo(x)));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].insert(getmimo(node));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            gimme_love(x, node);
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].erase(primarios[x].find(getmimo(node)));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].insert(getmimo(x));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-        }
+    if(t)
+    {
+        del(t->l), del(t->r);
+        delete t;
+    }
 }
 signed main()
 {
@@ -179,21 +184,34 @@ signed main()
     {
         int n;
         cin>>n;
-        fore(i, 0, n - 1)
+        pst root = NULL;
+        vector<vi> aris(n);
+        fore(i, 0, n)
         {
-            int a, b;
-            cin>>a>>b;
-            a--, b--;
-            g[a].pb(b);
-            g[b].pb(a);
+            int k;
+            cin>>k;
+            int maya = 0;
+            while(k--)
+            {
+                int x;
+                cin>>x;
+                if(x > maya)
+                    aris[i].pb(x), maya = x;
+            }
         }
-        dfs(0, -1);
-        res = 0;
-        segundones.insert(n);
-        gimme_love(0, -1);
-        cout<<res<<'\n';
-        fore(i, 0, n) g[i].clear(), primarios[i].clear();
-        segundones.clear();
+        sort(all(aris), [](vi &a, vi&b){
+            return a.back() < b.back();
+        });
+        int tami = 200010;
+        fore(i, 0, n)
+        {
+            int ruca = sz(aris[i]);
+            for(int j = sz(aris[i]) - 1; j > -1; j--)
+                ruca = max(ruca, sz(aris[i]) - j + query(root, 0, tami, 0, aris[i][j] - 1));
+            update(root, 0, tami, aris[i].back(), ruca);
+        }
+        cout<<root->val<<'\n';
+        del(root);
     }
 	return 0;
 }

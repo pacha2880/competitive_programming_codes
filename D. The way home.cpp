@@ -127,47 +127,10 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-vi g[tam];
-vector<multiset<int>> primarios(tam);
-multiset<int> segundones;
-int getmimo(int node)
-{
-    return sz(primarios[node]) ? *primarios[node].begin() + 1 : 1;
-}
-void dfs(int node, int pa)
-{
-    // cout<<node<<'\n';
-    for(int x : g[node])
-        if(x != pa)
-        {
-            dfs(x, node);
-            primarios[node].insert(getmimo(x));
-        }
-    if(sz(primarios[node]) > 1)
-        segundones.insert(*++primarios[node].begin());
-}
-int res;
-void gimme_love(int node, int pa)
-{
-    res = max(res, min(getmimo(node), *segundones.begin()));
-    for(int x : g[node])
-        if(x != pa)
-        {
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].erase(primarios[node].find(getmimo(x)));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].insert(getmimo(node));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            gimme_love(x, node);
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].erase(primarios[x].find(getmimo(node)));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].insert(getmimo(x));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-        }
-}
+int dp[800][800];
+int saldo[800][800];
+int poder[800];
+vii g[800];
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
@@ -177,23 +140,68 @@ signed main()
     cin>>t;
     while(t--)
     {
-        int n;
-        cin>>n;
-        fore(i, 0, n - 1)
+        int n, m, p;
+        cin>>n>>m>>p;
+        fore(i, 0, n) fore(j, 0, n) dp[i][j] = MOD * MOD, saldo[i][j] = 0;
+
+        fore(i, 0, n) cin>>poder[i];
+        fore(i, 0, m)
         {
-            int a, b;
-            cin>>a>>b;
+            int a, b, c;
+            cin>>a>>b>>c;
             a--, b--;
-            g[a].pb(b);
-            g[b].pb(a);
+            g[a].pb({b, c});
         }
-        dfs(0, -1);
-        res = 0;
-        segundones.insert(n);
-        gimme_love(0, -1);
-        cout<<res<<'\n';
-        fore(i, 0, n) g[i].clear(), primarios[i].clear();
-        segundones.clear();
+        queue<ii> que;
+        dp[0][0] = 0;
+        saldo[0][0] = p;
+        que.push({0, 0});
+        while(!que.empty())
+        {
+            int node = que.front().f, p = que.front().s; 
+            // cout<<"$$$$$ "<<node<<' '<<p<<'\n';
+            int po = poder[p];
+            int saltos = dp[node][p];
+            int sal = saldo[node][p];
+            // cout<<"%%%"<<po<<' '<<saltos<<' '<<sal<<'\n';
+            que.pop();
+            for(ii x : g[node])
+            {
+                // cout<<x.f<<' '<<x.s<<'\n';
+                if(po > poder[x.f])
+                {
+                    int salt = (max(0ll, x.s - sal) + po - 1) / po;
+                    if(dp[x.f][p] > salt + saltos)
+                    {
+                        dp[x.f][p] = salt + saltos;
+                        saldo[x.f][p] = sal + salt * po - x.s;
+                        que.push({x.f, p});
+                    }
+                }
+                else
+                {
+                    int salt = (max(0ll, x.s - sal) + po - 1) / po;
+                    // cout<<salt<<' '<<saltos<<' '<<salt + saltos<<'\n';
+                    // cout<<x.f<<'\n';
+                    if(dp[x.f][x.f] > salt + saltos)
+                    {
+                        dp[x.f][x.f] = salt + saltos;
+                        // cout<<x.f<<' '<<x.f<<' '<<dp[x.f][x.f]<<'\n';
+                        saldo[x.f][x.f] = sal + salt * po - x.s;
+                        que.push({x.f, x.f});
+                    }
+                }
+            }
+        }
+        int res = MOD * MOD;
+        fore(i, 0, n)
+            res = min(res, dp[n - 1][i]);
+        // cout<<"\n\n@@@\n\n";
+        if(res == MOD * MOD)
+            cout<<-1<<'\n';
+        else
+            cout<<res<<'\n';
+        fore(i, 0, n) g[i].clear();
     }
 	return 0;
 }

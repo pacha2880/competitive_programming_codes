@@ -83,7 +83,7 @@ EL PEMRRITO MALVADO
 #define mp				make_pair
 #define pb				push_back
 #define all(a)			(a).begin(), (a).end()
-#define sz(a)			(int)a.size()
+// #define sz(a)			(int)a.size()
 #define eq(a, b)     	(fabs(a - b) < EPS)
 #define md(a, b)		((a) % b + b) % b
 #define mod(a)			md(a, MOD)
@@ -127,74 +127,110 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-vi g[tam];
-vector<multiset<int>> primarios(tam);
-multiset<int> segundones;
-int getmimo(int node)
-{
-    return sz(primarios[node]) ? *primarios[node].begin() + 1 : 1;
+const int N_DEL = 0, N_VAL = 0; //delta, value
+inline int mOp(int x, int y){return max(x, y);}//modify
+inline int qOp(int lval, int rval){return max(lval, rval);}//query
+inline int dOnSeg(int d, int len){return d==N_DEL ? N_DEL : d*len;}
+//mostly generic
+inline int joinD(int d1, int d2){
+  if(d1==N_DEL)return d2;if(d2==N_DEL)return d1;return mOp(d1, d2);}
+inline int joinVD(int v, int d){return d==N_DEL ? v : mOp(v, d);}
+struct Node_t{
+  int sz, nVal, tVal, d, u, v;
+  bool rev;
+  Node_t *c[2], *p, *maxedge;
+  Node_t(int v) : sz(1), nVal(-1), tVal(-1), u(v), v(v), d(N_DEL), rev(0), p(0){
+    c[0]=c[1]=0, maxedge = this;
+  }
+  Node_t(int u, int v, int val) : sz(1), nVal(val), tVal(val), u(u), v(v), d(N_DEL), rev(0), p(0){
+    c[0] = c[1] = 0, maxedge = this;
+  }
+  bool isRoot(){return !p || (p->c[0] != this && p->c[1] != this);}
+  void push(){
+    if(rev){
+      rev=0; swap(c[0], c[1]);
+      fore(x,0,2)if(c[x])c[x]->rev^=1;
+    }
+    nVal=joinVD(nVal, d); tVal=joinVD(tVal, dOnSeg(d, sz));
+    // fore(x,0,2)if(c[x])c[x]->d=joinD(c[x]->d, d);
+    // d=N_DEL;
+  }
+  void upd();
+};
+typedef Node_t* Node;
+int getSize(Node r){return r ? r->sz : 0;}
+Node getPV(Node r){
+  return r ? r->maxedge : 0;}
+void Node_t::upd(){
+  tVal = qOp(qOp(getPV(c[0]), joinVD(nVal, d)), getPV(c[1]));
+  sz = 1 + getSize(c[0]) + getSize(c[1]);
 }
-void dfs(int node, int pa)
-{
-    // cout<<node<<'\n';
-    for(int x : g[node])
-        if(x != pa)
-        {
-            dfs(x, node);
-            primarios[node].insert(getmimo(x));
-        }
-    if(sz(primarios[node]) > 1)
-        segundones.insert(*++primarios[node].begin());
+void conn(Node c, Node p, int il){if(c)c->p=p;if(il>=0)p->c[!il]=c;}
+void rotate(Node x){
+  Node p = x->p, g = p->p;
+  bool gCh=p->isRoot(), isl = x==p->c[0];
+  conn(x->c[isl],p,isl); conn(p,x,!isl);
+  conn(x,g,gCh?-1:(p==g->c[0])); p->upd();
 }
-int res;
-void gimme_love(int node, int pa)
-{
-    res = max(res, min(getmimo(node), *segundones.begin()));
-    for(int x : g[node])
-        if(x != pa)
-        {
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].erase(primarios[node].find(getmimo(x)));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].insert(getmimo(node));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            gimme_love(x, node);
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].erase(primarios[x].find(getmimo(node)));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].insert(getmimo(x));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-        }
+void spa(Node x){//splay
+  while(!x->isRoot()){
+    Node p = x->p, g = p->p;
+    if(!p->isRoot())g->push();
+    p->push(); x->push();
+    if(!p->isRoot())rotate((x==p->c[0])==(p==g->c[0])? p : x);
+    rotate(x);
+  }
+  x->push(); x->upd();
 }
+Node exv(Node x){//expose
+  Node last=0;
+  for(Node y=x; y; y=y->p)spa(y),y->c[0]=last,y->upd(),last=y;
+  spa(x);
+  return last;
+}
+void mkR(Node x){exv(x);x->rev^=1;}//makeRoot
+Node getR(Node x){exv(x);while(x->c[1])x=x->c[1];spa(x);return x;}
+Node lca(Node x, Node y){exv(x); return exv(y);}
+bool connected(Node x, Node y){exv(x);exv(y); return x==y?1:x->p!=0;}
+void link(Node x, Node y){mkR(x); x->p=y;}
+void cut(Node x, Node y){mkR(x); exv(y); y->c[1]->p=0; y->c[1]=0;}
+Node father(Node x){
+	exv(x);
+	Node r=x->c[1];
+	if(!r)return 0;
+	while(r->c[0])r=r->c[0];
+	return r;
+}
+void cut(Node x){ // cuts x from father keeping tree root
+	exv(father(x));x->p=0;}
+Node query(Node x, Node y){mkR(x); exv(y); return getPV(y);}
+void modify(Node x, Node y, int d){mkR(x);exv(y);y->d=joinD(y->d,d);}
+Node lift_rec(Node x, int t){
+	if(!x)return 0;
+	if(t==getSize(x->c[0])){spa(x);return x;}
+	if(t<getSize(x->c[0]))return lift_rec(x->c[0],t);
+	return lift_rec(x->c[1],t-getSize(x->c[0])-1);
+}
+Node lift(Node x, int t){ // t-th ancestor of x (lift(x,1) is x's father)
+	exv(x);return lift_rec(x,t);}
+int depth(Node x){ // distance from x to its tree root
+	exv(x);return getSize(x)-1;}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-    int t;
-    cin>>t;
-    while(t--)
-    {
-        int n;
-        cin>>n;
-        fore(i, 0, n - 1)
-        {
-            int a, b;
-            cin>>a>>b;
-            a--, b--;
-            g[a].pb(b);
-            g[b].pb(a);
-        }
-        dfs(0, -1);
-        res = 0;
-        segundones.insert(n);
-        gimme_love(0, -1);
-        cout<<res<<'\n';
-        fore(i, 0, n) g[i].clear(), primarios[i].clear();
-        segundones.clear();
-    }
+  int n, m;
+  cin>>n>>m;
+  vector<Node> t(n);
+  fore(i, 0, n) 
+  vector<vector<Node>> g(n);
+  while(m--)
+  {
+    int a, b, c;
+    cin>>a>>b>>c;
+
+  }
 	return 0;
 }
 // Se vuelve más fácil,

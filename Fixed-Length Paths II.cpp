@@ -119,7 +119,7 @@ typedef vector<ii>      vii;
 typedef vector<ll>      vll;
 // typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_update> ordered_set;
 // find_by_order kth largest  order_of_key <
-// mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
 const int tam = 200010;
 const int MOD = 1000000007;
@@ -128,73 +128,110 @@ const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
 vi g[tam];
-vector<multiset<int>> primarios(tam);
-multiset<int> segundones;
-int getmimo(int node)
+vi siz(tam), cintra(tam);
+int n, k1, k2;
+int res = 0;
+void sisi(int node, int pa, int dis, int papazo, vi &chichi)
 {
-    return sz(primarios[node]) ? *primarios[node].begin() + 1 : 1;
-}
-void dfs(int node, int pa)
-{
-    // cout<<node<<'\n';
+    siz[node] = 1;
+    while(dis >= sz(chichi)) chichi.pb(0);
+    chichi[dis]++;
     for(int x : g[node])
-        if(x != pa)
-        {
-            dfs(x, node);
-            primarios[node].insert(getmimo(x));
-        }
-    if(sz(primarios[node]) > 1)
-        segundones.insert(*++primarios[node].begin());
+        if(x != pa && !cintra[x])
+            sisi(x, node, dis + 1, papazo, chichi), siz[node] += siz[x];
 }
-int res;
-void gimme_love(int node, int pa)
+int centruida(int node, int pa, int simp)
 {
-    res = max(res, min(getmimo(node), *segundones.begin()));
     for(int x : g[node])
-        if(x != pa)
+        if(x != pa && !cintra[x])
+            if(siz[x] > simp / 2)
+                return centruida(x, node, simp);
+    return node;
+}
+int unicos = 0;
+vi centauros(int node, int pa)
+{
+    vi chichi;
+    sisi(node, -1, 1, pa, chichi);
+    int centris =  centruida(node, -1, siz[node]);
+    if(pa != -1)
+        fore(i, k1, min(k2 + 1, sz(chichi)))
+            unicos += chichi[i];
+    // cout<<"!!! "<<unicos<<'\n';
+    // cout<<"####\n";
+    // cout<<node + 1<<' '<<centris + 1<<'\n';
+    // fore(i, 0, sz(chichi))
+    //     cout<<i<<' '<<chichi[i]<<'\n';
+    fore(i, 0, sz(chichi))
+    cintra[centris] = 1;
+    vi total_over;
+    vector<vi> totus;
+    for(int x : g[centris])
+        if(!cintra[x])
         {
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].erase(primarios[node].find(getmimo(x)));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].insert(getmimo(node));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            gimme_love(x, node);
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].erase(primarios[x].find(getmimo(node)));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].insert(getmimo(x));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
+            totus.pb(centauros(x, centris));
+            while(sz(total_over) < sz(totus.back())) total_over.pb(0);
+            fore(i, 0, sz(totus.back()))
+                total_over[i] += totus.back()[i];
         }
+    // cout<<'$'<<centris + 1<<'\n';
+    // for(auto cat : total_over)
+    //     cout<<cat.f<<' '<<cat.s<<'\n';
+    // cout<<res<<'\n';
+    fore(i, 1, sz(total_over))
+        total_over[i] += total_over[i - 1];;
+    // cout<<"----";
+    // for(int x : total_over)
+    //     cout<<x<<' ';
+    // cout<<'\n';
+    fore(i, 0, sz(totus))
+    {
+        vi copycat = totus[i];
+        fore(i, 1, sz(copycat))
+            copycat[i] += copycat[i - 1];
+        int shisui = sz(copycat);
+        // cout<<res<<'\n';
+        // cout<<"~~~~~";
+        // for(int x : copycat)
+        //     cout<<x<<' ';
+        // cout<<'\n';
+        fore(j, 1, min(k2, sz(totus[i])))
+        {
+            // cout<<k2 - j<<' '<<min(shisui - 1, k2 - j)<<' '<<total_over[k2 - j]<<' '<<copycat[min(shisui - 1, k2 - j)]<<'\n';
+            // cout<<total_over[k2 - j] - copycat[min(shisui - 1, k2 - j)]<<','<<(k1 - j - 1 > 0 ? total_over[k1 - j - 1] - copycat[k1 - j - 1] : 0)<<'\n';
+            assert(min(sz(total_over) - 1, k2 - j)>=0);
+            assert(min(shisui - 1, k2 - j)>=0);
+            res += totus[i][j] * (total_over[min(sz(total_over) - 1, k2 - j)] - copycat[min(shisui - 1, k2 - j)] - (k1 - j - 1 > 0 ? total_over[min(sz(total_over) - 1, k1 - j - 1)] - copycat[min(shisui - 1, k1 - j - 1)] : 0));
+        }
+        // cout<<i<<' '<<res<<'\n';
+    }
+    // cout<<res<<'\n';
+    // cout<<'%'<<node + 1<<'\n';
+    // for(auto cat : chichi)
+    //     cout<<cat.f<<' '<<cat.s<<'\n';
+    return chichi;
 }
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
-	// freopen("qwe.txt", "w", stdout); 
-    int t;
-    cin>>t;
-    while(t--)
+	// freopen("qwe.txt", "w", stdout);
+	cin>>n>>k1>>k2;
+    // k1--, k2--;
+    // k--;
+    fore(i, 0, n - 1)
     {
-        int n;
-        cin>>n;
-        fore(i, 0, n - 1)
-        {
-            int a, b;
-            cin>>a>>b;
-            a--, b--;
-            g[a].pb(b);
-            g[b].pb(a);
-        }
-        dfs(0, -1);
-        res = 0;
-        segundones.insert(n);
-        gimme_love(0, -1);
-        cout<<res<<'\n';
-        fore(i, 0, n) g[i].clear(), primarios[i].clear();
-        segundones.clear();
+        int a, b;
+        cin>>a>>b;
+        a--, b--;
+        g[a].pb(b);
+        g[b].pb(a);
     }
+    centauros(0, -1);
+    // cout<<res<<' '<<unicos<<'\n';
+    // cout<<unicos<<'\n';
+    cout<<res / 2 + unicos<<'\n';
+    
 	return 0;
 }
 // Se vuelve más fácil,

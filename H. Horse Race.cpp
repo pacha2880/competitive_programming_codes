@@ -127,74 +127,105 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-vi g[tam];
-vector<multiset<int>> primarios(tam);
-multiset<int> segundones;
-int getmimo(int node)
-{
-    return sz(primarios[node]) ? *primarios[node].begin() + 1 : 1;
-}
-void dfs(int node, int pa)
-{
-    // cout<<node<<'\n';
-    for(int x : g[node])
-        if(x != pa)
-        {
-            dfs(x, node);
-            primarios[node].insert(getmimo(x));
-        }
-    if(sz(primarios[node]) > 1)
-        segundones.insert(*++primarios[node].begin());
-}
-int res;
-void gimme_love(int node, int pa)
-{
-    res = max(res, min(getmimo(node), *segundones.begin()));
-    for(int x : g[node])
-        if(x != pa)
-        {
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].erase(primarios[node].find(getmimo(x)));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].insert(getmimo(node));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            gimme_love(x, node);
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].erase(primarios[x].find(getmimo(node)));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].insert(getmimo(x));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-        }
-}
+
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-    int t;
-    cin>>t;
-    while(t--)
+    int n;
+    cin>>n;
+    vector<string> caba(n);
+    vi indo(n);
+    map<string, int> id;
+    set<pair<int, int>> huerfanos;
+    fore(i, 0, n)
     {
-        int n;
-        cin>>n;
-        fore(i, 0, n - 1)
-        {
-            int a, b;
-            cin>>a>>b;
-            a--, b--;
-            g[a].pb(b);
-            g[b].pb(a);
-        }
-        dfs(0, -1);
-        res = 0;
-        segundones.insert(n);
-        gimme_love(0, -1);
-        cout<<res<<'\n';
-        fore(i, 0, n) g[i].clear(), primarios[i].clear();
-        segundones.clear();
+        // cout<<i<<'\n';
+        cin>>caba[i];
+        id[caba[i]] = i;
+        huerfanos.insert({0, i});
     }
+    int q;
+    cin>>q;
+    vi maxlos(n);
+    vector<set<int>> puestos(n), puastos(n);
+    fore(i, 0, q)
+    {
+        // cout<<i<<'\n';
+        int can, puesto;
+        cin>>can>>puesto;
+        puesto--;
+        set<int> nuevo;
+        fore(i, 0, can)
+        {
+            string s;
+            cin>>s;
+            maxlos[id[s]] = max(puesto, maxlos[id[s]]);
+            nuevo.insert(id[s]);
+            puastos[puesto].insert(id[s]);
+        }
+        if(!puestos[puesto].empty())
+            for(auto it = nuevo.begin(); it != nuevo.end();)
+            {
+                // cout<<*it<<'\n';
+                if(!puestos[puesto].count(*it))
+                    it = nuevo.erase(it);
+                else
+                    it++;
+            }
+        swap(puestos[puesto], nuevo);
+    }
+    map<int, set<int>> g;
+    fore(i, 0, n)
+    {
+        for(int s : puestos[i])
+            g[s].insert(i);
+    }
+    priority_queue<pair<int, int>> que;
+    fore(i, 0, n)
+    {
+        if(sz(g[i]) == 1)
+            que.push({-maxlos[i], i});
+    }
+    vector<string> res(n);
+    while(!que.empty())
+    {
+        int s = que.top().s;
+        // cout<<s<<'\n';
+        que.pop();
+        if(sz(g[s]) == 1)
+        {
+            int puesto = *g[s].begin();
+            if(!res[puesto].empty()) continue;
+            // cout<<caba[s]<<' '<<puesto<<'\n';
+            res[puesto] = caba[s];
+            huerfanos.erase({indo[s], s});
+            for(int s : puastos[puesto])
+            {
+                if(indo[s] < puesto && huerfanos.count({indo[s], s}))
+                {
+                    huerfanos.erase({indo[s], s});
+                    indo[s] = puesto;
+                    huerfanos.insert({puesto, s});
+                }
+            }
+            for(int s : puestos[puesto])
+            {
+                g[s].erase(puesto);
+                if(sz(g[s]) == 1)
+                    que.push({-maxlos[s], s});
+            }
+        }
+    }
+    // for(auto cat : huerfanos)
+    //     cout<<cat.f<<' '<<cat.s<<'\n';
+    fore(i, 0, n)
+        if(res[i].empty())
+            cout<<caba[huerfanos.begin()->s]<<' ', huerfanos.erase(huerfanos.begin());
+        else
+            cout<<res[i]<<' ';
+    cout<<'\n';
 	return 0;
 }
 // Se vuelve más fácil,

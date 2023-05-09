@@ -121,80 +121,108 @@ typedef vector<ll>      vll;
 // find_by_order kth largest  order_of_key <
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 200010;
-const int MOD = 1000000007;
-const int MOD1 = 998244353;
-const double DINF=1e100;
-const double EPS = 1e-9;
-const double PI = acos(-1); 
-vi g[tam];
-vector<multiset<int>> primarios(tam);
-multiset<int> segundones;
-int getmimo(int node)
+struct st
 {
-    return sz(primarios[node]) ? *primarios[node].begin() + 1 : 1;
+	int val;
+	st* r;
+	st* l;
+	st() {r = l = NULL; val = 0;}
+	st(int v) {r = l = NULL; val = v;}
+	st(st* L, st* R) {l = L; r = R, val = l->val + r->val;}
+};
+typedef st* pst;
+void update(pst &t, int b, int e, int pos, int val)
+{
+    if(!t) t = new st();
+	if(b == e)
+    {
+		t->val += val;
+        return;
+    }
+	int mid = (b + e) / 2;
+	if(mid >= pos)
+		update(t->l, b, mid, pos, val);
+    else
+        update(t->r, mid + 1, e, pos, val);
+    t->val = (t->l?t->l->val:0) + (t->r?t->r->val:0);
 }
-void dfs(int node, int pa)
+int query(pst t, int b, int e, int i, int j)
 {
-    // cout<<node<<'\n';
-    for(int x : g[node])
-        if(x != pa)
-        {
-            dfs(x, node);
-            primarios[node].insert(getmimo(x));
-        }
-    if(sz(primarios[node]) > 1)
-        segundones.insert(*++primarios[node].begin());
+    if(!t) 
+        return 0;
+	if(b >= i && e <= j)
+		return t->val;
+	int mid = (b + e) / 2;
+	if(mid >= j)
+		return query(t->l, b, mid, i, j);
+	if(mid < i)
+		return query(t->r, mid +1, e, i, j);
+	return query(t->l, b, mid, i, j) + query(t->r, mid +1, e, i, j);
 }
-int res;
-void gimme_love(int node, int pa)
+
+void del(pst t, int b, int e)
 {
-    res = max(res, min(getmimo(node), *segundones.begin()));
-    for(int x : g[node])
-        if(x != pa)
-        {
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].erase(primarios[node].find(getmimo(x)));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].insert(getmimo(node));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            gimme_love(x, node);
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].erase(primarios[x].find(getmimo(node)));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].insert(getmimo(x));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-        }
+	if(t)
+	{
+		int mid = (b + e) / 2;
+		del(t->l, b, mid);
+		del(t->r, mid + 1, e);
+		delete t;
+	}
 }
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-    int t;
-    cin>>t;
-    while(t--)
-    {
-        int n;
-        cin>>n;
-        fore(i, 0, n - 1)
-        {
-            int a, b;
-            cin>>a>>b;
-            a--, b--;
-            g[a].pb(b);
-            g[b].pb(a);
-        }
-        dfs(0, -1);
-        res = 0;
-        segundones.insert(n);
-        gimme_love(0, -1);
-        cout<<res<<'\n';
-        fore(i, 0, n) g[i].clear(), primarios[i].clear();
-        segundones.clear();
-    }
+    int n,m,k,x;
+    cin>>n;
+    cin>>m;
+	int refijo=0;
+	pst F=NULL;
+	int MA=1e9+5;
+	for(int i=0;i<n;i++){
+		cin>>x;
+		refijo+=query(F,0,MA,x+1,MA);
+		update(F,0,MA,x,1);
+	}	
+	for(int i=0;i<m;i++){
+		cin>>k;
+		vi v;
+		pst T = NULL;
+		int fijo=0;
+		for(int l=0;l<k;l++){
+			cin>>x;
+			v.pb(x);
+			fijo+=query(T,0,MA,x+1,MA);
+			update(T,0,MA,x,1);
+		}
+		// todo puedo hacer en relacion a k no a m
+		int res=1000000000000000ll;
+		vi A,B;
+		int curr=0;
+		for(int i=0;i<k;i++){
+			x=v[i];
+			curr+=query(F,0,MA,0,x-1);
+			A.pb(curr);
+		}
+		curr=0;
+		for(int i=k-1;i>=0;i--){
+			x=v[i];
+			curr+=query(F,0,MA,x+1,MA);
+			B.pb(curr);
+		}
+		reverse(B.begin(),B.end());
+		B.pb(0);
+		for(int i=0;i<k;i++){
+			//quiero meter despues de i
+			int bebita=A[i]+B[i+1];
+			res=min(res,bebita);
+		}
+		res=min(res,B[0]);
+		del(T,0,MA);
+		cout<<res+fijo+refijo<<"\n";
+	}
 	return 0;
 }
 // Se vuelve más fácil,

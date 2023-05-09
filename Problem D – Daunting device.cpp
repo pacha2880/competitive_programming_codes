@@ -121,80 +121,75 @@ typedef vector<ll>      vll;
 // find_by_order kth largest  order_of_key <
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 200010;
+const int tam = 100010;
 const int MOD = 1000000007;
 const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-vi g[tam];
-vector<multiset<int>> primarios(tam);
-multiset<int> segundones;
-int getmimo(int node)
+int t[4 * tam];
+int frec[tam];
+// int con = 0;
+void update(int b, int e, int node, int i, int j, int col)
 {
-    return sz(primarios[node]) ? *primarios[node].begin() + 1 : 1;
-}
-void dfs(int node, int pa)
-{
-    // cout<<node<<'\n';
-    for(int x : g[node])
-        if(x != pa)
+    // con++;
+    // if(con < 20)
+    // cout<<b<<' '<<e<<' '<<node<<' '<<i<<' '<<j<<' '<<col<<'\n';
+    if(b > e) return;
+    index;
+    if(b < e && t[node] != -1)
+        t[l] = t[node], t[r] = t[node];
+    if(e < i || b > j) return;
+    if(b >= i && e <= j)
+    {
+        if(t[node] != -1)
         {
-            dfs(x, node);
-            primarios[node].insert(getmimo(x));
+            frec[t[node]] -= e - b + 1;
+            frec[col] += e - b + 1;
         }
-    if(sz(primarios[node]) > 1)
-        segundones.insert(*++primarios[node].begin());
-}
-int res;
-void gimme_love(int node, int pa)
-{
-    res = max(res, min(getmimo(node), *segundones.begin()));
-    for(int x : g[node])
-        if(x != pa)
+        else
         {
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].erase(primarios[node].find(getmimo(x)));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].insert(getmimo(node));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            gimme_love(x, node);
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].erase(primarios[x].find(getmimo(node)));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].insert(getmimo(x));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
+            update(b, mid, l, i, j, col);
+            update(mid + 1, e, r, i, j, col);
         }
+        t[node] = col;
+        return;
+    }
+    update(b, mid, l, i, j, col);
+    update(mid + 1, e, r, i, j, col);
+    if(t[l] == t[r])
+        t[node] = t[l];
+    else
+        t[node] = -1;
 }
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-    int t;
-    cin>>t;
-    while(t--)
+    int l, c, n;
+    cin>>l>>c>>n;
+    frec[0] = l;
+    fore(i, 0, n)
     {
-        int n;
-        cin>>n;
-        fore(i, 0, n - 1)
-        {
-            int a, b;
-            cin>>a>>b;
-            a--, b--;
-            g[a].pb(b);
-            g[b].pb(a);
-        }
-        dfs(0, -1);
-        res = 0;
-        segundones.insert(n);
-        gimme_love(0, -1);
-        cout<<res<<'\n';
-        fore(i, 0, n) g[i].clear(), primarios[i].clear();
-        segundones.clear();
+        int p, x, a, b;
+        cin>>p>>x>>a>>b;
+        p--;
+        x--;
+        int s = frec[p];
+        int m1 = (a + s * s) % l;
+        int m2 = (a + (s + b) * (s + b)) % l;
+        int izq = min(m1, m2);
+        int der = max(m1, m2);
+        // cout<<izq<<' '<<der<<'\n';
+        update(0, l - 1, 0, izq, der, x);
+        // cout<<"$$$$$\n";
+        // fore(i, 0, l - 1)
+        //     cout<<i<<' '<<frec[i]<<'\n';
     }
+    int res = 0;
+    fore(i, 0, c) res = max(res, frec[i]);
+    cout<<res<<'\n';
 	return 0;
 }
 // Se vuelve más fácil,

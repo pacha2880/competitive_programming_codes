@@ -127,74 +127,65 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-vi g[tam];
-vector<multiset<int>> primarios(tam);
-multiset<int> segundones;
-int getmimo(int node)
-{
-    return sz(primarios[node]) ? *primarios[node].begin() + 1 : 1;
-}
-void dfs(int node, int pa)
-{
-    // cout<<node<<'\n';
-    for(int x : g[node])
-        if(x != pa)
-        {
-            dfs(x, node);
-            primarios[node].insert(getmimo(x));
-        }
-    if(sz(primarios[node]) > 1)
-        segundones.insert(*++primarios[node].begin());
-}
-int res;
-void gimme_love(int node, int pa)
-{
-    res = max(res, min(getmimo(node), *segundones.begin()));
-    for(int x : g[node])
-        if(x != pa)
-        {
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].erase(primarios[node].find(getmimo(x)));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].insert(getmimo(node));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            gimme_love(x, node);
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].erase(primarios[x].find(getmimo(node)));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].insert(getmimo(x));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-        }
+
+vector<pair<int,int> >G[tam];
+int dp[tam][2];//0 es si no le obligo 1 es si le obligo
+int f(int nodo, int ant, bool obligado){
+	// if(G[nodo].size()==1){
+	// 	return 0;
+	// }
+	if(dp[nodo][obligado]!=-1)return dp[nodo][obligado];
+	vector<pair<int,pair<int,int> > >E;
+	vi prefi;
+	for(auto it : G[nodo]){
+		if(it.f == ant) continue;
+		int vecino=it.f;
+		int w=it.s;
+		int obi=f(vecino,nodo,1);
+		int nobi=f(vecino,nodo,0);
+		E.pb({obi+w-nobi,{w+obi,nobi}});
+	}
+	sort(E.begin(),E.end());
+	E.pb({0, {0, 0}});
+	reverse(all(E));
+	// cout<<"$$$$$$"<<nodo<<' '<<obligado<<'\n';
+	// for(auto cat : E)
+	// 	cout<<cat.f<<' '<<cat.s.f<<' '<<cat.s.s<<'\n';
+	int n = E.size();
+	fore(i, 1, n)
+		E[i].s.f += E[i - 1].s.f, E[n - i - 1].s.s += E[n - i].s.s;
+	// cout<<"####\n";
+	// for(auto cat : E)
+	// 	cout<<cat.f<<' '<<cat.s.f<<' '<<cat.s.s<<'\n';
+	dp[nodo][obligado] = 0;
+	forg(i, obligado, n, 2)
+		dp[nodo][obligado] = max(dp[nodo][obligado], E[i].s.f + (i < n - 1 ? E[i + 1].s.s : 0));
+    if(sz(G[nodo]) == 1)
+	if(!obligado) dp[nodo][obligado] = max(dp[nodo][obligado], f(nodo, ant, 1));
+	// cout<<dp[nodo][obligado]<<'\n';
+	return dp[nodo][obligado];
 }
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-    int t;
-    cin>>t;
-    while(t--)
-    {
-        int n;
-        cin>>n;
-        fore(i, 0, n - 1)
-        {
-            int a, b;
-            cin>>a>>b;
-            a--, b--;
-            g[a].pb(b);
-            g[b].pb(a);
-        }
-        dfs(0, -1);
-        res = 0;
-        segundones.insert(n);
-        gimme_love(0, -1);
-        cout<<res<<'\n';
-        fore(i, 0, n) g[i].clear(), primarios[i].clear();
-        segundones.clear();
-    }
+	int n,a,b,w;
+	cin>>n;
+	for(int i=0;i<n-1;i++){
+		cin>>a>>b>>w;
+		G[a].pb({b, w});
+		G[b].pb({a, w});
+	}
+	mem(dp, -1);
+	cout<<f(1, -1, 0)<<'\n';
+	// for(int i=1;i<=n;i++){
+	// 	if(G[i].size()>1){
+	// 		cout<<f(i,0, 0)<<endl;
+	// 		return 0
+	// 	}
+	// }
+
 	return 0;
 }
 // Se vuelve más fácil,

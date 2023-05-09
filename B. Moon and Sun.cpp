@@ -122,79 +122,68 @@ typedef vector<ll>      vll;
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
 const int tam = 200010;
-const int MOD = 1000000007;
+const int MOD = 235813;
 const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-vi g[tam];
-vector<multiset<int>> primarios(tam);
-multiset<int> segundones;
-int getmimo(int node)
-{
-    return sz(primarios[node]) ? *primarios[node].begin() + 1 : 1;
-}
-void dfs(int node, int pa)
-{
-    // cout<<node<<'\n';
-    for(int x : g[node])
-        if(x != pa)
-        {
-            dfs(x, node);
-            primarios[node].insert(getmimo(x));
-        }
-    if(sz(primarios[node]) > 1)
-        segundones.insert(*++primarios[node].begin());
-}
-int res;
-void gimme_love(int node, int pa)
-{
-    res = max(res, min(getmimo(node), *segundones.begin()));
-    for(int x : g[node])
-        if(x != pa)
-        {
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].erase(primarios[node].find(getmimo(x)));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].insert(getmimo(node));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            gimme_love(x, node);
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].erase(primarios[x].find(getmimo(node)));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].insert(getmimo(x));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-        }
-}
+
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-    int t;
-    cin>>t;
-    while(t--)
-    {
-        int n;
-        cin>>n;
-        fore(i, 0, n - 1)
+    vi fac(tam), facin(tam);
+    auto pot = [&](int b, int e){
+        int res = 1;
+        while(e)
         {
-            int a, b;
-            cin>>a>>b;
-            a--, b--;
-            g[a].pb(b);
-            g[b].pb(a);
+            if(e & 1) res = res * b % MOD;
+            b = b * b % MOD;
+            e /= 2;
         }
-        dfs(0, -1);
-        res = 0;
-        segundones.insert(n);
-        gimme_love(0, -1);
-        cout<<res<<'\n';
-        fore(i, 0, n) g[i].clear(), primarios[i].clear();
-        segundones.clear();
+        return res;
+    };
+    fac[0] = facin[0] = 1;
+    fore(i, 1, tam) fac[i] = fac[i - 1] * i % MOD, facin[i] = pot(fac[i], MOD - 2);
+    auto bino = [&](int n, int k)
+    {
+        return fac[n] * facin[k] % MOD * facin[n - k] % MOD;
+    };
+    int n;
+    cin>>n;
+    vi ar(n), a(n), b(n);
+    int su = 0;
+    fore(i, 0, n)
+    {
+        cin>>ar[i];
+        b[i] = bino(n - 1, i);
+        if((n - 1 - i) & 1)
+            b[i] = MOD - b[i];
+        a[i] = ar[i] * b[i] % MOD;
+        su = (su + a[i]) % MOD;
+        // cout<<ar[i]<<' '<<a[i]<<' '<<b[i]<<'\n';
     }
+    if(su == 0)
+    {
+        cout<<0<<'\n';
+        return 0;
+    }
+    // cout<<su<<'\n';
+    // cout<<MOD - su<<'\n';
+    int res = 0;
+    fore(i, 0, n)
+    {
+        int sasi = (su - (ar[i] + 100000) * b[i]) % MOD;
+        if(sasi == 0) res++;
+        else{
+            int x = (-sasi * pot(b[i], MOD - 2) % MOD + MOD) % MOD;
+            // cout<<i<<' '<<sasi<<' '<<x<<'\n';
+            if(x <= 200000)
+                res++;
+        }
+    }
+    cout<<res<<'\n';
 	return 0;
 }
 // Se vuelve más fácil,

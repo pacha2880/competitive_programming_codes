@@ -51,6 +51,16 @@ const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
 
+    int pot(int a, int b){
+        int r = 1;
+        while(b){
+            if(b & 1)
+                r = r * a % MOD;
+            a = a * a % MOD;
+            b >>= 1;
+        }
+        return r;
+    }
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
@@ -60,65 +70,41 @@ signed main()
     cin>>n>>k;
     vector<pair<ii, int>> ar(n);
     fore(i, 0, n)
-        cin>>ar[i].f.s;
-    auto pot = [&](int a, int b){
-        int r = 1;
-        while(b){
-            if(b & 1)
-                r = r * a % MOD;
-            a = a * a % MOD;
-            b >>= 1;
-        }
-        return r;
-    };
+        cin>>ar[i].s;
     fore(i, 0, n)
     {
         fore(j, 0, 6)
         {
             int x;
             cin>>x;
-            ar[i].f.f += x;
+            ar[i].f.f += x * x;
+            ar[i].f.s += x;
         }
     }
-    sort(all(ar));
-    reverse(all(ar));
-    fore(i, 0, k)
-    {
-        ar[i].s = ar[i].f.f * ar[i].f.f - ar[i].f.s;
-        fore(j, 0, k)
-            if(i != j)
-                ar[i].s += 2 * ar[i].f.f * ar[j].f.f;
-    }
-    fore(i, 0, 10)
     fore(i, k, n)
     {
-        int ind = 0;
-        ar[i].s = ar[i].f.f * ar[i].f.f - ar[i].f.s;
+        int su = 0;
+        fore(j, 0, k) su += ar[j].f.s;
         fore(j, 0, k)
-            ar[i].s += 2 * ar[i].f.f * ar[j].f.f;
-        ii swas = {0, -1};
-        fore(j, 1, k)
-            if(ar[i].s - 2 * ar[i].f.f * ar[j].f.f > ar[j].s)
-                swas = max(swas, {ar[i].s - 2 * ar[i].f.f * ar[j].f.f - ar[j].s, j});
-        if(swas.s != -1)
         {
-            int ind = swas.s;
-            fore(j, 0, k)
-                if(j != ind)
-                    ar[j].s += 2 * ar[i].f.f * ar[j].f.f - 2 * ar[ind].f.f * ar[j].f.f;
-            ar[i].s -= 2 * ar[i].f.f * ar[ind].f.f;
-            swap(ar[i], ar[ind]);
+            if(ar[i].f.f * 6 + 2 * ar[i].f.s * (su - ar[j].f.s) - ar[i].s * 36 >
+                ar[j].f.f * 6 + 2 * ar[j].f.s * (su - ar[j].f.s) - ar[j].s * 36)
+                swap(ar[j], ar[i]);
         }
     }
     int nega = 0, res = 0;
+    fore(i, 0, k) nega = (nega + MOD - ar[i].s) % MOD;
     fore(i, 0, k)
     {
-        res = (res + ar[i].f.f) % MOD, nega = (nega + MOD - ar[i].f.s) % MOD;
+        res = (res + ar[i].f.f % MOD * pot(6, k - 1) % MOD);
+        fore(j, i + 1, k)
+            res = (res + 2 * ar[i].f.s * ar[j].f.s % MOD * pot(6, k - 2)) % MOD;
     }
-    cout<<res<<' '<<MOD - nega<<'\n';
-    cout<<pot(6, MOD - 2)<<'\n';
-    cout<<res * res % MOD * pot(6, MOD - 2) % MOD * pot(6, MOD - 2) % MOD<<'\n';
-    cout<<(res * res % MOD * pot(6, MOD - 2) % MOD * pot(6, MOD - 2) + nega)% MOD<<'\n';
+    // cout<<pot(6, MOD - 2)<<'\n';
+    // cout<<res * res % MOD * pot(pot(6, k), MOD - 2) % MOD * pot(6, MOD - 2) % MOD<<'\n';
+    // cout<<MOD - nega<<'\n';
+    // cout<<res<<'\n';
+    cout<<(res * pot(pot(6, k), MOD - 2) + nega) % MOD<<'\n';
 	return 0;
 }
 

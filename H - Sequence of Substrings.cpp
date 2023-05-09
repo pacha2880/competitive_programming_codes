@@ -127,74 +127,130 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-vi g[tam];
-vector<multiset<int>> primarios(tam);
-multiset<int> segundones;
-int getmimo(int node)
-{
-    return sz(primarios[node]) ? *primarios[node].begin() + 1 : 1;
+vector<vector<int>> table;
+vector<int> suffixa(string &s){
+  int n = s.size(), cc, ax;
+  vector<int> sa(n), sa1(n), col(n), col1(n), head(n);
+  fore(i, 0, n) sa[i] = i;
+  auto cmp = [&](int a, int b){ return s[a] < s[b]; };
+  stable_sort(sa.begin(), sa.end(), cmp);
+  head[0] = col[sa[0]] = cc = 0;
+  fore(i, 1, n){
+    if(s[sa[i]] != s[sa[i-1]])
+      cc++, head[cc] = i;
+    col[sa[i]] = cc;
+  }
+  table.pb(col);
+  for(int k = 1; k < n; k *= 2){
+    fore(i, 0, n){
+      ax = (sa[i] - k + n) % n;
+      sa1[head[col[ax]]++] = ax;
+    }
+    swap(sa, sa1);
+    col1[sa[0]] = head[0] = cc = 0;
+    fore(i, 1, n){
+      if(col[sa[i]] != col[sa[i - 1]] || col[(sa[i] + k) % n] != col[(sa[i - 1] + k) % n])
+        cc++, head[cc] = i;
+      col1[sa[i]] = cc;
+    }
+    swap(col, col1); table.pb(col);
+    // if(col[sa[n - 1]] == n - 1) break;
+  }
+  return sa;
 }
-void dfs(int node, int pa)
-{
-    // cout<<node<<'\n';
-    for(int x : g[node])
-        if(x != pa)
-        {
-            dfs(x, node);
-            primarios[node].insert(getmimo(x));
-        }
-    if(sz(primarios[node]) > 1)
-        segundones.insert(*++primarios[node].begin());
+pair<int, int> query(int b, int e){
+  int lev = 31 - __builtin_clz(e - b + 1);  
+  // cout<<lev<<' '<<b<<' '<<e<<' '<<table.size()<<'\n';
+  return mp(table[lev][b], table[lev][e - (1 << lev) + 1]);  
 }
-int res;
-void gimme_love(int node, int pa)
-{
-    res = max(res, min(getmimo(node), *segundones.begin()));
-    for(int x : g[node])
-        if(x != pa)
-        {
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].erase(primarios[node].find(getmimo(x)));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].insert(getmimo(node));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            gimme_love(x, node);
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].erase(primarios[x].find(getmimo(node)));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].insert(getmimo(x));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-        }
+bool comp(int b1, int e1, int b2, int e2){ 
+  int siz = min(e1 - b1, e2 - b2);
+  ii le = query(b1, b1 + siz), ri = query(b2, b2 + siz);
+  if(le == ri)
+    return e1 - b1 == e2 - b2 ? e1 > e2 : e1 - b1 < e2 - b2;
+  return le < ri;
 }
+struct node
+{
+  int val;
+};
+node join(node a, node b)
+{
+  a.val = max(a.val, b.val);
+  return a;
+}
+node t1[4 * tam];
+void init(int b, int e, int node)
+{
+  if(b == e)
+  {
+    if(b == 0) t1[node].val = 0;
+    else
+      t1[node].val = -100;
+    return;
+  }
+  index;
+  init(b, mid, l);
+  init(mid + 1, e, r);
+  t1[node] = join(t1[l], t1[r]);
+}
+node query(int b, int e, int node, int i, int j)
+{
+	if(b >= i && e <= j)
+		return t1[node];
+	int mid = (b + e) / 2, l = node * 2 + 1, r = l + 1;
+	if(mid < i)
+		return query(mid + 1, e, r, i, j);
+	if(mid >= j)
+		return query(b, mid, l, i, j);
+	return join(query(b, mid, l, i, j), query(mid + 1, e, r, i, j));
+}
+void update(int b, int e, int node, int pos, int val)
+{
+	if(b == e) {t1[node].val = max(t1[node].val, val);return;}
+	int mid = (b + e) / 2, l = node * 2 + 1, r = l + 1;
+	if(mid < pos)
+		update(mid + 1, e, r, pos, val);
+	else
+		update(b, mid, l, pos, val);
+	t1[node] = join(t1[l], t1[r]);
+}
+
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-    int t;
-    cin>>t;
-    while(t--)
+    int n;
+    cin>>n;
+    string s;
+    cin>>s;
+    s += '0' - 1;
+    vi v = suffixa(s);  
+    vii ar;
+    int raz = 250;
+    fore(i, 0, n)
     {
-        int n;
-        cin>>n;
-        fore(i, 0, n - 1)
-        {
-            int a, b;
-            cin>>a>>b;
-            a--, b--;
-            g[a].pb(b);
-            g[b].pb(a);
-        }
-        dfs(0, -1);
-        res = 0;
-        segundones.insert(n);
-        gimme_love(0, -1);
-        cout<<res<<'\n';
-        fore(i, 0, n) g[i].clear(), primarios[i].clear();
-        segundones.clear();
+      fore(j, max(0ll, i - raz), i + 1)
+        ar.pb({j + 1, i + 1});
     }
+    // cout<<"asfdsd\n";
+    sort(all(ar), [&](ii a, ii b){
+      // cout<<a.f<<' '<<a.s<<' '<<b.f<<' '<<b.s<<'\n';
+      return comp(a.f - 1, a.s - 1, b.f - 1, b.s - 1);
+    });
+    // cout<<"afsdasfd\n";
+    init(0, n, 0);
+    string la;
+    la += '0' - 1;
+    for(auto cat : ar)
+    {
+      // cout<<cat.f<<' '<<cat.s<<'\n';
+      assert(s.substr(cat.f - 1, cat.s - cat.f + 1) >= la);
+      la = s.substr(cat.f - 1, cat.s - cat.f + 1);
+      update(0, n, 0, cat.s, query(0, n, 0, 0, cat.f - 1).val + 1);
+    }
+    cout<<t1[0].val<<'\n';
 	return 0;
 }
 // Se vuelve más fácil,

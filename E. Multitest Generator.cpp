@@ -127,47 +127,7 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-vi g[tam];
-vector<multiset<int>> primarios(tam);
-multiset<int> segundones;
-int getmimo(int node)
-{
-    return sz(primarios[node]) ? *primarios[node].begin() + 1 : 1;
-}
-void dfs(int node, int pa)
-{
-    // cout<<node<<'\n';
-    for(int x : g[node])
-        if(x != pa)
-        {
-            dfs(x, node);
-            primarios[node].insert(getmimo(x));
-        }
-    if(sz(primarios[node]) > 1)
-        segundones.insert(*++primarios[node].begin());
-}
-int res;
-void gimme_love(int node, int pa)
-{
-    res = max(res, min(getmimo(node), *segundones.begin()));
-    for(int x : g[node])
-        if(x != pa)
-        {
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].erase(primarios[node].find(getmimo(x)));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].insert(getmimo(node));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            gimme_love(x, node);
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].erase(primarios[x].find(getmimo(node)));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].insert(getmimo(x));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-        }
-}
+
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
@@ -175,25 +135,52 @@ signed main()
 	// freopen("qwe.txt", "w", stdout); 
     int t;
     cin>>t;
-    while(t--)
+    int can = 0;
+    fore(cas, 1, t + 1)
     {
         int n;
         cin>>n;
-        fore(i, 0, n - 1)
+        vi ar(n);
+        fore(i, 0, n)
+            cin>>ar[i];
+        can += n - 1;
+        // if(t == 50068)
+        // {
+        //     if(can >= 263)
+        //     {
+        //         cout<<n<<'\n';
+        //         fore(i, 0, n) cout<<ar[i]<<' ';
+        //     }
+        //     continue;
+        // }
+        vi solo(n), res(n);
+        solo[n - 1] = ar[n - 1] == 0;
+        vi maxun(n);
+        maxun[n - 1] = 1;
+        int maxalla = solo[n - 1];
+        for(int i = n - 2; i > -1; i--)
         {
-            int a, b;
-            cin>>a>>b;
-            a--, b--;
-            g[a].pb(b);
-            g[b].pb(a);
+            if(solo[i + 1] == ar[i] && ar[i] > 0)
+                res[i] = 0;
+            else if(ar[i] > 0 && maxun[i + 1] >= ar[i] || solo[i + 1])
+                res[i] = 1;
+            else
+                res[i] = 2;
+            maxun[i] = 1 + maxalla;
+            if(ar[i] + i == n - 1)
+                solo[i] = 1;
+            else if(i + ar[i] < n - 1)
+            {
+                if(solo[i + ar[i] + 1])
+                    solo[i] = solo[i + ar[i] + 1] + 1;
+                maxun[i] = max(maxun[i + ar[i] + 1] + 1, maxun[i]);
+            }
+            maxalla = max(maxalla, solo[i]);
+            // cout<<solo[i]<<' '<<maxun[i]<<' '<<res[i]<<' '<<maxalla<<'\n';
         }
-        dfs(0, -1);
-        res = 0;
-        segundones.insert(n);
-        gimme_love(0, -1);
-        cout<<res<<'\n';
-        fore(i, 0, n) g[i].clear(), primarios[i].clear();
-        segundones.clear();
+        fore(i, 0, n - 1)
+            cout<<res[i]<<' ';
+        cout<<'\n';
     }
 	return 0;
 }

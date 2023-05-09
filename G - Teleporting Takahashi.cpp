@@ -79,7 +79,7 @@ EL PEMRRITO MALVADO
 // #include <ext/pb_ds/assoc_container.hpp>
 // #include <ext/pb_ds/tree_policy.hpp>
 // #include <ext/rope>
-#define int ll
+// #define int ll
 #define mp				make_pair
 #define pb				push_back
 #define all(a)			(a).begin(), (a).end()
@@ -122,79 +122,148 @@ typedef vector<ll>      vll;
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
 const int tam = 200010;
-const int MOD = 1000000007;
-const int MOD1 = 998244353;
+const int MOD1 = 1000000007;
+const int MOD = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-vi g[tam];
-vector<multiset<int>> primarios(tam);
-multiset<int> segundones;
-int getmimo(int node)
+int pot(int b, int e)
 {
-    return sz(primarios[node]) ? *primarios[node].begin() + 1 : 1;
+    int res = 1;
+    while(e)
+    {
+        if(e & 1) res = 1ll * res * b % MOD;
+        b = 1ll * b * b % MOD;
+        e /= 2;
+    }
+    return res;
 }
-void dfs(int node, int pa)
+// el modulo debe ser un primo de la forma p = c*2^k + 1
+const int mod = 998244353; // c*2^k + 1 = 119*2^23 + 1
+
+// 3 es raiz primitiva de mod, root = 3^c % mod = 3^119 % mod
+const int root = 15311432;
+
+// root_1 = root^-1
+const int root_1 = 469870224;
+
+// 2^k
+const int root_pw = 1 << 23;
+ 
+int modPow(int b, int e)
 {
-    // cout<<node<<'\n';
-    for(int x : g[node])
-        if(x != pa)
-        {
-            dfs(x, node);
-            primarios[node].insert(getmimo(x));
+	if (e == 0) return 1;
+	int res = modPow(b, e/2);
+	if (e%2 == 1)
+		return ((1LL * b * res % mod) * res % mod) % mod;
+	else 
+		return (1LL * res * res % mod) % mod;
+}
+ 
+void fft(vector<int> & a, bool invert) {
+    int n = a.size();
+
+    for (int i = 1, j = 0; i < n; i++) {
+        int bit = n >> 1;
+        for (; j & bit; bit >>= 1)
+            j ^= bit;
+        j ^= bit;
+
+        if (i < j)
+            swap(a[i], a[j]);
+    }
+
+    for (int len = 2; len <= n; len <<= 1) {
+        int wlen = invert ? root_1 : root;
+        for (int i = len; i < root_pw; i <<= 1)
+            wlen = (int)(1LL * wlen * wlen % mod);
+
+        for (int i = 0; i < n; i += len) {
+            int w = 1;
+            for (int j = 0; j < len / 2; j++) {
+                int u = a[i+j], v = (int)(1LL * a[i+j+len/2] * w % mod);
+                a[i+j] = u + v < mod ? u + v : u + v - mod;
+                a[i+j+len/2] = u - v >= 0 ? u - v : u - v + mod;
+                w = (int)(1LL * w * wlen % mod);
+            }
         }
-    if(sz(primarios[node]) > 1)
-        segundones.insert(*++primarios[node].begin());
+    }
+
+    if (invert) {
+	// Pre-calcular inversos modulares para mejorar eficiencia
+        int n_1 = modPow(n, mod-2);
+        for (int & x : a)
+            x = (int)(1LL * x * n_1 % mod);
+    }
 }
-int res;
-void gimme_love(int node, int pa)
+ 
+vector<int> fftMul(vector<int> & a, vector<int> & b)
 {
-    res = max(res, min(getmimo(node), *segundones.begin()));
-    for(int x : g[node])
-        if(x != pa)
-        {
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].erase(primarios[node].find(getmimo(x)));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].insert(getmimo(node));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            gimme_love(x, node);
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].erase(primarios[x].find(getmimo(node)));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].insert(getmimo(x));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-        }
+	vector<int> fa(a.begin(), a.end()), fb(b.begin(), b.end());
+	int n = 1;
+	while (n < a.size() + b.size())
+		n <<= 1;
+	fa.resize(n);
+	fb.resize(n);
+ 
+	fft(fa, false);
+	fft(fb, false);
+ 
+	for (int i = 0; i < n; i++)
+		fa[i] = (int)(1LL * fa[i] * fb[i] % mod);
+	fft(fa, true);
+ 
+	return fa;
 }
+
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-    int t;
-    cin>>t;
-    while(t--)
+    int n;
+    cin>>n;
+    vi fac(n + 1), facin(n + 1);
+    auto bino = [&](int n, int k)
     {
-        int n;
-        cin>>n;
-        fore(i, 0, n - 1)
-        {
-            int a, b;
-            cin>>a>>b;
-            a--, b--;
-            g[a].pb(b);
-            g[b].pb(a);
-        }
-        dfs(0, -1);
-        res = 0;
-        segundones.insert(n);
-        gimme_love(0, -1);
-        cout<<res<<'\n';
-        fore(i, 0, n) g[i].clear(), primarios[i].clear();
-        segundones.clear();
+        return 1ll * fac[n] * facin[k] % MOD * facin[n - k] % MOD;
+    };
+    fac[0] = 1;
+    fore(i, 1, n + 1)
+        fac[i] = 1ll * fac[i - 1] * i % MOD;
+    facin[n] = pot(fac[n], MOD - 2);
+    for(int i = n - 1; i > -1; i--)
+        facin[i] = 1ll * facin[i + 1] * (i + 1) % MOD;
+        // cout<<facin[0]<<'\n';
+    int x, y, z;
+    cin>>x>>y>>z;
+    x = abs(x);
+    y = abs(y);
+    z = abs(z);
+    int t = n - x - y - z;
+    // cout<<t<<'\n';
+    if(t < 0 || (t & 1))
+    {
+        cout<<0<<'\n';
+        return 0;
     }
+    t /= 2;
+    // vi fac1(t + 1), fac2(t + 1);
+    vi fac3(t + 1);
+    fore(i, 0, t + 1)
+        fac3[i] = bino(x + y + 2 * i, x + y + i) * bino(x + y + 2 * i, x + i) % MOD;
+    // vi fac3 = fftMul(fac1, fac2);
+    int susu = 0;
+    // cout<<'\n';
+    // cout<<"asfsdffasd "<<sz(fac3)<<'\n';
+    fore(i, 0, t + 1)
+    {
+        // cout<<n<<' '<<z + i<<' '<<bino(n, z + i)<<'\n';
+        susu = (susu + 1ll * bino(n, z + 2 * i) * bino(z + 2 * i, i) % MOD * fac3[t - i]) % MOD;//, cout<<"% "<<t - i<<' '<<fac3[t - i]<<'\n';;
+    }
+    // cout<<susu<<'\n';
+    // cout<<fac[n] <<'\n';
+    cout<<susu<<'\n';
 	return 0;
 }
 // Se vuelve más fácil,

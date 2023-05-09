@@ -127,73 +127,77 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-vi g[tam];
-vector<multiset<int>> primarios(tam);
-multiset<int> segundones;
-int getmimo(int node)
-{
-    return sz(primarios[node]) ? *primarios[node].begin() + 1 : 1;
-}
-void dfs(int node, int pa)
-{
-    // cout<<node<<'\n';
-    for(int x : g[node])
-        if(x != pa)
-        {
-            dfs(x, node);
-            primarios[node].insert(getmimo(x));
-        }
-    if(sz(primarios[node]) > 1)
-        segundones.insert(*++primarios[node].begin());
-}
-int res;
-void gimme_love(int node, int pa)
-{
-    res = max(res, min(getmimo(node), *segundones.begin()));
-    for(int x : g[node])
-        if(x != pa)
-        {
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].erase(primarios[node].find(getmimo(x)));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].insert(getmimo(node));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            gimme_love(x, node);
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].erase(primarios[x].find(getmimo(node)));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].insert(getmimo(x));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-        }
-}
+
 signed main()
 {
-	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+	// ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
+    auto wazza = [](){int x;cin>>x;if(x==-2) exit(0);};
     int t;
     cin>>t;
     while(t--)
     {
         int n;
         cin>>n;
-        fore(i, 0, n - 1)
+        cout<<"+ "<<n<<endl;wazza();
+        cout<<"+ "<<n + 1<<endl;wazza();
+        vi arruglo;
+        int a = n, b = 1;
+        while(a >= b)
         {
-            int a, b;
-            cin>>a>>b;
-            a--, b--;
-            g[a].pb(b);
-            g[b].pb(a);
+            arruglo.pb(a);
+            if(b < a)
+                arruglo.pb(b);
+            a--, b++;
         }
-        dfs(0, -1);
-        res = 0;
-        segundones.insert(n);
-        gimme_love(0, -1);
-        cout<<res<<'\n';
-        fore(i, 0, n) g[i].clear(), primarios[i].clear();
-        segundones.clear();
+        // cout<<"*** ";
+        // for(int x : arruglo)
+        //     cout<<x<<' ';
+        // cout<<endl;
+        map<int, vi> dis;
+        fore(i, 2, n + 1)
+        {
+            cout<<"? "<<1<<' '<<i<<endl;
+            int x;
+            cin>>x;
+            dis[x].pb(i - 1);
+        }
+        int maxus = (--dis.end())->f;
+        int pozo = maxus;
+        vi resa(n);
+        resa[0] = pozo;
+        int izq = (--dis.end())->s[0] + 1;
+        for(auto cat : dis)
+        {
+            if(sz(cat.s) == 1)
+                resa[cat.s[0]] = pozo - cat.f;
+            else
+            {
+                cout<<"? "<<cat.s[0] + 1<<' '<<izq<<endl;
+                int a, b;
+                cin>>a;
+                cout<<"? "<<cat.s[1] + 1<<' '<<izq<<endl;
+                cin>>b;
+                // cout<<"## "<<cat.s[0]<<' '<<cat.s[1]<<endl;
+                if(a < b)
+                {
+                    resa[cat.s[0]] = pozo - cat.f;
+                    resa[cat.s[1]] = pozo + cat.f;
+                }
+                else
+                {
+                    resa[cat.s[0]] = pozo + cat.f;
+                    resa[cat.s[1]] = pozo - cat.f;
+                }
+            }
+        }
+        cout<<"!";
+        // for(int x : resa)cout<<x<<' ';
+        // cout<<endl;
+        for(int x : resa) cout<<' '<<arruglo[x];
+        for(int x : resa) cout<<' '<<arruglo[n - 1 - x];
+        cout<<endl;wazza();
     }
 	return 0;
 }

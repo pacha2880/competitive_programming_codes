@@ -127,74 +127,78 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-vi g[tam];
-vector<multiset<int>> primarios(tam);
-multiset<int> segundones;
-int getmimo(int node)
+bitset<5001> g[5001];
+vector<vi> g1(5001);
+int dp[5001];
+int prof[5001];
+int f(int pos)
 {
-    return sz(primarios[node]) ? *primarios[node].begin() + 1 : 1;
-}
-void dfs(int node, int pa)
-{
-    // cout<<node<<'\n';
-    for(int x : g[node])
-        if(x != pa)
-        {
-            dfs(x, node);
-            primarios[node].insert(getmimo(x));
-        }
-    if(sz(primarios[node]) > 1)
-        segundones.insert(*++primarios[node].begin());
-}
-int res;
-void gimme_love(int node, int pa)
-{
-    res = max(res, min(getmimo(node), *segundones.begin()));
-    for(int x : g[node])
-        if(x != pa)
-        {
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].erase(primarios[node].find(getmimo(x)));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].insert(getmimo(node));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            gimme_love(x, node);
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].erase(primarios[x].find(getmimo(node)));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].insert(getmimo(x));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-        }
+    if(dp[pos] != -1) return dp[pos];
+    dp[pos] = 0;
+    for(int x : g1[pos])
+        dp[pos] = max(dp[pos], f(x));
+    return dp[pos] += prof[pos];
 }
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-    int t;
-    cin>>t;
-    while(t--)
+	int m, n;
+    cin>>m>>n;
+    fore(i, 0, n) g[i].set();
+    fore(i, 0, n) cin>>prof[i];
+    fore(i, 0, m)
     {
-        int n;
-        cin>>n;
-        fore(i, 0, n - 1)
+        bitset<5001> bi;
+        bi.reset();
+        vii ar(n);
+        fore(i, 0, n) cin>>ar[i].f, ar[i].s = i;
+        sort(all(ar));
+        reverse(all(ar));
+        vi ac;
+        int las = -1;
+        // cout<<i<<'\n';
+        fore(i, 0, n)
         {
-            int a, b;
-            cin>>a>>b;
-            a--, b--;
-            g[a].pb(b);
-            g[b].pb(a);
+            // cout<<'$'<<i<<'\n';
+            // for(int x : ac) cout<<x<<' ';
+            // cout<<'\n';
+            if(ar[i].f != las)
+            {
+                for(int x : ac)
+                    bi[x] = 1;
+                ac.clear();
+            }
+            // cout<<"=====\n";
+            // cout<<ar[i].f<<' '<<ar[i].s<<'\n';
+            // cout<<g[ar[i].s][0]<<'\n';
+            // cout<<bi[0]<<'\n';
+            g[ar[i].s] &= bi;
+            // cout<<'@'<<endl;
+            // return 0;
+            ac.pb(ar[i].s);
+            // cout<<'!'<<endl;
+            las = ar[i].f;
+            // cout<<'*'<<endl;
         }
-        dfs(0, -1);
-        res = 0;
-        segundones.insert(n);
-        gimme_love(0, -1);
-        cout<<res<<'\n';
-        fore(i, 0, n) g[i].clear(), primarios[i].clear();
-        segundones.clear();
     }
+    mem(dp, -1);
+    int res = 0;
+    fore(i, 0, n)
+        fore(j, 0, n)
+            if(g[i][j])
+                g1[i].pb(j);
+    // fore(i, 0, n)
+    // {
+    //     cout<<"%%% "<<i<<endl;
+    //     for(int x : g1[i])
+    //         cout<<x<<' ';
+    //     cout<<'\n';
+    // }
+    fore(i, 0, n)
+        res = max(res, f(i));
+    cout<<res<<'\n';
 	return 0;
 }
 // Se vuelve más fácil,

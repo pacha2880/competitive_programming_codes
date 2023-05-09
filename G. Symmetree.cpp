@@ -119,15 +119,17 @@ typedef vector<ii>      vii;
 typedef vector<ll>      vll;
 // typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_update> ordered_set;
 // find_by_order kth largest  order_of_key <
-// mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
+mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
 const int tam = 200010;
 const int MOD = 1000000007;
-const int MOD1 = 998244353;
+// const int MOD1 = rng()%(MOD - 100) + 100;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
 int sizu[tam], simi[tam];
+int poroto[tam];
+int key = rng() % (MOD - 100) % MOD;
 vi g[tam];
 void saza(int node, int pa)
 {
@@ -141,26 +143,27 @@ int papa = 1;
 ii dfs(int node, int pa)
 {
     // cout<<node<<' '<<pa<<'\n';
-    vi lef, rig, nods;
+    vii lef, rig;
+    vi nods;
     for(int x : g[node])
         if(x != pa)
         {
             ii res = dfs(x, node);
-            lef.pb(res.f), rig.pb(res.s), nods.pb(x);
+            lef.pb({res.f, x}), rig.pb({res.s, x}), nods.pb(x);
         }
     int n = lef.size();
     simi[node] = 1;
     vi usi(n);
     set<ii> st;
     bool ya = false;
-    fore(i, 0, n) st.insert({rig[i], i});
+    fore(i, 0, n) st.insert({rig[i].f, i});
     fore(i, 0, n)
     {
         if(!usi[i])
         {
-            st.erase({rig[i], i});
-            auto it = st.lower_bound({rig[i], 0});
-            if(it != st.end() && it->f == rig[i])
+            st.erase({rig[i].f, i});
+            auto it = st.lower_bound({rig[i].f, 0});
+            if(it != st.end() && it->f == rig[i].f)
             {
                 usi[it->s] = 1;
                 st.erase(it);
@@ -179,15 +182,15 @@ ii dfs(int node, int pa)
         }
     }
     sort(all(lef));
-    int hachu = papa, hachi = papa;
-    for(int x : lef)
-        hachu = (hachu * MOD1 + 2 * x) % MOD;
+    int hachu = 0, hachi = 0;
+    for(ii x : lef)
+        hachu = (hachu * poroto[sizu[x.s]] + 2 * x.f) % MOD;
     sort(all(rig));
     reverse(all(rig));
-    for(int x : rig)
-        hachi = (hachi * MOD1 + 2 * x) % MOD;
-    hachu = (hachu * MOD1 + 1) % MOD;
-    hachi = (hachi * MOD1 + 1) % MOD;
+    for(ii x : rig)
+        hachi = (hachi * poroto[sizu[x.s]] + 2 * x.f) % MOD;
+    hachu = (hachu * key + 1) % MOD;
+    hachi = (hachi * key + 1) % MOD;
     // cout<<node + 1<<' '<<hachu<<' '<<hachi<<'\n';
     return {hachu, hachi};
 }
@@ -198,7 +201,8 @@ signed main()
 	// freopen("qwe.txt", "w", stdout);
 	int t;
     cin>>t;
-    forn(i, 100007) papa = papa * MOD1 % MOD;
+    poroto[0] = 1;
+    fore(i, 1, tam) poroto[i] = poroto[i - 1] * key % MOD;
     while(t--)
     {
         int n;

@@ -122,79 +122,80 @@ typedef vector<ll>      vll;
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
 const int tam = 200010;
-const int MOD = 1000000007;
-const int MOD1 = 998244353;
+const int MOD1 = 1000000007;
+const int MOD = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-vi g[tam];
-vector<multiset<int>> primarios(tam);
-multiset<int> segundones;
-int getmimo(int node)
-{
-    return sz(primarios[node]) ? *primarios[node].begin() + 1 : 1;
-}
-void dfs(int node, int pa)
-{
-    // cout<<node<<'\n';
-    for(int x : g[node])
-        if(x != pa)
-        {
-            dfs(x, node);
-            primarios[node].insert(getmimo(x));
-        }
-    if(sz(primarios[node]) > 1)
-        segundones.insert(*++primarios[node].begin());
-}
-int res;
-void gimme_love(int node, int pa)
-{
-    res = max(res, min(getmimo(node), *segundones.begin()));
-    for(int x : g[node])
-        if(x != pa)
-        {
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].erase(primarios[node].find(getmimo(x)));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].insert(getmimo(node));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            gimme_love(x, node);
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].erase(primarios[x].find(getmimo(node)));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].insert(getmimo(x));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-        }
-}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-    int t;
-    cin>>t;
-    while(t--)
+    int n;
+    cin>>n;
+    map<int, int> mcm;
+
+    int res = 0;
+    vi ar(n);
+    fore(i, 0, n) cin>>ar[i], ar[i]--;
+    vi vis(n);
+    fore(i, 0, n)
     {
-        int n;
-        cin>>n;
-        fore(i, 0, n - 1)
+        if(!vis[i])
         {
-            int a, b;
-            cin>>a>>b;
-            a--, b--;
-            g[a].pb(b);
-            g[b].pb(a);
+            int tata = 0;
+            int ax = i;
+            do
+            {
+                vis[ax] = 1;
+                ax = ar[ax];
+                tata++;
+            }while(ax != i);
+            int popo = 0;
+            // cout<<"&&&"<<i<<' '<<tata<<'\n';
+            while(~tata&1)
+                popo++, tata /= 2;
+            // cout<<tata<<' '<<popo<<'\n';
+            res = max(res, popo);
+            if(tata > 1)
+            {
+            int bobo = 1;
+            int po = 2;
+            while(po % tata != 1) po = po * 2 % tata, bobo++;
+            tata = bobo;
+                for(int i = 2; i * i <= tata; i++)
+                {
+                    if(tata % i == 0)
+                    {
+                        int can = 0;
+                        while(tata % i == 0){
+                            tata /= i;
+                            can++;
+                        }
+                        mcm[i] = max(mcm[i], can);
+                    }
+                }
+                if(tata > 1)
+                    mcm[tata] = max(mcm[tata], 1ll);
+            }
         }
-        dfs(0, -1);
-        res = 0;
-        segundones.insert(n);
-        gimme_love(0, -1);
-        cout<<res<<'\n';
-        fore(i, 0, n) g[i].clear(), primarios[i].clear();
-        segundones.clear();
     }
+    res++;
+    // cout<<res<<'\n';
+    if(!mcm.empty())
+    {
+        int midsomar = 1;
+        for(auto cat : mcm)
+        {
+            // cout<<cat.f<<' '<<cat.s<<'\n';
+            while(cat.s--)
+                midsomar = midsomar * cat.f % MOD;
+        }
+        // cout<<midsomar<<'\n';
+        res = (res + midsomar - 1 + MOD) % MOD;
+    }
+    cout<<res<<'\n';
 	return 0;
 }
 // Se vuelve más fácil,

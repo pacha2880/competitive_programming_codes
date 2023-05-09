@@ -121,52 +121,23 @@ typedef vector<ll>      vll;
 // find_by_order kth largest  order_of_key <
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 200010;
+const int tam = 4000010;
 const int MOD = 1000000007;
 const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-vi g[tam];
-vector<multiset<int>> primarios(tam);
-multiset<int> segundones;
-int getmimo(int node)
+vi g[tam], res[30];
+void go(int node, int fro, int quien)
 {
-    return sz(primarios[node]) ? *primarios[node].begin() + 1 : 1;
-}
-void dfs(int node, int pa)
-{
-    // cout<<node<<'\n';
-    for(int x : g[node])
-        if(x != pa)
-        {
-            dfs(x, node);
-            primarios[node].insert(getmimo(x));
-        }
-    if(sz(primarios[node]) > 1)
-        segundones.insert(*++primarios[node].begin());
-}
-int res;
-void gimme_love(int node, int pa)
-{
-    res = max(res, min(getmimo(node), *segundones.begin()));
-    for(int x : g[node])
-        if(x != pa)
-        {
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].erase(primarios[node].find(getmimo(x)));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].insert(getmimo(node));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            gimme_love(x, node);
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].erase(primarios[x].find(getmimo(node)));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].insert(getmimo(x));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-        }
+    if(!g[node].empty())
+    {
+        int to = g[node].back(), fru = 2 - sz(g[node]);
+        g[node].pop_back();
+        go(to, fru, quien);
+    }
+    if(fro != -1)
+        res[quien].pb(fro);
 }
 signed main()
 {
@@ -177,23 +148,30 @@ signed main()
     cin>>t;
     while(t--)
     {
-        int n;
-        cin>>n;
-        fore(i, 0, n - 1)
+        int n, k;
+        cin>>n>>k;
+        if(n == 1)
+            cout<<k<<'\n';
+        else
         {
-            int a, b;
-            cin>>a>>b;
-            a--, b--;
-            g[a].pb(b);
-            g[b].pb(a);
+            if(res[n].empty())
+            {
+                n--;
+                int tut = (1<<n) - 1;
+                fore(i, 0, 1<<n)
+                {
+                    g[i].pb(((i<<1) | 1) & tut);
+                    g[i].pb((i<<1) & tut);
+                }
+                go(tut, -1, n + 1);
+                reverse(all(res[n + 1]));
+                n++;
+            }
+            int re = 0;
+            fore(i, k, k + n)
+                re = re * 2 + res[n][i % (1<<n)];
+            cout<<re<<'\n';
         }
-        dfs(0, -1);
-        res = 0;
-        segundones.insert(n);
-        gimme_love(0, -1);
-        cout<<res<<'\n';
-        fore(i, 0, n) g[i].clear(), primarios[i].clear();
-        segundones.clear();
     }
 	return 0;
 }

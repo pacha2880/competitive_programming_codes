@@ -127,74 +127,52 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-vi g[tam];
-vector<multiset<int>> primarios(tam);
-multiset<int> segundones;
-int getmimo(int node)
+vi status(tam), buenona(tam), malona(tam), buence(tam), malce(tam);
+vii hijas_de(tam);
+void dfs(int node)
 {
-    return sz(primarios[node]) ? *primarios[node].begin() + 1 : 1;
-}
-void dfs(int node, int pa)
-{
-    // cout<<node<<'\n';
-    for(int x : g[node])
-        if(x != pa)
-        {
-            dfs(x, node);
-            primarios[node].insert(getmimo(x));
-        }
-    if(sz(primarios[node]) > 1)
-        segundones.insert(*++primarios[node].begin());
-}
-int res;
-void gimme_love(int node, int pa)
-{
-    res = max(res, min(getmimo(node), *segundones.begin()));
-    for(int x : g[node])
-        if(x != pa)
-        {
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].erase(primarios[node].find(getmimo(x)));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].insert(getmimo(node));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            gimme_love(x, node);
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].erase(primarios[x].find(getmimo(node)));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].insert(getmimo(x));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-        }
+    ii buen0(0, 0), mal0(0, 0), buen1(0, 0), mal1(0, 0);
+    if(hijas_de[node].f == 0)
+        buen0.f = 1, buen1.f = 1;
+    else
+    {
+        int x = hijas_de[node].f - 1;
+        dfs(x);
+        buen0.f = buence[x], mal0.f = malce[x];
+        buen1.f = buenona[x], mal1.f = malona[x];
+    }
+    if(hijas_de[node].s == 0)
+        buen0.s = 1, buen1.s = 1;
+    else
+    {
+        int x = hijas_de[node].s - 1;
+        dfs(x);
+        buen0.s = buence[x], mal0.s = malce[x];
+        buen1.s = buenona[x], mal1.s = malona[x];
+    }
+    buence[node] = buen1.f * buen1.s % MOD;
+    malce[node] = (mal1.f * buen1.s % MOD + mal1.f * mal1.s % MOD + buen1.f * mal1.s % MOD) % MOD;
+    malona[node] = (mal0.f * buen1.s % MOD + buen1.f * mal0.s % MOD + mal0.f * mal0.s % MOD) % MOD;
+    buenona[node] = (mal1.f * mal0.s % MOD + mal1.f * buen0.s % MOD + buen1.f * buen0.s % MOD +
+                    buen0.f * buen0.s % MOD + mal0.f * buen0.s % MOD + buen0.f * mal0.s % MOD + 
+                    mal0.f * mal1.s % MOD + buen0.f * mal1.s % MOD + buen0.f * buen1.s % MOD) % MOD;
+    int a = (buenona[node] + malona[node]) % MOD, b = (buence[node] + malce[node]) % MOD;
+    if(status[node] == 1)
+        buenona[node] = a, malona[node] = 0, malce[node] = b, buence[node] = 0;
+    if(status[node] == 0)
+        buenona[node] = 0, malona[node] = a, malce[node] = 0, buence[node] = b;
 }
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-    int t;
-    cin>>t;
-    while(t--)
-    {
-        int n;
-        cin>>n;
-        fore(i, 0, n - 1)
-        {
-            int a, b;
-            cin>>a>>b;
-            a--, b--;
-            g[a].pb(b);
-            g[b].pb(a);
-        }
-        dfs(0, -1);
-        res = 0;
-        segundones.insert(n);
-        gimme_love(0, -1);
-        cout<<res<<'\n';
-        fore(i, 0, n) g[i].clear(), primarios[i].clear();
-        segundones.clear();
-    }
+    int n;
+    cin>>n;
+    fore(i, 0, n)
+        cin>>hijas_de[i].f>>hijas_de[i].s>>status[i];
+    dfs(0);
+    cout<<(malona[0] + malce[0]) % MOD<<'\n';
 	return 0;
 }
 // Se vuelve más fácil,

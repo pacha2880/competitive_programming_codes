@@ -127,46 +127,15 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-vi g[tam];
-vector<multiset<int>> primarios(tam);
-multiset<int> segundones;
-int getmimo(int node)
+vi visi;
+int can(int node, vector<vi> &g)
 {
-    return sz(primarios[node]) ? *primarios[node].begin() + 1 : 1;
-}
-void dfs(int node, int pa)
-{
-    // cout<<node<<'\n';
+    int cant = 1;
+    visi[node] = 1;
     for(int x : g[node])
-        if(x != pa)
-        {
-            dfs(x, node);
-            primarios[node].insert(getmimo(x));
-        }
-    if(sz(primarios[node]) > 1)
-        segundones.insert(*++primarios[node].begin());
-}
-int res;
-void gimme_love(int node, int pa)
-{
-    res = max(res, min(getmimo(node), *segundones.begin()));
-    for(int x : g[node])
-        if(x != pa)
-        {
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].erase(primarios[node].find(getmimo(x)));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].insert(getmimo(node));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            gimme_love(x, node);
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].erase(primarios[x].find(getmimo(node)));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].insert(getmimo(x));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-        }
+        if(!visi[x])
+            cant += can(x, g);
+    return cant;
 }
 signed main()
 {
@@ -175,25 +144,60 @@ signed main()
 	// freopen("qwe.txt", "w", stdout); 
     int t;
     cin>>t;
-    while(t--)
+    fore(cas, 1, t + 1)
     {
-        int n;
-        cin>>n;
-        fore(i, 0, n - 1)
+        int n, m;
+        cin>>n>>m;
+        vector<vi> g(n);
+        fore(i, 0, m)
         {
             int a, b;
             cin>>a>>b;
             a--, b--;
-            g[a].pb(b);
             g[b].pb(a);
         }
-        dfs(0, -1);
-        res = 0;
-        segundones.insert(n);
-        gimme_love(0, -1);
-        cout<<res<<'\n';
-        fore(i, 0, n) g[i].clear(), primarios[i].clear();
-        segundones.clear();
+        vi vis(n);
+        vector<vi> grups;
+        queue<ii> que;
+        que.push({0, 0});
+        vis[0] = 1;
+        while(!que.empty())
+        {
+            int node = que.front().f, dis = que.front().s;
+            que.pop();
+            if(sz(grups) == dis)
+                grups.pb(vi());
+            grups[dis].pb(node);
+            for(int x : g[node])
+                if(!vis[x])
+                    vis[x] = 1, que.push({x, dis + 1});
+        }
+        int tat = grups.size();
+        vi res;
+        // fore(i, 0, tat)
+        // {
+        //     cout<<"tats "<<i<<'\n';
+        //     for(int x : grups[i])
+        //         cout<<x<<' ';
+        //     cout<<'\n';
+        // }
+        for(int i = tat - 1; i > -1; i--)
+            for(int j = i; j < tat; j++)
+                for(int x : grups[j])
+                    res.pb(x);
+        bool inf = false;
+        fore(i, 0, n) inf |= !vis[i];
+        if(inf)
+            cout<<"INFINITE\n";
+        else
+        {
+            cout<<"FINITE\n";
+            cout<<sz(res)<<'\n';
+            for(int x : res)
+                cout<<x + 1<<' ';
+            cout<<'\n';
+        }
+
     }
 	return 0;
 }

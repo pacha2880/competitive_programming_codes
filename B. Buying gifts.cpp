@@ -127,46 +127,61 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-vi g[tam];
-vector<multiset<int>> primarios(tam);
-multiset<int> segundones;
-int getmimo(int node)
+int sims_city(vi &ar, vi & br)
 {
-    return sz(primarios[node]) ? *primarios[node].begin() + 1 : 1;
-}
-void dfs(int node, int pa)
-{
-    // cout<<node<<'\n';
-    for(int x : g[node])
-        if(x != pa)
+    // cout<<"###\n";
+    // for(int x : ar)
+    //     cout<<x<<' ';
+    // cout<<'\n';
+    // cout<<"***\n";
+    // for(int x : br)
+    //     cout<<x<<' ';
+    // cout<<'\n'<<'\n';
+    int res = MOD;
+    int mayonesa = -1;
+    map<int, set<int>> mamu, mamalon;
+    int n = sz(ar);
+    fore(i, 0, n) mamu[ar[i]].insert(i), mamalon[br[i]].insert(i);
+    // for(auto x : mamu)
+    //     cout<<x.f<<' ';
+    // cout<<'\n';
+    // for(auto x : mamalon)
+    //     cout<<x.f<<' ';
+    // cout<<'\n';
+    fore(i, 0, n)
+    {
+        if(mamu.empty()) break;
+        int mamani = (--mamu.end())->f;
+        int mai = -1, miu = -1;
+        for(int x : mamu[mamani])
         {
-            dfs(x, node);
-            primarios[node].insert(getmimo(x));
+            if(br[x] > mamani) mai = x;
+            else if(miu == -1) miu = x;
+            else if(br[miu] > br[x]) miu = x;
+            // mamalon[br[x]].erase(x);
+            // if(mamalon[br[x]].empty())
+            //     mamalon.erase(br[x]);
         }
-    if(sz(primarios[node]) > 1)
-        segundones.insert(*++primarios[node].begin());
-}
-int res;
-void gimme_love(int node, int pa)
-{
-    res = max(res, min(getmimo(node), *segundones.begin()));
-    for(int x : g[node])
-        if(x != pa)
+        int indu = mai;
+        if(indu == -1) indu = miu;
+        mamalon[br[indu]].erase(indu);
+        if(mamalon[br[indu]].empty())
+            mamalon.erase(br[indu]);
+        while(!mamalon.empty() && (--mamalon.end())->f > mamani)
         {
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].erase(primarios[node].find(getmimo(x)));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].insert(getmimo(node));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            gimme_love(x, node);
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].erase(primarios[x].find(getmimo(node)));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].insert(getmimo(x));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
+            for(int x : (--mamalon.end())->s)
+                mayonesa = max(mayonesa, ar[x]);
+            mamalon.erase(--mamalon.end());
         }
+        if(mayonesa > mamani) break;
+        if(!mamalon.empty())
+            res = min(res, mamani - (--mamalon.end())->f);
+
+        // for(int x : mamu[mamani])
+        mamalon[br[indu]].insert(indu);
+        mamu.erase(--mamu.end());
+    }
+    return res;
 }
 signed main()
 {
@@ -179,21 +194,10 @@ signed main()
     {
         int n;
         cin>>n;
-        fore(i, 0, n - 1)
-        {
-            int a, b;
-            cin>>a>>b;
-            a--, b--;
-            g[a].pb(b);
-            g[b].pb(a);
-        }
-        dfs(0, -1);
-        res = 0;
-        segundones.insert(n);
-        gimme_love(0, -1);
-        cout<<res<<'\n';
-        fore(i, 0, n) g[i].clear(), primarios[i].clear();
-        segundones.clear();
+        vi ar(n); 
+        vi br(n);
+        fore(i, 0, n) cin>>ar[i]>>br[i];
+        cout<<min(sims_city(ar, br), sims_city(br, ar))<<'\n';
     }
 	return 0;
 }

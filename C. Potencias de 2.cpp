@@ -127,73 +127,73 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-vi g[tam];
-vector<multiset<int>> primarios(tam);
-multiset<int> segundones;
-int getmimo(int node)
-{
-    return sz(primarios[node]) ? *primarios[node].begin() + 1 : 1;
-}
-void dfs(int node, int pa)
-{
-    // cout<<node<<'\n';
-    for(int x : g[node])
-        if(x != pa)
-        {
-            dfs(x, node);
-            primarios[node].insert(getmimo(x));
+int solve(int a, int b, int m) {
+    a %= m, b %= m;
+    int n = sqrt(m) + 1;
+
+    int an = 1;
+    for (int i = 0; i < n; ++i)
+        an = ((__int128)an * a) % m;
+
+    unordered_map<int, int> vals;
+    for (int q = 0, cur = b; q <= n; ++q) {
+        vals[cur] = q;
+        cur = ((__int128)cur * a) % m;
+    }
+
+    for (int p = 1, cur = 1; p <= n; ++p) {
+        cur = ((__int128)cur * an) % m;
+        if (vals.count(cur)) {
+            int ans = n * p - vals[cur];
+            return ans;
         }
-    if(sz(primarios[node]) > 1)
-        segundones.insert(*++primarios[node].begin());
+    }
+    return -1;
 }
-int res;
-void gimme_love(int node, int pa)
-{
-    res = max(res, min(getmimo(node), *segundones.begin()));
-    for(int x : g[node])
-        if(x != pa)
-        {
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].erase(primarios[node].find(getmimo(x)));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].insert(getmimo(node));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            gimme_love(x, node);
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].erase(primarios[x].find(getmimo(node)));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].insert(getmimo(x));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-        }
-}
+
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
+	// fore(r, 1, 21)
+    // {
+    //     int modo = 1;
+    //     fore(i, 0, r) modo *= 5;
+    //     int ras = MOD * MOD;
+    //     fore(i, 0, 1<<r)
+    //     {
+    //         __int128 nu = 0;
+    //         fore(j, 0, r)
+    //             if(i & 1 << j)
+    //                 nu = nu * 10 + 1;
+    //             else
+    //                 nu = nu * 10 + 2;
+    //         bool can = 1;
+    //         int ax = nu;
+    //         // cout<<can<<' '<<nu<<' '<<ax<<'\n';
+    //         fore(i, 0, r)
+    //         {
+    //             // cout<<i<<' '<<ax<<'\n';
+    //             if(ax & 1) can = 0;
+    //             ax /= 2;
+    //         }
+    //         if(can)
+    //         {
+    //             // cout<<nu<<'\n';
+    //             ras = min(ras, solve(2, nu % modo, modo));
+    //         }
+    //     }
+    //     cout<<ras<<", ";
+    // }
+    int res[] = {1, 9, 89, 89, 589, 3089, 3089, 3089, 315589ll, 315589ll, 8128089ll, 164378089ll, 945628089ll, 1922190589ll, 11687815589ll, 109344065589ll, 231414378089ll, 1452117503089ll, 4503875315589ll, 65539031565589ll};
     int t;
     cin>>t;
     while(t--)
     {
-        int n;
-        cin>>n;
-        fore(i, 0, n - 1)
-        {
-            int a, b;
-            cin>>a>>b;
-            a--, b--;
-            g[a].pb(b);
-            g[b].pb(a);
-        }
-        dfs(0, -1);
-        res = 0;
-        segundones.insert(n);
-        gimme_love(0, -1);
-        cout<<res<<'\n';
-        fore(i, 0, n) g[i].clear(), primarios[i].clear();
-        segundones.clear();
+        int x;
+        cin>>x;
+        cout<<res[x - 1]<<'\n';
     }
 	return 0;
 }

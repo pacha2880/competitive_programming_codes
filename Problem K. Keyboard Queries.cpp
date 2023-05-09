@@ -121,79 +121,131 @@ typedef vector<ll>      vll;
 // find_by_order kth largest  order_of_key <
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 200010;
+const int tam = 100010;
 const int MOD = 1000000007;
-const int MOD1 = 998244353;
+const int p = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-vi g[tam];
-vector<multiset<int>> primarios(tam);
-multiset<int> segundones;
-int getmimo(int node)
+int pos[tam];
+struct nodus{
+    int f, s, si;
+
+    bool operator ==(const nodus &n) const{return f == n.f && s == n.s;}
+};
+nodus t[4 * tam];
+nodus join(nodus a, nodus b)
 {
-    return sz(primarios[node]) ? *primarios[node].begin() + 1 : 1;
+    return {(a.f * pos[b.si] + b.f) % MOD, (a.s + b.s * pos[a.si]) % MOD, a.si + b.si};
 }
-void dfs(int node, int pa)
+void init(int b, int e, int node)
 {
-    // cout<<node<<'\n';
-    for(int x : g[node])
-        if(x != pa)
-        {
-            dfs(x, node);
-            primarios[node].insert(getmimo(x));
-        }
-    if(sz(primarios[node]) > 1)
-        segundones.insert(*++primarios[node].begin());
+    if(b == e)
+    {
+        t[node] = {b + 1, b + 1, 1};
+        return;
+    }
+    index;
+    init(b, mid, l);
+    init(mid + 1, e, r);
+    t[node] = join(t[l], t[r]);
 }
-int res;
-void gimme_love(int node, int pa)
+nodus query(int b, int e, int node, int i, int j)
 {
-    res = max(res, min(getmimo(node), *segundones.begin()));
-    for(int x : g[node])
-        if(x != pa)
-        {
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].erase(primarios[node].find(getmimo(x)));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].insert(getmimo(node));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            gimme_love(x, node);
-            if(sz(primarios[x]) > 1) segundones.erase(segundones.find(*++primarios[x].begin()));
-            primarios[x].erase(primarios[x].find(getmimo(node)));
-            if(sz(primarios[x]) > 1) segundones.insert(*++primarios[x].begin());
-            if(sz(primarios[node]) > 1) segundones.erase(segundones.find(*++primarios[node].begin()));
-            primarios[node].insert(getmimo(x));
-            if(sz(primarios[node]) > 1) segundones.insert(*++primarios[node].begin());
-        }
+    if(b >= i && e <= j)
+        return t[node];
+    index;
+    if(mid >= j)
+        return query(b, mid, l, i, j);
+    if(mid < i)
+        return query(mid + 1, e, r, i, j);
+    return join(query(b, mid, l, i, j), query(mid + 1, e, r, i, j));
+}
+void update(int b, int e, int node, int pos, int val)
+{
+    if(b == e)
+    {
+        t[node] = {val, val, 1};
+        return;
+    }
+    index;
+    if(pos <= mid)
+        update(b, mid, l, pos, val);
+    else
+        update(mid + 1, e, r, pos, val);
+    t[node] = join(t[l], t[r]);
 }
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-    int t;
-    cin>>t;
-    while(t--)
+    int asdf;
+	int n, q;
+    cin>>n>>q;
+    pos[0] = 1;
+    fore(i, 1, tam) pos[i] = pos[i - 1] * p % MOD;
+    init(0, n - 1, 0);
+    // fore(i, 0, n)
+    //     cout<<query(0, n - 1, 0, i, i).f<<'\n';
+    // return 0;
+    vector<vi> lugs(n + 1);
+    fore(i, 1, n + 1) lugs[i].pb(i - 1);
+    while(q--)
     {
-        int n;
-        cin>>n;
-        fore(i, 0, n - 1)
+        int a, b, c, d, e;
+        cin>>a>>b>>c;
+        b--, c--;
+        if(a == 1)
         {
-            int a, b;
-            cin>>a>>b;
-            a--, b--;
-            g[a].pb(b);
-            g[b].pb(a);
+        // cout<<"@@@@@@ "<<a<<' '<<b<<' '<<c<<'\n';
+            while(true)
+            {
+        // fore(i, b, c + 1)
+        //     cout<<query(0, n - 1, 0, i, i).f<<' ';
+        //     cout<<'\n';
+                int lo = 0, hi = c - b, mid, res = -1;
+                // cout<<"asdf\n";
+                while(lo <= hi)
+                {
+                    mid = (lo + hi) / 2;
+                    int aa = query(0, n - 1, 0, b, b + mid).f;
+                    int bb = query(0, n - 1, 0, c - mid, c).s;
+                    // cout<<'$'<<mid<<'\n';
+                    // cout<<b<<' '<<b + mid<<' '<<c - mid<<' '<<c<<' '<<aa<<' '<<bb<<'\n';
+                    if(aa != bb)
+                        res = mid, hi = mid - 1;
+                    else
+                        lo = mid + 1;
+                }
+                if(res == -1) break;
+                int x = query(0, n - 1, 0, b + res, b + res).f;
+                int y = query(0, n - 1, 0, c - res, c - res).f;
+                int xx = query(0, n - 1, 0, b, b).f;
+                int yy = query(0, n - 1, 0, c, c).s;
+                // cout<<res<<'\n';
+                // cout<<b + res<<' '<<c - res<<'\n';
+                // cout<<xx<<' '<<yy<<'\n';
+                // cout<<x<<' '<<y<<' '<<b + res<<' '<<c - res<<'\n';
+                if(sz(lugs[x]) < sz(lugs[y])) swap(x, y);
+                for(int asd : lugs[y])
+                    update(0, n - 1, 0, asd, x), lugs[x].pb(asd); //, cout<<'*'<<asd<<' '<<x<<'\n';
+                lugs[y].clear();
+                // return 0;
+            }
+            // return 0;
         }
-        dfs(0, -1);
-        res = 0;
-        segundones.insert(n);
-        gimme_love(0, -1);
-        cout<<res<<'\n';
-        fore(i, 0, n) g[i].clear(), primarios[i].clear();
-        segundones.clear();
+        else
+        {
+            cin>>d>>e;
+            d--, e--;
+            if(c - b != e - d)
+                cout<<"Not equal\n";
+            else if(query(0, n - 1, 0, b, c) == query(0, n - 1, 0, d, e))
+                cout<<"Equal\n";
+            else
+                cout<<"Unknown\n";
+        }
     }
 	return 0;
 }
