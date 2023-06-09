@@ -127,32 +127,44 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-	
-	signed main()
-	{
-		ios::sync_with_stdio(false); cin.tie(0);
-		//freopen("", "r", stdin);
-		//freopen("", "w", stdout);
-		int lg = 20;
-		int fu = (1<<lg) - 1;
-		int n;
-		cin>>n;
-		vi ar(n), er(1<<lg);
 
-		fore(i, 0, n)
-			cin>>ar[i], er[fu -ar[i]]++;
-		fore(i, 0, lg) fore(j, 0, 1<<lg)
-			if((1<<i) & j)
-				er[j] += er[j ^ (1<<i)];
-		vi pot(1<<lg);
-		pot[0] = 1;
-		fore(i, 1, 1<<lg) pot[i] = pot[i - 1] * 2 % MOD;
-		int res = 0;
-		fore(i, 0, 1<<lg)
-			res = (res + (__builtin_popcount(i) & 1 ? -1 : 1) * (pot[er[fu - i]] - 1)) % MOD;
-		cout<<(res + MOD) % MOD<<'\n';
-		return 0;
-	}
-
-	// read the question correctly (is y a vowel? what are the exact constraints?)
-	// look out for SPECIAL CASES (n=1?) and overflow (ll vs int?) ARRAY OUT OF BOUNDSS
+signed main()
+{
+	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+	// freopen("asd.txt", "r", stdin);
+	// freopen("qwe.txt", "w", stdout); 
+    int t;
+    cin>>t;
+    while(t--)
+    {
+        int n;
+        cin>>n;
+        string s;
+        cin>>s;
+        char ch = s[0];
+        string res;
+        fore(i, 1, n)
+        {
+            if(s[i] == ch)
+            {
+                res += ch;
+                if(i < n - 1)
+                    ch = s[i + 1];
+                i ++;
+            }
+        }
+        cout<<res<<'\n';
+    }
+	return 0;
+}
+// Se vuelve más fácil,
+// cada día es un poco más fácil, pero tienes que hacerlo cada día,
+// es la parte difícil, pero se vuelve más fácil.
+// Crecer duele.
+// La única manera de pasar esa barrera es pasandola.
+// efe no más.
+// Si no vá por todo, andá pa' allá bobo.
+// No sirve de nada hacer sacrificios si no tienes disciplina.
+// Cae 7 veces, levántate 8.
+// LA DISCIPLINA es el puente entre tus metas y tus logros.
+// Take a sad song and make it better

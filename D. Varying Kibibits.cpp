@@ -121,38 +121,88 @@ typedef vector<ll>      vll;
 // find_by_order kth largest  order_of_key <
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 200010;
+const int tam = 1000010;
 const int MOD = 1000000007;
 const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-	
-	signed main()
-	{
-		ios::sync_with_stdio(false); cin.tie(0);
-		//freopen("", "r", stdin);
-		//freopen("", "w", stdout);
-		int lg = 20;
-		int fu = (1<<lg) - 1;
-		int n;
-		cin>>n;
-		vi ar(n), er(1<<lg);
 
-		fore(i, 0, n)
-			cin>>ar[i], er[fu -ar[i]]++;
-		fore(i, 0, lg) fore(j, 0, 1<<lg)
-			if((1<<i) & j)
-				er[j] += er[j ^ (1<<i)];
-		vi pot(1<<lg);
-		pot[0] = 1;
-		fore(i, 1, 1<<lg) pot[i] = pot[i - 1] * 2 % MOD;
-		int res = 0;
-		fore(i, 0, 1<<lg)
-			res = (res + (__builtin_popcount(i) & 1 ? -1 : 1) * (pot[er[fu - i]] - 1)) % MOD;
-		cout<<(res + MOD) % MOD<<'\n';
-		return 0;
-	}
-
-	// read the question correctly (is y a vowel? what are the exact constraints?)
-	// look out for SPECIAL CASES (n=1?) and overflow (ll vs int?) ARRAY OUT OF BOUNDSS
+int cucu[10][10];
+signed main()
+{
+	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+	// freopen("asd.txt", "r", stdin);
+	// freopen("qwe.txt", "w", stdout); 
+	int n;
+    cin>>n;
+    vi ar(n);
+    fore(i, 0, n) cin>>ar[i];
+    int ta = 1e6;
+    int po = 1;
+    vi pot(tam);
+    pot[0] = 1;
+    fore(i, 1, tam) pot[i] = pot[i - 1] * 2 % MOD;
+    int res = 0;
+    vi sus(1e6), susn(1e6), susc(1e6);
+    fore(i, 0, n) sus[ar[i]]++, susn[ar[i]] = (susn[ar[i]] + ar[i]) % MOD, susc[ar[i]] = (susc[ar[i]] + ar[i] * ar[i]) % MOD;
+    set<int> st;
+    fore(i, 0, 6)
+    {
+        for(int j = ta - 1; j > -1; j--)
+        {
+            int dig = j / po % 10;
+            if(dig < 9)
+                sus[j] += sus[j + po],
+                susn[j] = (susn[j] + susn[j + po]) % MOD,
+                susc[j] = (susc[j] + susc[j + po]) % MOD;
+        }
+        po *= 10;
+    }
+    vi sust(ta);
+    for(int i = ta - 1; i > -1; i--)
+    {
+        int dob = ((susn[i] * susn[i] - susc[i]) % MOD + MOD) % MOD;
+        int nu = susc[i] * pot[sus[i] - 1] % MOD;
+        if(sus[i] > 1)
+            nu = (nu + dob * pot[sus[i] - 2]) % MOD;
+        sust[i] = nu;
+        fore(j, 0, 1<<6)
+        {
+            po = 1;
+            int b = 1, co = 0, ax = i;
+            fore(k, 0, 6)
+            {
+                if(j & (1<<k))
+                {
+                    int dig = i / po % 10;
+                    if(dig < 9)
+                        ax += po, co++;
+                    else
+                    {
+                        b = 0;
+                        break;
+                    }
+                }
+                po *= 10;
+            }
+            if(b && ax > i)
+                nu = (nu + (co & 1 ? -1 : 1) * sust[ax]) % MOD;
+        }
+        nu = (nu + MOD) % MOD;
+        res ^= nu * i;
+    }
+    cout<<res<<'\n';
+	return 0;
+}
+// Se vuelve más fácil,
+// cada día es un poco más fácil, pero tienes que hacerlo cada día,
+// es la parte difícil, pero se vuelve más fácil.
+// Crecer duele.
+// La única manera de pasar esa barrera es pasandola.
+// efe no más.
+// Si no vá por todo, andá pa' allá bobo.
+// No sirve de nada hacer sacrificios si no tienes disciplina.
+// Cae 7 veces, levántate 8.
+// LA DISCIPLINA es el puente entre tus metas y tus logros.
+// Take a sad song and make it better

@@ -83,7 +83,7 @@ EL PEMRRITO MALVADO
 #define mp				make_pair
 #define pb				push_back
 #define all(a)			(a).begin(), (a).end()
-// #define sz(a)			(int)a.size()
+#define sz(a)			(int)a.size()
 #define eq(a, b)     	(fabs(a - b) < EPS)
 #define md(a, b)		((a) % b + b) % b
 #define mod(a)			md(a, MOD)
@@ -121,189 +121,39 @@ typedef vector<ll>      vll;
 // find_by_order kth largest  order_of_key <
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 300010;
+const int tam = 200010;
 const int MOD = 1000000007;
 const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-const int N_DEL = 0, N_VAL = 0; //delta, value
-struct Node_t{
-  int sz, nVal, tVal, d, u, v;
-  bool rev;
-  Node_t *c[2], *p, *maxedge;
-  Node_t(int v) : sz(1), nVal(-1), tVal(-1), u(v), v(v), d(N_DEL), rev(0), p(0){
-    c[0]=c[1]=0, maxedge = this;
-  }
-  Node_t(int u, int v, int val) : sz(1), nVal(val), tVal(val), u(u), v(v), d(N_DEL), rev(0), p(0){
-    c[0] = c[1] = 0, maxedge = this;
-  }
-  bool isRoot(){return !p || (p->c[0] != this && p->c[1] != this);}
-  void push(){
-    if(rev){
-      rev=0; swap(c[0], c[1]);
-      fore(x,0,2)if(c[x])c[x]->rev^=1;
-    }
-    // fore(x,0,2)if(c[x])c[x]->d=joinD(c[x]->d, d);
-    // d=N_DEL;
-  }
-  void upd();
-};
 
-typedef Node_t* Node;
-
-
-inline int mOp(int x, int y){return max(x, y);}//modify
-Node qOp(Node l, Node r){return l ? r ? r->nVal > l->nVal ? r : l : l : r;}//query
-inline int dOnSeg(int d, int len){return d==N_DEL ? N_DEL : d*len;}
-//mostly generic
-inline int joinD(int d1, int d2){
-  if(d1==N_DEL)return d2;if(d2==N_DEL)return d1;return mOp(d1, d2);}
-
-int getSize(Node r){return r ? r->sz : 0;}
-Node getPV(Node r){
-  return r ? r->maxedge : 0;}
-void Node_t::upd(){
-  maxedge = qOp(qOp(getPV(c[0]), this), getPV(c[1]));
-  sz = 1 + getSize(c[0]) + getSize(c[1]);
-}
-void conn(Node c, Node p, int il){if(c)c->p=p;if(il>=0)p->c[!il]=c;}
-void rotate(Node x){
-  Node p = x->p, g = p->p;
-  bool gCh=p->isRoot(), isl = x==p->c[0];
-  conn(x->c[isl],p,isl); conn(p,x,!isl);
-  conn(x,g,gCh?-1:(p==g->c[0])); p->upd();
-}
-void spa(Node x){//splay
-  while(!x->isRoot()){
-    Node p = x->p, g = p->p;
-    if(!p->isRoot())g->push();
-    p->push(); x->push();
-    if(!p->isRoot())rotate((x==p->c[0])==(p==g->c[0])? p : x);
-    rotate(x);
-  }
-  x->push(); x->upd();
-}
-Node exv(Node x){//expose
-  Node last=0;
-  for(Node y=x; y; y=y->p)spa(y),y->c[0]=last,y->upd(),last=y;
-  spa(x);
-  return last;
-}
-void mkR(Node x){exv(x);x->rev^=1;}//makeRoot
-Node getR(Node x){exv(x);while(x->c[1])x=x->c[1];spa(x);return x;}
-Node lca(Node x, Node y){exv(x); return exv(y);}
-bool connected(Node x, Node y){exv(x);exv(y); return x==y?1:x->p!=0;}
-void link(Node x, Node y){mkR(x); x->p=y;}
-void cut(Node x, Node y){mkR(x); exv(y); y->c[1]->p=0; y->c[1]=0;}
-Node father(Node x){
-	exv(x);
-	Node r=x->c[1];
-	if(!r)return 0;
-	while(r->c[0])r=r->c[0];
-	return r;
-}
-void cut(Node x){ // cuts x from father keeping tree root
-	exv(father(x));x->p=0;}
-Node query(Node x, Node y){mkR(x); exv(y); return getPV(y);}
-void modify(Node x, Node y, int d){mkR(x);exv(y);y->d=joinD(y->d,d);}
-Node lift_rec(Node x, int t){
-	if(!x)return 0;
-	if(t==getSize(x->c[0])){spa(x);return x;}
-	if(t<getSize(x->c[0]))return lift_rec(x->c[0],t);
-	return lift_rec(x->c[1],t-getSize(x->c[0])-1);
-}
-Node lift(Node x, int t){ // t-th ancestor of x (lift(x,1) is x's father)
-	exv(x);return lift_rec(x,t);}
-int depth(Node x){ // distance from x to its tree root
-	exv(x);return getSize(x)-1;}
-
-
-struct unionFind {
-  vi p;
-  unionFind(int n) : p(n, -1) {}
-  int findParent(int v) {
-    if (p[v] == -1) return v;
-    return p[v] = findParent(p[v]);
-  }
-  bool join(int a, int b) {
-    a = findParent(a);
-    b = findParent(b);
-    if (a == b) return false;
-    p[a] = b;
-    return true;
-  }
-};
-
-struct edge{
-  int v, u, c;
-  bool operator <(const edge &e) const{
-    return c < e.c;
-  }
-};
-vector<vii> g(tam);
-vector<Node> eds(tam);
-vector<Node> nodes(tam);
-int calc(int pos)
-{
-  int res = 0;
-  vector<Node> el, con;
-  for(ii x : g[pos])
-  {
-    Node maus = query(nodes[x.f], nodes[pos]);
-    res += x.s - maus->nVal;
-    cut(maus, nodes[maus->u]), cut(maus, nodes[maus->v]);
-    Node tmp = new Node_t(pos, x.f, -1);
-    link(tmp, nodes[pos]), link(tmp, nodes[x.f]);
-    el.pb(tmp), con.pb(maus);
-  }
-
-  for(Node n : el)
-  {
-    cut(n, nodes[n->u]), cut(n, nodes[n->v]);
-    delete n;
-  }
-  for(Node n: con)
-    link(n, nodes[n->u]), link(n, nodes[n->v]);
-  return res;
-}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-  int n, m;
-  cin>>n>>m;
-  fore(i, 0, n) 
-    nodes[i] = new Node_t(-1);
-  vector<edge> edges;
-  fore(i, 0, m)
-  {
-    int a, b, c;
-    cin>>a>>b>>c;
-    a--, b--;
-    g[a].pb({b, c});
-    g[b].pb({a, c});
-    edges.pb({a, b, c});
-  }
-  unionFind uf(n);
-  sort(all(edges));
-  int su = 0;
-  fore(i, 0, m)
-  {
-    int u = edges[i].u, v = edges[i].v, c = edges[i].c;
-    // cout<<u<<' '<<v<<' '<<c<<'\n';
-    eds[i] = new Node_t(u, v, c);
-    if(uf.join(u, v))
+	int t;
+    cin>>t;
+    while(t--)
     {
-      // cout<<u<<' '<<v<<'\n';
-      su += c;
-      link(eds[i], nodes[u]);
-      link(eds[i], nodes[v]);
+        int x;
+        cin>>x;
+        if(x == 1)
+            cout<<"-1\n";
+        else if(x <= 1e6)
+            cout<<x - 1<<' '<<1<<' '<<1<<'\n';
+        else
+        {
+            int a = 1e6;
+            if(x % a == 0)
+                cout<<a<<' '<<x / a - 1<<' '<<a<<'\n';
+            else
+                cout<<a<<' '<<x / a<<' '<<x % a<<'\n';
+        }
+
+            
     }
-  }
-  // cout<<su<<'\n';
-  fore(i, 0, n) cout<<su + calc(i)<<'\n';
 	return 0;
 }
 // Se vuelve más fácil,
