@@ -1,9 +1,11 @@
+// Task Meteors (met)
+// https://szkopul.edu.pl/problemset/problem/7JrCYZ7LhEK4nBR5zbAXpcmM/site/?key=statement
 #include <bits/stdc++.h>
 // #include <ext/pb_ds/assoc_container.hpp>
 // #include <ext/pb_ds/assoc_container.hpp>
 // #include <ext/pb_ds/tree_policy.hpp>
 // #include <ext/rope>
-#define int ll
+// #define int ll
 #define mp				make_pair
 #define pb				push_back
 #define all(a)			(a).begin(), (a).end()
@@ -23,16 +25,16 @@
 #define DBG(x) cerr<<#x<<" = "<<(x)<<endl
 #define RAYA cout<<"=============================="<<'\n'
 // int in(){int r=0,c;for(c=getchar();c<=32;c=getchar());if(c=='-') return -in();for(;c>32;r=(r<<1)+(r<<3)+c-'0',c=getchar());return r;}
- 
- 
+
+
 using namespace std;
 // using namespace __gnu_pbds;
 // using namespace __gnu_cxx;
- 
-#pragma GCC target ("avx2")
-#pragma GCC optimization ("O3")
-#pragma GCC optimization ("unroll-loops")
- 
+
+// #pragma GCC target ("avx2")
+// #pragma GCC optimization ("O3")
+// #pragma GCC optimization ("unroll-loops")
+
 typedef long long 		ll;
 typedef long double ld;	
 typedef unsigned long long 		ull;
@@ -45,125 +47,103 @@ typedef vector<ll>      vll;
 // find_by_order kth largest  order_of_key <
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 1000010;
+const int tam = 300010;
 const int MOD = 1000000007;
 const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-vi pos(tam), endo(tam);
-int curpo = 1;
-vi g[tam];
-vi negan(tam);
-vi dep(tam);
-void dfs(int node)
+ll bit[tam];
+ll query(int pos)
 {
-    // cout<<node<<'\n';
-    pos[node] = curpo++;
-    for(int x : g[node])
-        dep[x] = dep[node] + 1, dfs(x);
-    negan[curpo] = 1;
-    endo[node] = curpo++;
-}
-int bit[2][tam];
-int query(int cual, int pos)
-{
-    int res = 0;
+    ll res = 0;
     while(pos > 0)
-        res += bit[cual][pos], pos -= pos & -pos;
+    {
+        res += bit[pos];
+        pos -= pos & -pos;
+    }
     return res;
 }
-void update(int cual, int pos, int val)
+void update(int pos, int val)
 {
     while(pos < tam)
-        bit[cual][pos] += val, pos += pos & -pos;
+        bit[pos] += val, pos += pos & -pos;
 }
-int n, m;
-vector<vi> tiene(tam);
-vi meta(tam);
-vector<pair<int, ii>> ques(tam);
-vi res(tam, -1);
- 
-int trepos = -1;
-void dnc(int l, int r, vi &candi)
-{
-    if(l > r) return;
-    int mid = (l + r) / 2;
-    while(trepos < mid)
-    {
-        trepos++;
-        int a = ques[trepos].f, b = ques[trepos].s.f, c = ques[trepos].s.s;
-        update(0, pos[a], b - dep[a] * c);
-        update(0, endo[a], -b + dep[a] * c);
-        update(1, pos[a], c);
-        update(1, endo[a], -c);
-    }
-    while(trepos > mid)
-    {
-        int a = ques[trepos].f, b = ques[trepos].s.f, c = ques[trepos].s.s;
-        update(0, pos[a], -b + dep[a] * c);
-        update(0, endo[a], +b - dep[a] * c);
-        update(1, pos[a], -c);
-        update(1, endo[a], +c);
-        trepos--;
-    }
-    vi les, ris;
-    for(int x : candi)
-    {
-        int su = 0;
-        for(int y : tiene[x])
-        {
-            su += query(0, pos[y]) + query(1, pos[y]) * dep[y];
-            if(su >= meta[x]) break;
-        }
-        if(su >= meta[x])
-            res[x] = mid + 1, les.pb(x);
-        else
-            ris.pb(x);
-    }
-    candi.clear();
-    dnc(l, mid - 1, les);
-    dnc(mid + 1, r, ris);
-}
- 
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-    int m;
-	cin>>n>>m;
-    fore(i, 1, n)
+    int n, m;
+    cin>>n>>m;
+    vector<vi> lugs(n);
+    vi meta(n);
+    fore(i, 0, m)
     {
         int x;
         cin>>x;
         x--;
-        g[x].pb(i);
+        lugs[x].pb(i + 1);
     }
-    
-    dfs(0);
-    
-    fore(i, 0, n)
-    {
-        int x;
-        cin>>x;
-        tiene[x - 1].pb(i);
-    }
-    fore(i, 0, m) cin>>meta[i];
+    fore(i, 0, n) cin>>meta[i];
     int q;
     cin>>q;
+    vector<pair<ii, int>> qs(q);
     fore(i, 0, q)
     {
         int a, b, c;
         cin>>a>>b>>c;
-        ques[i] = {a - 1, {b, c}};
+        qs[i] = {{a, b}, c};
     }
-    vi asd(m);
-    fore(i, 0, m) asd[i] = i;
-    dnc(0, q - 1, asd);
-    fore(i, 0, m)
+    vector<vi> mids(q);
+    vi ls(n, 0), rs(n, q - 1);
+    vi res(n, -1);
+    int lo, hi, mid, res;
+    while(lo <= hi)
+    {
+        mid = (lo + hi) / 2;
+        if(f(mid))
+            res = mid, hi = mid - 1;
+        else
+            lo = mid + 1;
+    }
+    while(true) //se repite log(q) veces
+    {
+        bool bo = true;
+        fore(i, 0, n)
+        {
+            if(ls[i] <= rs[i])
+                mids[(ls[i] + rs[i]) / 2].pb(i), bo = false;
+        }
+        if(bo) break;
+        fore(i, 0, q)
+        {
+            int a = qs[i].f.f, b = qs[i].f.s, c = qs[i].s;
+            if(a <= b)
+                update(a, c), update(b + 1, -c);
+            else
+                update(a, c), update(1, c), update(b + 1, -c);
+            for(int x : mids[i])
+            {
+                ll su = 0;
+                for(int y : lugs[x])
+                {
+                    su += query(y);
+                    if(su >= meta[x])
+                        break;
+                }
+                if(su >= meta[x])
+                    res[x] = i + 1, rs[x] = i - 1;
+                else
+                    ls[x] = i + 1;
+            }
+            ques[i].clear();
+        }
+        mem(bit, 0);
+    }
+    fore(i, 0, n)
         if(res[i] == -1)
-            cout<<"rekt\n";
+            cout<<"NIE\n";
         else
             cout<<res[i]<<'\n';
 	return 0;

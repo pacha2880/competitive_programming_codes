@@ -74,13 +74,16 @@ vector<vi> lugs(tam);
 vi meta(tam);
 vi res(tam, -1);
 int treepos = -1;
+int updates = 0;
 void dnc(int l, int r, vi &candi)
 {
+    // if(candi.empty()) return;
     if(l > r) return;
     int mid = (l + r) / 2;
     while(treepos < mid)
     {
         treepos++;
+        updates++;
         int a = qs[treepos].f.f, b = qs[treepos].f.s, c = qs[treepos].s;
         if(a <= b)
             update(a, c), update(b + 1, -c);
@@ -89,6 +92,7 @@ void dnc(int l, int r, vi &candi)
     }
     while(treepos > mid)
     {
+        updates++;
         int a = qs[treepos].f.f, b = qs[treepos].f.s, c = qs[treepos].s;
         if(a <= b)
             update(a, -c), update(b + 1, c);
@@ -101,7 +105,10 @@ void dnc(int l, int r, vi &candi)
     {
         ll su = 0;
         for(int y : lugs[x])
-            su += query(y), su = min(su, (ll)MOD);
+        {
+            su += query(y);
+            if(su >= meta[x]) break;
+        }
         if(su >= meta[x])
             res[x] = mid + 1, lef.pb(x);
         else
@@ -142,6 +149,7 @@ signed main()
             cout<<"NIE\n";
         else
             cout<<res[i]<<'\n';
+    cout<<updates<<'\n';
 	return 0;
 }
 // Se vuelve más fácil,

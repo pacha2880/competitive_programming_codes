@@ -29,9 +29,10 @@ using namespace std;
 // using namespace __gnu_pbds;
 // using namespace __gnu_cxx;
 
-// #pragma GCC target ("avx2")
-// #pragma GCC optimization ("O3")
-// #pragma GCC optimization ("unroll-loops")
+#pragma GCC optimization ("O2")
+// #pragma GCC optimize("Ofast") si el O3 no da
+// #pragma GCC optimize("O3,unroll-loops")
+// #pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
 
 typedef long long 		ll;
 typedef long double ld;	
@@ -45,97 +46,43 @@ typedef vector<ll>      vll;
 // find_by_order kth largest  order_of_key <
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 100010;
+const int tam = 200010;
 const int MOD = 1000000007;
 const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
 
-int col[tam];
-struct unionFind {
-    vi p;
-    vector<unordered_set<int>> st;
-    unionFind(int n) : p(n, -1), st(n){
-        fore(i, 0, n) st[i].insert(col[i]);
-    }
-    int findParent(int v) {
-        if (p[v] == -1) return v;
-        return p[v] = findParent(p[v]);
-    }
-    bool join(int a, int b) {
-        a = findParent(a);
-        b = findParent(b);
-        if (a == b) return false;
-        if(sz(st[a]) > sz(st[b]))
-            swap(a, b);
-        for(int x : st[a])
-            st[b].insert(x);
-        st[a].clear();
-        p[a] = b;
-        return true;
-    }
-};
-
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-	int n, m, q;
-    cin>>n>>m>>q;
-    fore(i, 0, n) cin>>col[i];
-    map<int, vii> ars;
-    fore(i, 0, m)
+	int t;
+    cin>>t;
+    while(t--)
     {
-        int a, b, c;
-        cin>>a>>b>>c;
-        ars[c].pb({a - 1, b - 1});
-    }
-
-    vector<pair<ii, int>> ques(q);
-    fore(i, 0, q)
-    {
-        int a, b, c;
-        cin>>a>>b>>c;
-        ques[i] = {{a - 1, b - 1}, c};
-    }
-    vi ls(q), rs(q, sz(ars) - 1);
-    vector<vi> mids(sz(ars));
-    vi res(q, -1);
-    bool bo = true;
-    while(bo)
-    {
-        bo = false;
-        fore(i, 0, q)
+        string s;
+        cin>>s;
+        if(s == "()")
+            cout<<"NO\n";
+        else
         {
-            if(ls[i] <= rs[i])
-                mids[ls[i] + rs[i] >> 1].pb(i);
-        }
-        unionFind uf(n);
-        int ind = 0;
-        for(auto it = ars.begin(); it != ars.end(); it++, ind++)
-        {
-            for(ii cat : it->s)
-                uf.join(cat.f, cat.s);
-            // cout<<'#'<<'\n';
-            for(int x : mids[ind])
-            {
-                // cout<<x<<'\n';
-                bo = true;
-                int a = ques[x].f.f, b = ques[x].f.s, c = ques[x].s;
-                // cout<<a<<' '<<b<<' '<<c<<'\n';
-                a = uf.findParent(a), b = uf.findParent(b);
-                if(a == b && sz(uf.st[a]) >= c)
-                    res[x] = it->f, rs[x] = ind - 1;
-                else
-                    ls[x] = ind + 1;
-            }
-            mids[ind].clear();
+            string a = "", b = "";
+            int n = sz(s);
+            fore(i, 0, n) a += '(', b += "()";
+            fore(i, 0, n) a += ')';
+            bool bo = true;
+            fore(i, 0, n + 1)
+                if(a.substr(i, n) == s)
+                    bo = false;
+            cout<<"YES\n";
+            if(bo)
+                cout<<a<<'\n';
+            else
+                cout<<b<<'\n';
         }
     }
-    fore(i, 0, q)
-        cout<<res[i]<<'\n';
 	return 0;
 }
 // Se vuelve más fácil,
