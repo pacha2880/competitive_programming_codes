@@ -52,24 +52,22 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-vii g[tam];
-vi vis(tam);
-vi nodes;
-int ars;
-int dfs(int node)
-{
-    nodes.pb(node);
-    vis[node] = 1;
-    int res = MOD;
-    for(ii x : g[node])
-    {
-        ars++;
-        if(!vis[x.f])
-            res = min(res, dfs(x.f));
-        res = min(res, x. s);
-    }
-    return res;
-}
+struct unionFind {
+  vi p, si;
+  unionFind(int n) : p(n, -1), si(n, 1) {}
+  int findParent(int v) {
+    if (p[v] == -1) return v;
+    return p[v] = findParent(p[v]);
+  }
+  bool join(int a, int b) {
+    a = findParent(a);
+    b = findParent(b);
+    if (a == b) return false;
+    p[a] = b;
+    si[b] += si[a];
+    return true;
+  }
+};
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
@@ -77,39 +75,43 @@ signed main()
 	// freopen("qwe.txt", "w", stdout); 
 	int n, m;
     cin>>n>>m;
-    int toto = n * (n - 1) / 2;
-    int res = 0;
+    int res = n * (n - 1) / 2;
+    map<int, vii> ma;
     fore(i, 0, m)
     {
         int a, b, c;
         cin>>a>>b>>c;
-        res += c;
-        a--, b--;
-        g[a].pb({b, c});
-        g[b].pb({a, c});
+        ma[c].pb({a - 1, b - 1});
     }
-    fore(i, 0, n)
-        if(!vis[i])
+    unionFind uni(n);
+    bool bo = true;
+    for(auto it = ma.end(); it != ma.begin(); )
+    {
+        it--;
+        for(ii cat : it->s)
         {
-            nodes.clear(), ars = 0;
-            int mina = dfs(i);
-            int nods = sz(nodes);
-            res += (nods * (nods - 1) / 2 - ars / 2) * mina;
-            toto -= nods * (nods - 1) / 2;
-            for(int x : nodes)
-            {
-                int can = 0;
-                for(ii y : g[x])
-                    if(y.s == mina)
-                        can++;
-                if(can + 1 < sz(g[x]))
-                {
-                    cout<<-1<<'\n';
-                    return 0;
-                }
-            }
+            int a = uni.findParent(cat.f), b = uni.findParent(cat.s);
+            if(a == b)
+                bo = false;
         }
-    cout<<res + toto<<'\n';
+        for(ii cat : it->s)
+        {
+            int a = uni.findParent(cat.f), b = uni.findParent(cat.s);
+            if(a != b)
+                res += it->f * uni.si[a] * uni.si[b];
+            uni.join(a, b);
+        }
+    }
+    if(bo)
+    {
+        set<int> st;
+        fore(i, 0, n) st.insert(uni.findParent(i));
+        for(int x : st)
+            res -= uni.si[x] * (uni.si[x] - 1) / 2;
+        cout<<res<<'\n';
+    }
+    else
+        cout<<"-1\n";
 	return 0;
 }
 // Se vuelve más fácil,

@@ -3,7 +3,7 @@
 // #include <ext/pb_ds/assoc_container.hpp>
 // #include <ext/pb_ds/tree_policy.hpp>
 // #include <ext/rope>
-// #define int ll
+#define int ll
 #define mp				make_pair
 #define pb				push_back
 #define all(a)			(a).begin(), (a).end()
@@ -47,8 +47,8 @@ typedef vector<ll>      vll;
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
 const int tam = 200010;
-const int MOD = 1000000007;
-const int MOD1 = 998244353;
+const int MOD1 = 1000000007;
+const int MOD = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
@@ -58,59 +58,46 @@ signed main()
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-    string s;
-    cin>>s;
-    int n = sz(s) - 1;
-    fore(i, 0, n + 1)
-        s[i] -= 'a';
-    int can = 26 * 26;
-    auto combo = [&](int a, int b){return a * 26 + b + n;};
-	vector<vii> g(n + can);
-    vector<vi> dis(can, vi(n + can, MOD));
-    fore(i, 0, n)
+	int n, m;
+    cin>>n>>m;
+    vi ar, bet(n);
+    bool bo = false;
+    int las = 0;
+    fore(i, 0, m)
     {
-        if(i > 0)
-            g[i].pb({i - 1, 1});
-        if(i < n - 1)
-            g[i].pb({i + 1, 1});
-        int let = (int)s[i] * 26 + (int)s[i + 1] +  n;
-        g[let].pb({i, 0});
-        g[i].pb({let, 1});
+        int x;
+        cin>>x;
+        x--;
+        if(i > 0 && x < las || bo)
+            bet[x] = 1, bo = 1;
+        else
+            ar.pb(x);
+        las = x;
     }
-    fore(i, 0, can)
+    vi ma(n);
+    int po = 0;
+    fore(i, 0, n)
+        if(!bet[i])
+            ma[i] = po++;
+    m = sz(ar);
+    fore(i, 0, m) ar[i] = ma[ar[i]];
+    n = po;
+    if(ar[0] != 0)
     {
-        dis[i][i + n] = 0;
-        deque<int> que;
-        que.push_front(i + n);
-        while(!que.empty())
+        cout<<0<<'\n';
+        return 0;
+    }
+    int res = 1;
+    fore(i, 0, m - 1)
+    {
+        fore(j, ar[i] + 1, ar[i + 1])
         {
-            int node = que.front();
-            que.pop_front();
-            for(ii cat : g[node])
-            {
-                if(dis[i][cat.f] > dis[i][node] + cat.s)
-                {
-                    dis[i][cat.f] = dis[i][node] + cat.s;
-                    if(cat.s == 0)
-                        que.push_front(cat.f);
-                    else
-                        que.push_back(cat.f);
-                }
-            }
+            res = res * j % MOD;
         }
     }
-    int q;
-    cin>>q;
-    while(q--)
-    {
-        int a, b;
-        cin>>a>>b;
-        a--, b--;
-        int res = abs(a - b);
-        fore(i, max(0, a - can), min(n - 1, a + can) + 1)
-            res = min(res, abs(a - i) + 1 + dis[(int)s[i] * 26 + (int)s[i + 1]][b]);
-        cout<<res<<'\n';
-    }
+    fore(i, ar[m - 1] + 1, n)
+        res = res * (i + 1) % MOD;
+    cout<<res<<'\n';
 	return 0;
 }
 // Se vuelve más fácil,

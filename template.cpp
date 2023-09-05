@@ -66,8 +66,6 @@ signed main()
 // es la parte difícil, pero se vuelve más fácil.
 // Crecer duele.
 // La única manera de pasar esa barrera es pasandola.
-// efe no más.
-// Si no vá por todo, andá pa' allá bobo.
 // No sirve de nada hacer sacrificios si no tienes disciplina.
 // Cae 7 veces, levántate 8.
 // LA DISCIPLINA es el puente entre tus metas y tus logros.

@@ -3,7 +3,7 @@
 // #include <ext/pb_ds/assoc_container.hpp>
 // #include <ext/pb_ds/tree_policy.hpp>
 // #include <ext/rope>
-// #define int ll
+#define int ll
 #define mp				make_pair
 #define pb				push_back
 #define all(a)			(a).begin(), (a).end()
@@ -52,64 +52,73 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-
+vi g[tam];
+vi visited;
+vi dp(tam);
+vi tims(tam);
+int k;
+int f(int node)
+{
+    if(visited[node]) return dp[node];
+    visited[node] = 1;
+    int res = 0;
+    for(int x : g[node])
+    {
+        int rus = f(x);
+        if(tims[x] <= tims[node])
+            res = max(res, tims[node] - tims[x] + rus);
+        else
+            res = max(res, k - tims[x] + tims[node] + rus);
+    }
+    return dp[node] = res;
+}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-    string s;
-    cin>>s;
-    int n = sz(s) - 1;
-    fore(i, 0, n + 1)
-        s[i] -= 'a';
-    int can = 26 * 26;
-    auto combo = [&](int a, int b){return a * 26 + b + n;};
-	vector<vii> g(n + can);
-    vector<vi> dis(can, vi(n + can, MOD));
-    fore(i, 0, n)
+    int t;
+    cin>>t;
+    while(t--)
     {
-        if(i > 0)
-            g[i].pb({i - 1, 1});
-        if(i < n - 1)
-            g[i].pb({i + 1, 1});
-        int let = (int)s[i] * 26 + (int)s[i + 1] +  n;
-        g[let].pb({i, 0});
-        g[i].pb({let, 1});
-    }
-    fore(i, 0, can)
-    {
-        dis[i][i + n] = 0;
-        deque<int> que;
-        que.push_front(i + n);
-        while(!que.empty())
+        int n, m;
+        cin>>n>>m>>k;
+        fore(i, 0, n) cin>>tims[i];
+        vi out(n);
+        fore(i, 0, m)
         {
-            int node = que.front();
-            que.pop_front();
-            for(ii cat : g[node])
+            int a, b;
+            cin>>a>>b;
+            a--, b--;
+            g[b].pb(a);
+            out[a]++;
+        }
+        vector<pair<int, ii>> nus;
+        visited.assign(n, 0);
+        multiset<int> mimi;
+        int res = MOD * MOD;
+        vii timis(n);
+        fore(i, 0, n) timis[i] = {tims[i], i};
+        sort(all(timis));
+        vi mama(n);
+        fore(asd, 0, 2 * n)
+        {
+            int i = timis[asd % n].s;
+            int timi = timis[asd % n].f;
+            if(out[i] == 0)
             {
-                if(dis[i][cat.f] > dis[i][node] + cat.s)
+                if(asd < n)
+                    mama[i] = timi - f(i), mimi.insert(mama[i]);
+                else
                 {
-                    dis[i][cat.f] = dis[i][node] + cat.s;
-                    if(cat.s == 0)
-                        que.push_front(cat.f);
-                    else
-                        que.push_back(cat.f);
+                    mimi.insert(mama[i] + k);
+                    mimi.erase(mimi.find(mama[i]));
+                    res = min(res, timi + k - *mimi.begin());
                 }
             }
         }
-    }
-    int q;
-    cin>>q;
-    while(q--)
-    {
-        int a, b;
-        cin>>a>>b;
-        a--, b--;
-        int res = abs(a - b);
-        fore(i, max(0, a - can), min(n - 1, a + can) + 1)
-            res = min(res, abs(a - i) + 1 + dis[(int)s[i] * 26 + (int)s[i + 1]][b]);
         cout<<res<<'\n';
+        fore(i, 0, n) g[i].clear();
     }
 	return 0;
 }

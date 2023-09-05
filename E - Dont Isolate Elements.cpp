@@ -3,7 +3,7 @@
 // #include <ext/pb_ds/assoc_container.hpp>
 // #include <ext/pb_ds/tree_policy.hpp>
 // #include <ext/rope>
-// #define int ll
+#define int ll
 #define mp				make_pair
 #define pb				push_back
 #define all(a)			(a).begin(), (a).end()
@@ -52,65 +52,97 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-
+bitset<1010> tab[1010], uns;
+    int dirx[] = {0, 0, 1, -1}, diry[] = {1, -1, 0, 0};
+	int n, m;
+bool bad(int x, int y)
+{
+    fore(i, 0, 4)
+    {
+        int xx = x + dirx[i], yy = y + diry[i];
+        if(xx >= 0 && xx < n && yy >= 0 && yy < m && tab[xx][yy] == tab[x][y])
+            return false;
+    }
+    return true;
+}
+int dp[4][1010];
+int f(int pos, int mask)
+{
+    if(dp[mask][pos] != -1) return dp[mask][pos];
+    int fi = mask & 1, fai = mask > 1;
+    if(fi)
+        tab[pos] ^= uns;
+    if(fai)
+        tab[pos - 1] ^= uns;
+    if(pos == 1)
+    {
+        bool malo = 0;
+        fore(i, 0, m)
+            if(bad(0, i))
+                malo = 1;
+        if(malo)
+        {
+            if(fi)
+                tab[pos] ^= uns;
+            if(fai)
+                tab[pos - 1] ^= uns;
+            return dp[mask][pos] = MOD;
+        }
+    }
+    if(pos == n - 1)
+    {
+        bool malo = 0;
+        fore(i, 0, m)
+            if(bad(pos, i))
+                malo = 1;
+        if(fi)
+            tab[pos] ^= uns;
+        if(fai)
+            tab[pos - 1] ^= uns;
+        if(malo)
+            return dp[mask][pos] = MOD;
+        return dp[mask][pos] = 0;
+    }
+    int res = MOD;
+    bool malo1 = 0;
+    fore(i, 0, m)
+        if(bad(pos, i))
+            malo1 = 1;
+    tab[pos + 1] ^= uns;
+    bool malo2 = 0;
+    fore(i, 0, m)
+        if(bad(pos, i))
+            malo2 = 1;
+    tab[pos + 1] ^= uns;
+    if(fi)
+        tab[pos] ^= uns;
+    if(fai)
+        tab[pos - 1] ^= uns;
+    if(!malo1)
+        res = min(res, 0 + f(pos + 1, fi * 2));
+    if(!malo2)
+        res = min(res, 1 + f(pos + 1, fi * 2 + 1));
+    return dp[mask][pos] = res;
+}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-    string s;
-    cin>>s;
-    int n = sz(s) - 1;
-    fore(i, 0, n + 1)
-        s[i] -= 'a';
-    int can = 26 * 26;
-    auto combo = [&](int a, int b){return a * 26 + b + n;};
-	vector<vii> g(n + can);
-    vector<vi> dis(can, vi(n + can, MOD));
-    fore(i, 0, n)
+    uns.set();
+    cin>>n>>m;
+    fore(i, 0, n) fore(j, 0, m) 
     {
-        if(i > 0)
-            g[i].pb({i - 1, 1});
-        if(i < n - 1)
-            g[i].pb({i + 1, 1});
-        int let = (int)s[i] * 26 + (int)s[i + 1] +  n;
-        g[let].pb({i, 0});
-        g[i].pb({let, 1});
+        int x;
+        cin>>x;
+        tab[i][j] = x;
     }
-    fore(i, 0, can)
-    {
-        dis[i][i + n] = 0;
-        deque<int> que;
-        que.push_front(i + n);
-        while(!que.empty())
-        {
-            int node = que.front();
-            que.pop_front();
-            for(ii cat : g[node])
-            {
-                if(dis[i][cat.f] > dis[i][node] + cat.s)
-                {
-                    dis[i][cat.f] = dis[i][node] + cat.s;
-                    if(cat.s == 0)
-                        que.push_front(cat.f);
-                    else
-                        que.push_back(cat.f);
-                }
-            }
-        }
-    }
-    int q;
-    cin>>q;
-    while(q--)
-    {
-        int a, b;
-        cin>>a>>b;
-        a--, b--;
-        int res = abs(a - b);
-        fore(i, max(0, a - can), min(n - 1, a + can) + 1)
-            res = min(res, abs(a - i) + 1 + dis[(int)s[i] * 26 + (int)s[i + 1]][b]);
+    mem(dp, -1);
+    int res = min({f(1, 0), f(1, 1) + 1, f(1, 2) + 1, f(1, 3) + 2});
+    if(res >= MOD)
+        cout<<-1<<'\n';
+    else
         cout<<res<<'\n';
-    }
 	return 0;
 }
 // Se vuelve más fácil,
