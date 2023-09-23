@@ -46,7 +46,7 @@ typedef vector<ll>      vll;
 // find_by_order kth largest  order_of_key <
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 1000010;
+const int tam = 200010;
 const int MOD = 1000000007;
 const int MOD1 = 998244353;
 const double DINF=1e100;
@@ -58,36 +58,26 @@ signed main()
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-	int n, k;
-	cin>>n>>k;
-	vi ar(tam);
-	fore(i, 0, n)
-	{
-		int x;
-		cin>>x;
-		ar[x]++;
-	}
-	for(int i = tam - 1; i--; i)
-	{
-		if(ar[i])
-		{
-			k -= ar[i];
-			int can = 0;
-			int x = i;
-			while(x)
-			{
-				can += x % 10;
-				x /= 10;
-			}
-			ar[i - can] += ar[i];
-			if(k <= 0)
-			{
-				cout<<can<<'\n';
-				return 0;
-			}
-		}
-	}
-	cout<<0<<'\n';
+	int n;
+    cin>>n;
+    unordered_set<int> st;
+    vector<vi> dis(n, vi(n));
+    fore(i, 0, n) fore(j, 0, n) cin>>dis[i][j];
+    fore(k, 0, n)
+        fore(i, 0, n)
+            fore(j, 0, n)
+            {
+                if(k == i || k == j || i == j) continue;
+                int didi = dis[i][k] + dis[k][j];
+                if(didi < dis[i][j])
+                {
+                    cout<<-1<<'\n';
+                    return 0;
+                }
+                if(didi == dis[i][j])
+                    st.insert((min(i, j) << 32) + max(i, j));
+            }
+    cout<<sz(st)<<'\n';
 	return 0;
 }
 // Se vuelve más fácil,

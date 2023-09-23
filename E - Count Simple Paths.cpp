@@ -46,48 +46,46 @@ typedef vector<ll>      vll;
 // find_by_order kth largest  order_of_key <
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 1000010;
+const int tam = 200010;
 const int MOD = 1000000007;
 const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-
+int nu = 0;
+vi g[tam];
+vi vis(tam);
+void paths(int node)
+{
+    vis[node] = 1;
+    nu++;
+    if(nu == 1000000)
+    {
+        cout<<nu<<'\n';
+        exit(0);
+    }
+    for(int x : g[node])
+        if(!vis[x])
+            paths(x);
+    vis[node] = 0;
+}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-	int n, k;
-	cin>>n>>k;
-	vi ar(tam);
-	fore(i, 0, n)
-	{
-		int x;
-		cin>>x;
-		ar[x]++;
-	}
-	for(int i = tam - 1; i--; i)
-	{
-		if(ar[i])
-		{
-			k -= ar[i];
-			int can = 0;
-			int x = i;
-			while(x)
-			{
-				can += x % 10;
-				x /= 10;
-			}
-			ar[i - can] += ar[i];
-			if(k <= 0)
-			{
-				cout<<can<<'\n';
-				return 0;
-			}
-		}
-	}
-	cout<<0<<'\n';
+	int n, m;
+    cin>>n>>m;
+    while(m--)
+    {
+        int a, b;
+        cin>>a>>b;
+        a--, b--;
+        g[a].pb(b);
+        g[b].pb(a);
+    }
+    paths(0);
+    cout<<nu<<'\n';
 	return 0;
 }
 // Se vuelve más fácil,

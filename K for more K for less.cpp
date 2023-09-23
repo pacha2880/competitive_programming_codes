@@ -165,17 +165,18 @@ signed main()
     vi por(n + 1);
     int po = 1;
     fore(i, 0, n + 1)
-      por[n - i] = po * facin[i] % MOD, po = po * k % MOD, v[i] = v[i] * fac[i] % MOD;
+      por[i] = po * facin[i] % MOD, po = po * k % MOD, v[i] = v[i] * fac[i] % MOD;
+	reverse(all(v));
     vi mul = multiply(v, por);
     vi res(n + 1);
-    fore(i, n, 2 * n + 1)
-      res[i - n] = mul[i] * facin[i - n] % MOD;
+    fore(i, 0, n + 1)
+      res[i] = mul[i] * facin[n - i] % MOD;
     return res;
   };
   vi tk = cal(t, k), pk = cal(p, MOD - k);
 
   fore(i, 0, n + 1)
-    cout<<(tk[i] + pk[i]) % MOD<<' ';
+    cout<<(tk[n - i] + pk[n - i]) % MOD<<' ';
   cout<<'\n';
 	return 0;
 }

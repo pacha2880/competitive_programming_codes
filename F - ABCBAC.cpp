@@ -46,48 +46,93 @@ typedef vector<ll>      vll;
 // find_by_order kth largest  order_of_key <
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 1000010;
+const int tam = 200010;
 const int MOD = 1000000007;
 const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
+int pot (int b, int e, int MOD) {
+    int res = 1;
+    while(e)
+    {
+        if(e & 1) res = res * b % MOD;
+        b = b * b % MOD;
+        e /= 2;
+    }
+    return res;
+}
+struct Hash
+{
+	int p = 997, m[2], in[2], n;
+	vector<int> h[2], inv[2];
+	Hash(string s)
+	{
+        n = sz(s);
+		m[0] = 998244353, m[1] = 1000000009;
+		fore(i, 0, 2)
+		{
+			in[i] = pot(p, m[i]-2, m[i]);
+			h[i].resize(s.size() + 1);
+			inv[i].resize(s.size() + 1);
+			ll acu = 1;
+			h[i][0] = 0, inv[i][0] = 1;
+			fore(j, 0, s.size())
+			{
+				h[i][j + 1] = (h[i][j] + acu * s[j]) % m[i];
+				inv[i][j + 1] = (1ll * inv[i][j] * in[i]) % m[i];
+				acu = (acu * p) % m[i];
+			}
+		}
+	}
+	ll get(int e)
+	{
+		ll ha[2];
+		fore(i, 0, 2)
+			ha[i] = ((((h[i][n] - h[i][n / 2 + e]) * (ll)inv[i][n / 2]) % m[i] + h[i][e]) + m[i]) % m[i];
+		return((ha[0] << 32) | ha[1]) ;
+	}
+    
+	ll get(int b, int e)
+	{
+		ll ha[2];
+		fore(i, 0, 2)
+			ha[i] = ((((h[i][e] - h[i][b]) * (ll)inv[i][b]) % m[i]) + m[i]) % m[i];
+        // cout<<ha[0]<<' '<<ha[1]<<'\n';
+		return((ha[0] << 32) | ha[1]) ;
+	}
+};
 
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-	int n, k;
-	cin>>n>>k;
-	vi ar(tam);
-	fore(i, 0, n)
-	{
-		int x;
-		cin>>x;
-		ar[x]++;
-	}
-	for(int i = tam - 1; i--; i)
-	{
-		if(ar[i])
-		{
-			k -= ar[i];
-			int can = 0;
-			int x = i;
-			while(x)
-			{
-				can += x % 10;
-				x /= 10;
-			}
-			ar[i - can] += ar[i];
-			if(k <= 0)
-			{
-				cout<<can<<'\n';
-				return 0;
-			}
-		}
-	}
-	cout<<0<<'\n';
+    string s;
+    int n;
+    cin>>n;
+    cin>>s;
+    // int n = sz(s) / 2;
+    string sr = s;
+    reverse(all(sr));
+    Hash h1(s), h2(sr);
+    // cout<<'a' + 0<<'\n';
+    // cout<<(h1.get(0, 1)>>32)<<'\n';
+    fore(i, 0, n + 1)
+    {
+        // cout<<i<<' '<<i<<' '<<i + n + 1<<'\n';
+        int rev = n - i;
+        // cout<<i<<' '<<rev<<' '<<rev + n<<'\n';
+        // cout<<h1.get(i)<<' '<<h2.get(rev, rev + n)<<'\n';
+        if(h1.get(i) == h2.get(rev, rev + n))
+        {
+            fore(j, 0, i) cout<<s[j];
+            fore(j, i + n, 2 * n) cout<<s[j];
+            cout<<'\n'<<i;
+            return 0;
+        }
+    }
+    cout<<-1<<'\n';
 	return 0;
 }
 // Se vuelve más fácil,

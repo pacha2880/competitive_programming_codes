@@ -46,49 +46,70 @@ typedef vector<ll>      vll;
 // find_by_order kth largest  order_of_key <
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 1000010;
+const int tam = 200010;
 const int MOD = 1000000007;
 const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
+struct point{
+    ll x, y;
+};
+
 
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-	int n, k;
-	cin>>n>>k;
-	vi ar(tam);
-	fore(i, 0, n)
-	{
-		int x;
-		cin>>x;
-		ar[x]++;
-	}
-	for(int i = tam - 1; i--; i)
-	{
-		if(ar[i])
-		{
-			k -= ar[i];
-			int can = 0;
-			int x = i;
-			while(x)
-			{
-				can += x % 10;
-				x /= 10;
-			}
-			ar[i - can] += ar[i];
-			if(k <= 0)
-			{
-				cout<<can<<'\n';
-				return 0;
-			}
-		}
-	}
-	cout<<0<<'\n';
-	return 0;
+    int n,x;
+    cin>>n;
+    vi v;
+    for(int i=0;i<n;i++){
+        cin>>x;//los robots
+        v.pb(x);
+    }
+    stack<int>st;
+    vi res;
+    int respueta=0;
+    vi E;
+    for(int i=0;i<n;i++){
+        cin>>x;
+        E.pb(x);
+        respueta+=abs(v[i]-x);
+        if(v[i]<x){
+            st.push(i);
+            // (((((
+        }else{
+            // )))))
+            bool efe=false;
+            while(!st.empty()){
+                int ind=st.top();
+                int dif1=abs(v[ind]-E[ind]);
+                int dif2=abs(v[i]-E[i]);
+                if(dif2<dif1){
+                    efe=true;
+                    res.pb(i);
+                    break;
+                }else{
+                    res.pb(ind);
+                    st.pop();
+                }
+            }
+            if(!efe){
+                res.pb(i);
+            }
+        }
+    }
+    while(!st.empty()){
+        res.pb(st.top());
+        st.pop();
+    }
+    cout<<respueta<<endl;
+    for(auto it : res){         
+        cout<<it+1<<" ";
+    }
+    return 0;
 }
 // Se vuelve más fácil,
 // cada día es un poco más fácil, pero tienes que hacerlo cada día,
@@ -98,4 +119,4 @@ signed main()
 // No sirve de nada hacer sacrificios si no tienes disciplina.
 // Cae 7 veces, levántate 8.
 // LA DISCIPLINA es el puente entre tus metas y tus logros.
-// Take a sad song and make it better
+// Las chicas buenas se van al cielo, las chicas malas se van conmigo

@@ -46,48 +46,65 @@ typedef vector<ll>      vll;
 // find_by_order kth largest  order_of_key <
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 1000010;
+const int tam = 200010;
 const int MOD = 1000000007;
 const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-
+struct unionFind {
+  vi p;
+  unionFind(int n) : p(n, -1) {}
+  int findParent(int v) {
+    if (p[v] == -1) return v;
+    return p[v] = findParent(p[v]);
+  }
+  bool join(int a, int b) {
+    a = findParent(a);
+    b = findParent(b);
+    if (a == b) return false;
+    p[a] = b;
+    return true;
+  }
+};
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-	int n, k;
-	cin>>n>>k;
-	vi ar(tam);
-	fore(i, 0, n)
-	{
-		int x;
-		cin>>x;
-		ar[x]++;
-	}
-	for(int i = tam - 1; i--; i)
-	{
-		if(ar[i])
-		{
-			k -= ar[i];
-			int can = 0;
-			int x = i;
-			while(x)
-			{
-				can += x % 10;
-				x /= 10;
-			}
-			ar[i - can] += ar[i];
-			if(k <= 0)
-			{
-				cout<<can<<'\n';
-				return 0;
-			}
-		}
-	}
-	cout<<0<<'\n';
+	int n, m;
+    cin>>n>>m;
+    vii eds(m);
+    fore(i, 0, m)
+    {
+        int a, b;
+        cin>>a>>b;
+        eds[i] = {a - 1, b - 1};
+    }
+    int k;
+    cin>>k;
+    vi bet(m);
+    fore(i, 0, k)
+    {
+        int x;
+        cin>>x;
+        bet[x - 1] = 1;
+    }
+    vi in(n);
+    unionFind uni(n);
+    fore(i, 0, m)
+        if(!bet[i])
+            uni.join(eds[i].f, eds[i].s);
+    fore(i, 0, m)
+        if(bet[i])
+            in[uni.findParent(eds[i].f)]++, in[uni.findParent(eds[i].s)]++;
+    int ods = 0;
+    fore(i, 0, n)
+        ods += in[i] & 1;
+    if(ods == 0 || ods == 2)
+        cout<<"Yes\n";
+    else
+        cout<<"No\n";
 	return 0;
 }
 // Se vuelve más fácil,

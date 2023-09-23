@@ -46,48 +46,63 @@ typedef vector<ll>      vll;
 // find_by_order kth largest  order_of_key <
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 1000010;
+const int tam = 10000010;
 const int MOD = 1000000007;
 const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-
+void euclid(ll a, ll b, ll &x, ll &y) {
+  if (b) euclid(b, a%b, y, x), y -= x*(a/b);
+  else x = 1, y = 0;
+}
 signed main()
 {
-	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+	// ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-	int n, k;
-	cin>>n>>k;
-	vi ar(tam);
-	fore(i, 0, n)
-	{
-		int x;
-		cin>>x;
-		ar[x]++;
-	}
-	for(int i = tam - 1; i--; i)
-	{
-		if(ar[i])
-		{
-			k -= ar[i];
-			int can = 0;
-			int x = i;
-			while(x)
-			{
-				can += x % 10;
-				x /= 10;
-			}
-			ar[i - can] += ar[i];
-			if(k <= 0)
-			{
-				cout<<can<<'\n';
-				return 0;
-			}
-		}
-	}
-	cout<<0<<'\n';
+	int n;
+    cin>>n;
+    int lcm = 1;
+    while(n--)
+    {
+        int x;
+        cin>>x;
+        lcm = x / __gcd(x, lcm) * lcm;
+    }
+    map<int, int> mc;
+    lcm *= 2;
+    fore(i, 2, tam)
+    {
+        while(lcm % i == 0)
+        {
+            if(!mc.count(i)) mc[i] = 1;
+            mc[i] *= i;
+            lcm /= i;
+        }
+    }
+    vii fac(all(mc));
+    int res = (1ll<<62) - 1 + (1ll<<6);
+    int m = sz(fac);
+    fore(i, 0, 1<<m)
+    {
+        int a = 1, b = 1;
+        fore(j, 0, m)
+            if(i >> j & 1)
+                a *= fac[j].s;
+            else
+                b *= fac[j].s;
+        a = -a;
+        int x, y;
+        euclid(a, b, x, y);
+        int xx = (x % b + b) % b;
+        if(xx == 0) xx += b;
+        int mul = (xx - x) / b;
+        y = y - a * mul;
+        if(-a*xx + 1 == b * y)
+        res = min(res, -a * xx);
+    }
+    cout<<res<<'\n';
 	return 0;
 }
 // Se vuelve más fácil,

@@ -46,48 +46,77 @@ typedef vector<ll>      vll;
 // find_by_order kth largest  order_of_key <
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 1000010;
+const int tam = 2000010;
 const int MOD = 1000000007;
 const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-
+int t[4 * tam];
+void update(int b, int e, int node, int pos, int val)
+{
+    if(b == e)
+    {
+        t[node] = max(t[node], val);
+        return;
+    }
+    index;
+    if(pos <= mid)
+        update(b, mid, l, pos, val);
+    else
+        update(mid + 1, e, r, pos, val);
+    t[node] = max(t[l], t[r]);
+}
+int query(int b, int e, int node, int i, int j)
+{
+    if(i > j) return -MOD * MOD;
+    if(b >= i && e <= j)
+        return t[node];
+    index;
+    if(mid >= j)
+        return query(b, mid, l, i, j);
+    if(mid < i)
+        return query(mid + 1, e, r, i, j);
+    return max(query(b, mid, l, i, j), query(mid + 1, e, r, i, j));
+}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-	int n, k;
-	cin>>n>>k;
-	vi ar(tam);
-	fore(i, 0, n)
-	{
-		int x;
-		cin>>x;
-		ar[x]++;
-	}
-	for(int i = tam - 1; i--; i)
-	{
-		if(ar[i])
-		{
-			k -= ar[i];
-			int can = 0;
-			int x = i;
-			while(x)
-			{
-				can += x % 10;
-				x /= 10;
-			}
-			ar[i - can] += ar[i];
-			if(k <= 0)
-			{
-				cout<<can<<'\n';
-				return 0;
-			}
-		}
-	}
-	cout<<0<<'\n';
+	int n, s;
+    int res = 0;
+    cin>>n>>s;
+    vector<pair<ii, int>> ar(n);
+    set<int> st;
+    fore(i, 0, n)
+    {
+        int a, b, c;
+        cin>>a>>b>>c;
+        st.insert(a); st.insert(b);
+        ar[i] = {{a, b}, c};
+    }
+    sort(all(ar));
+    map<int, int> ma;
+    int can = sz(st) + 1;
+    int po = 0;
+    for(int x : st)
+        ma[x] = po++;
+    vi maxus(can);
+    int las = can - 1;
+    for(int i = n - 1; i > -1; i--)
+    {
+        int l = ar[i].f.f, r = ar[i].f.s, c = ar[i].s;
+        int va = max((r - l + 1) * s + maxus[ma[r] + 1], 
+                    -s * l + query(0, can - 1, 0, ma[l] + 1, ma[r])) - c;
+        update(0, can - 1, 0, ma[l], va + l * s);
+        res = max(res, va);
+        fore(j, ma[l], las)
+            maxus[j] = maxus[las];
+        maxus[ma[l]] = max(va, maxus[ma[l]]);
+        las = ma[l];
+    }
+    cout<<res<<'\n';
 	return 0;
 }
 // Se vuelve más fácil,
