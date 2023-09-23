@@ -29,7 +29,7 @@ using namespace std;
 // using namespace __gnu_pbds;
 // using namespace __gnu_cxx;
 
-#pragma GCC optimization ("O2")
+// #pragma GCC optimization ("O2")
 // #pragma GCC optimize("Ofast") si el O3 no da
 // #pragma GCC optimize("O3,unroll-loops")
 // #pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")

@@ -54,7 +54,7 @@ int main()
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
 	int n, x;
-	cin>>n>>x;
+	cin>>n>>x; 
 	vi ar(n), dp(x + 1, MOD);
 	dp[0] = 0;
 	fore(i, 0, n) cin>>ar[i];

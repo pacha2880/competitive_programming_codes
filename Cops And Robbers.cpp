@@ -47,7 +47,7 @@ typedef vector<ll>      vll;
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
 const int tam = 200010;
-const int MOD = 1000000007;
+const int MOD = 1000000000007ll;
 const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
@@ -133,10 +133,8 @@ signed main()
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
 	int n, m, c;
-    cin>>n>>m>>c;
-    vi costus(500);
-    costus['.'] = MOD;
-    costus['B'] = MOD;
+    cin>>m>>n>>c;
+    vi costus(500, MOD);
     int s, t = n * m * 2;
     vector<string> tab(n);
     fore(i, 0, n)
@@ -148,6 +146,35 @@ signed main()
                 s = i * m + j;
         }
     }
+        
+    Dinitz dinic(2 * n * m + 1, s, t);
+    fore(i, 0, c)
+        cin>>costus['a' + i];
+    fore(i, 0, m)
+        dinic.addEdge(n * m + i, t, MOD), dinic.addEdge(n * m + (n - 1) * m + i, t, MOD);
+    fore(i, 1, n - 1)
+        dinic.addEdge(n * m + i * m, t, MOD), dinic.addEdge(n * m + i * m + m - 1, t, MOD);
+    auto can = [&](int x, int y)
+    {
+        return x >= 0 && y >= 0 && x < n && y < m;
+    };
+    int dir[2][4] = {{1, 0, -1, 0}, {0, 1, 0, -1}};
+    fore(i, 0, n)
+    fore(j, 0, m)
+    {
+        dinic.addEdge(i * m + j, n * m + i * m + j, costus[tab[i][j]]);
+        fore(k, 0, 4)
+        {
+            int x = i + dir[0][k], y = j + dir[1][k];
+            if(can(x, y))
+                dinic.addEdge(n * m + i * m + j, x * m + y, MOD);
+        }
+    }
+    int flow = dinic.maxFlow();
+    if(flow >= MOD)
+        cout<<-1<<'\n';
+    else
+        cout<<flow<<'\n';
 	return 0;
 }
 // Se vuelve más fácil,
