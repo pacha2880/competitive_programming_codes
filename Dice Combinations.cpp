@@ -63,7 +63,7 @@ int main()
 			if(j <= i)
 				dp[i] = (dp[i] + dp[i - j]) % MOD;
 	cout<<dp[n]<<'\n';
-	return 0;
+	return 0; 
 }
 
 // se vuelve más fácil

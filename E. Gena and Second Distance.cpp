@@ -78,11 +78,14 @@ signed main()
         double x1 = r * cos(an1) + po.x, y1 = r * sin(an1) + po.y, x2 = r * cos(an2) + po.x, y2 = r * sin(an2) + po.y;
         if(x1 > -EPS && x1 < w + EPS && y1 > -EPS && y1 < h + EPS || x2 > -EPS && x2 < w + EPS && y2 > -EPS && y2 < h + EPS)
             return 1;
+        // cout<<x1<<' '<<y1<<' '<<x2<<' '<<y2<<'\n';
         fore(i, 0, 4)
         {
             pt dir = esq[i] - po;
             double an = atan2(dir.y, dir.x);
-            if(dir.norm() > r - EPS && an > an1 - EPS && an < an2 + EPS)
+            // cout<<i<<' '<<an * 180 / PI<<'\n';
+            // cout<<dir.x<<' '<<dir.y<<' '<<dir.norm()<<'\n';
+            if(dir.norm() > r - EPS && (an > an1 - EPS && an < an2 + EPS || an - 2 * PI > an1 - EPS && an - 2 * PI < an2 + EPS))
                 return 1;
         }
         return 0;
@@ -91,17 +94,17 @@ signed main()
     {
         vector<pair<double, int>> sweep;
         int cuanta_maldad = 0;
-        cout<<"@@@@\n";
-        cout<<r<<'\n';
-        cout<<cual<<'\n';
-        cout<<pots[cual].x<<' '<<pots[cual].y<<'\n';
+        // cout<<"@@@@\n";
+        // cout<<r<<'\n';
+        // cout<<cual<<'\n';
+        // cout<<pots[cual].x<<' '<<pots[cual].y<<'\n';
         double lasu = -PI;
         fore(i, 0, n)
             if(i != cual)
             {
                 if(pots[i].x == pots[cual].x && pots[i].y == pots[cual].y)
                 {
-                    cout<<i<<'\n';
+                    // cout<<i<<'\n';
                     fore(j, 0, n)
                     {
                         if(j != cual && j != i)
@@ -115,22 +118,29 @@ signed main()
                 double alf = atan2(res.y, res.x);
                 double bet = acos(res.norm() / r / 2);
                 if(alf - bet < -PI)
-                    cuanta_maldad++, sweep.pb({alf + bet + EPS, -1}), sweep.pb({alf - bet + 2 * PI - EPS, 1}),
-                    lasu = max(lasu, sweep.back().f);
+                {
+                    cuanta_maldad++, sweep.pb({alf + bet + EPS, -1}), sweep.pb({alf - bet + 2 * PI - EPS, 1});
+                    lasu = sweep.back().f - 2 * PI;
+                    // cout<<"!!!"<<lasu<<'\n';
+                    // cout<<cuanta_maldad<<'\n';
+                }
                 else if(alf + bet > PI)
-                    cuanta_maldad++, sweep.pb({alf + bet - 2 * PI + EPS, -1}), sweep.pb({alf - bet - EPS, 1}),
-                    lasu = max(lasu,);
+                {
+                    cuanta_maldad++, sweep.pb({alf + bet - 2 * PI + EPS, -1}), sweep.pb({alf - bet - EPS, 1});
+                    lasu = sweep.back().f - 2 * PI;
+                    // cout<<"!!"<<lasu<<'\n';
+                    // cout<<cuanta_maldad<<'\n';
+                }
                 else
                     sweep.pb({alf - bet - EPS, 1}), sweep.pb({alf + bet + EPS, -1});
             }
-        cout<<sz(sweep)<<'\n';
+        // cout<<sz(sweep)<<'\n';
         sort(all(sweep));
-        if(cuanta_maldad > 0)
-            lasu = sweep.back();
+        // cout<<cuanta_maldad<<'\n';
         for(auto cat : sweep)
         {
-            cout<<'$'<<cat.f * 180 / PI<<' '<<lasu * 180 / PI<<' '<<cat.s<<'\n';
-            cout<<cuanta_maldad<<'\n';
+            // cout<<'$'<<cat.f * 180 / PI<<' '<<lasu * 180 / PI<<' '<<cat.s<<'\n';
+            // cout<<cuanta_maldad<<'\n';
             if(cat.f - lasu > EPS && cuanta_maldad == 1 && cana(r, lasu, cat.f, pots[cual]))
                 return true;
             cuanta_maldad += cat.s;
@@ -142,13 +152,13 @@ signed main()
     shuffle(all(pots), rng);
     fore(i, 0, n)
     {
-        cout<<i<<"#################3\n";
-        cout<<pots[i].x<<' '<<pots[i].y<<'\n';
+        // cout<<i<<"#################3\n";
+        // cout<<pots[i].x<<' '<<pots[i].y<<'\n';
         double minu = MOD;
         fore(j, 0, n) if(j != i) minu = min(minu, (pots[i] - pots[j]).norm() / 2);
-        cout<<minu<<'\n';
+        // cout<<minu<<'\n';
         rusa = max(rusa, minu);
-        cout<<rusa<<'\n';
+        // cout<<rusa<<'\n';
         if(can(i, rusa))
         {
             double hi = 2e6;
@@ -161,9 +171,9 @@ signed main()
                     hi = mid;
             }
         }
-        cout<<pots[i].x<<' '<<pots[i].y<<' '<<rusa<<'\n';
+        // cout<<pots[i].x<<' '<<pots[i].y<<' '<<rusa<<'\n';
     }
-    cout<<rusa<<'\n';
+    cout<<fixed<<setprecision(9)<<rusa<<'\n';
 	return 0;
 
 }

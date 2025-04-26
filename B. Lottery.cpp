@@ -127,66 +127,122 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-struct st
-{
-    ii val;
-    int laz;
-	st* r;
-	st* l;
-	st() {r = l = NULL; val = {0, 0}, laz = 0;}
-	st(ii v) {r = l = NULL; val = {v}; laz = 0;}
-	st(st* L, st* R) {l = L; r = R; val = max(L->val, R->val), laz = 0;}
-};
-typedef st* pst;
-void push(pst t, int b, int e)
-{
-    if(!t->l)
-        t->l = new st(t->val);
-    if(!t->r)
-        t->r = new st({t->val.f, -((b + e) / 2 + 1)});
-    if(t->laz)
-    {
-        t->val.f += t->laz;
-        if(b < e)
-            t->l->laz += t->laz, t->r->laz += t->laz;
-        t->laz = 0;
-    }
-}
-void update(pst &t, int b, int e, int i, int j, int val)
-{
-    if(b > e) return;
-    push(t, b, e);
-    if(e < i || b > j) return;
-    if(b >= i && e <= j)
-    {
-        t->laz += val;
-        push(t, b, e);
-        return;
-    }
-	int mid = (b + e) / 2;
-    update(t->l, b, mid, i, j, val);
-    update(t->r, mid + 1, e, i, j, val);
-    t->val = max(t->l->val, t->r->val);
-}
 
 signed main()
 {
-	// ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout);
     int n, m, k;
     cin>>n>>m>>k;
-    vi ar(n);
-    fore(i, 0, n) cin>>ar[i];
-    sort(all(ar));
-    pst t = new st();
+    map<int, int> ma;
+    fore(i, 0, n)
+    {
+        int x;
+        cin>>x;
+        ma[x]++;
+    }
+    // for(auto cat : ma)
+    //     cout<<cat.f<<' '<<cat.s<<'\n';
     if(k > n)
     {
         cout<<m + 1<<' '<<0<<'\n';
         return 0;
     }
-    int le = -1, ri = -1;
-    int
+    ii res = {0, 0};
+    auto le = ma.begin(), ri = ma.begin();
+    int canle = 0, canri = 0;
+    while(canri < k && ri != ma.end())
+    {
+        // cout<<'@'<<ri->f<<' '<<ri->s<<'\n';
+        canri += ri->s, ri++;
+        // if(ri != ma.end())
+            // cout<<ri->f<<' '<<ri->s<<'\n';
+    }
+    for(auto it = ma.begin(); it != ma.end(); it++)
+    {
+        auto rere = ri;
+        rere--;
+        // cout<<"#### "<<it->f<<' '<<res.f<<' '<<res.s<<'\n';
+        auto cait = it;
+        // cout<<canle<<' '<<canri<<'\n';
+        // cout<<it->f<<' '<<canle<<' '<<canri<<'\n';
+        cait--;
+        if(canle < k && canri < k && cait->f + 1 < it->f)
+        {
+            res = {m + 1, -cait->f - 1};
+            break;
+        }
+        if(it != ma.begin() && canle >= k && canri >= k)
+        {
+            if(cait->f + 1 < it->f && le->f < rere->f)
+            {
+                int p = cait->f + 1;
+                res = max(res, {(rere->f - p + 1) / 2 + (p - le->f + 1) / 2 - 1, -p});
+            }
+            if(cait->f + 2 < it->f && le->f < rere->f)
+            {
+                int p = cait->f + 2;
+                res = max(res, {(rere->f - p + 1) / 2 + (p - le->f + 1) / 2 - 1, -p});
+            }
+        }
+        // cout<<"#### "<<it->f<<' '<<res.f<<' '<<res.s<<'\n';
+        cait = it;
+        // cout<<it->f<<'\n';
+        // cout<<canle<<' '<<le->f<<' '<<canri<<' '<<rere->f<<'\n';
+        if(canle < k)
+        {
+            cait--;
+            // cout<<rere->f<<'\n';
+            if(it == ma.begin() && it->f > 0 || it != ma.begin() && cait->f + 1 < it->f)
+            {
+                int p = it->f - 1;
+                res = max(res, {p + (rere->f - p + 1) / 2, -p});
+            }
+            if(it == ma.begin() && it->f > 1 || it != ma.begin() && cait->f + 2 < it->f)
+            {
+                int p = it->f - 2;
+                // cout<<'!'<<p<<' '<<(rere->f - p) / 2<<'\n';
+                res = max(res, {p + (rere->f - p + 1) / 2, -p});
+            }
+        }
+        // cout<<"#### "<<it->f<<' '<<res.f<<' '<<res.s<<'\n';
+        canle += it->s;
+        while(canle - le->s >= k)
+        {
+            canle -= le->s;
+            le++;
+        }
+        int p = it->f;
+        if(canri < k)
+            res = max(res, {m - p + (p - le->f + 1) / 2, -p});
+        if(canle < k)
+            res = max(res, {p + (rere->f - p + 1) / 2, -p});
+        if(canle >= k && canri >= k)
+                res = max(res, {(rere->f - p +  1) / 2 + (p - le->f + 1) / 2 - 1, -p});
+        canri -= it->s;
+        while(canri < k && ri != ma.end())
+        {
+            // cout<<'@'<<ri->f<<' '<<ri->s<<'\n';
+            canri += ri->s, ri++;
+            // if(ri != ma.end())
+                // cout<<ri->f<<' '<<ri->s<<'\n';
+        }
+        rere = ri;
+        rere--;
+        if(canri < k)
+        {
+            auto cait = it;
+            cait++;
+            if(cait == ma.end() && it->f < m || cait != ma.end() && it->f + 1 < cait->f)
+            {
+                int p = it->f + 1;
+                res = max(res, {(p - le->f + 1) / 2 + m - p, -p});
+            }
+        }
+        // cout<<"#### "<<it->f<<' '<<res.f<<' '<<res.s<<'\n';
+    }
+    cout<<res.f<<' '<<-res.s<<'\n';
 	return 0;
 }
 // 30067266499541040
