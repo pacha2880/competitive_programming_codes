@@ -51,39 +51,33 @@ const int MOD = 1000000007;
 const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
-const double PI = acos(-1); 
+const double PI = acos(-1);
+int dp[501][126000];
+int n;
+int f(int pos, int su)
+{
+	if(pos == n)
+		return su * 2 == n * (n + 1) / 2;
+	if(dp[pos][su] != -1) return dp[pos][su];
+	return dp[pos][su] = (f(pos + 1, su) + f(pos + 1, su + pos + 1)) % MOD;
+}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-	int n;
 	cin>>n;
-	vi res({1, 1});
-	fore(i, 2, n + 1)
-	{
-		auto aux = res;
-		fore(j, i, min(i + i, n + 1))
-		{
-			cout<<sz(res)<<' '<<j<<' '<<j - i + 1<<'\n';
-			if(sz(res) <= j)
-				res.pb(aux[j - i]);
-			else
-				res[j] += aux[j - i];
+	mem(dp, -1);
+	auto pot = [&](int b, int e) {
+		int res = 1;
+		while(e){
+			if(e & 1) res = res * b % MOD;
+			b = b * b % MOD;
+			e /= 2;
 		}
-		cout<<"asdf\n";
-		for(int x : res)
-			cout<<x<<' ';
-		cout<<'\n';
-	}
-	int resu = 0;
-	fore(i, 1, n / 2)
-		resu += res[i];
-	if(n & 1)
-		resu += res[n / 2];
-	else
-		resu += res[n / 2] / 2;
-	cout<<resu<<'\n';
+		return res;
+	};
+	cout<<f(0, 0) * pot(2, MOD - 2) % MOD<<'\n';
 	return 0;
 }
 // Se vuelve más fácil,
