@@ -53,37 +53,40 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-vii dp(1<<20);
-vi vis(1<<20);
-vi ar(20);
-int n, x;
-ii f(int mask)
+int pot(int b, int e)
 {
-    if(mask == 0) return {1, 0};
-    if(vis[mask]) return dp[mask];
-    vis[mask] = 1;
-    ii res(MOD, MOD);
-    fore(i, 0, n)
-    {
-        if(mask & (1<<i))
-        {
-            ii combo = f(mask ^ (1<<i));
-            if(combo.s + ar[i] <= x)
-                res = min(res, {combo.f, combo.s + ar[i]});
-            else
-                res = min(res, {combo.f + 1, ar[i]});
-        }
+    int res = 1;
+    while(e){
+        if(e & 1) res = res * b % MOD;
+        b = b * b % MOD;
+        e /= 2;
     }
-    return dp[mask] = res;
+    return res;
+}
+int inv(int x){
+    return pot(x, MOD - 2);
 }
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-    cin>>n>>x;
-    fore(i, 0, n) cin>>ar[i];
-    cout<<f((1<<n) - 1).f<<'\n';
+	int n, q;
+    cin>>n>>q;
+    vi ar(q);
+    fore(i, 0, q) cin>>ar[i];
+    int inv_dos = inv(2);
+    vi res(n + 1);
+    int suf = 0;
+    for(int i = q - 2; i > -1; i--)
+    {
+        int nuevo_suf = (ar[i + 1] * inv_dos % MOD * inv_dos + suf * inv_dos) % MOD; 
+        res[ar[i]] = (res[ar[i]] + nuevo_suf) % MOD;
+        suf = nuevo_suf; 
+    }
+    res[1] = (res[1] + ar[0] * inv_dos + suf) % MOD;
+    fore(i, 1, n + 1)
+        cout<<res[i]<<'\n';
 	return 0;
 }
 // Se vuelve más fácil,
@@ -96,3 +99,4 @@ signed main()
 // LA DISCIPLINA es el puente entre tus metas y tus logros.
 // Las indisciplinadas son mi debilidad
 // Take a sad song and make it better
+    

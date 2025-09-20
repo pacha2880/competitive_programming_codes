@@ -53,37 +53,77 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-vii dp(1<<20);
-vi vis(1<<20);
-vi ar(20);
-int n, x;
-ii f(int mask)
-{
-    if(mask == 0) return {1, 0};
-    if(vis[mask]) return dp[mask];
-    vis[mask] = 1;
-    ii res(MOD, MOD);
-    fore(i, 0, n)
-    {
-        if(mask & (1<<i))
-        {
-            ii combo = f(mask ^ (1<<i));
-            if(combo.s + ar[i] <= x)
-                res = min(res, {combo.f, combo.s + ar[i]});
-            else
-                res = min(res, {combo.f + 1, ar[i]});
-        }
-    }
-    return dp[mask] = res;
-}
+vi p(6);
+  int findParent(int v) {
+    if (p[v] == -1) return v;
+    return p[v] = findParent(p[v]);
+  }
+  bool join(int a, int b) {
+    a = findParent(a);
+    b = findParent(b);
+    if (a == b) return false;
+    p[a] = b;
+    return true;
+  }
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-    cin>>n>>x;
-    fore(i, 0, n) cin>>ar[i];
-    cout<<f((1<<n) - 1).f<<'\n';
+	int t;
+    cin>>t;
+    int con = 0;
+    vii ari;
+    map<ii, int> maskin;
+    fore(i, 0, 6)
+        fore(j, i, 6)
+        {
+            ari.pb({i, j});
+            maskin[{i, j}] = 1<<(con++);
+        }
+    // cout<<sz(ari)<<' '<<con<<'\n';
+    vi res(1<<21);
+    fore(i, 0, 1<<21)
+    {
+        fore(i, 0, 6) p[i] = -1;
+        vi pari(6);
+        int maski = 0;
+        int joins = 0;
+        fore(j, 0, 21)
+            if((1<<j) & i)
+            {
+                joins += join(ari[j].f, ari[j].s);
+                maski |= (1<<(ari[j].f)) | (1<<(ari[j].s));
+                // gra.insert(ari[j].f), gra.insert(ari[j].s);
+                pari[ari[j].f]^=1, pari[ari[j].s]^=1;
+            }
+        int con = 0;
+        fore(i, 0, 6) con += pari[i];
+        if((con == 0 || con == 2) && __builtin_popcount(maski) == joins + 1)
+        res[i] = 1;
+    }
+    int N = 21;
+    for(int i = 0;i < N; ++i) for(int mask = 0; mask < (1<<N); ++mask){
+	if(mask & (1<<i))
+		res[mask] += res[mask^(1<<i)];
+    }
+    // cout<<"asdf\n";
+    while(t--)
+    {
+        int n;
+        cin>>n;
+        int ma = 0;
+        fore(i, 0, n){
+            int a, b;
+            cin>>a>>b;
+            if(a > b)
+            swap(a, b);
+            a--, b--;
+            ma |= maskin[{a, b}];
+        }
+        // cout<<ma<<'\n';
+        cout<<res[ma]<<'\n';
+    }
 	return 0;
 }
 // Se vuelve más fácil,

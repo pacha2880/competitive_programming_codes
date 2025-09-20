@@ -63,33 +63,25 @@ signed main()
     vii ar(n);
     fore(i, 0, n) cin>>ar[i].f>>ar[i].s;
     int mi = 1, ma = 2 * MOD;
-    fore(i, 0, n - 1)
-    {
-        int di = max(abs(ar[i + 1].f - ar[i].f), abs(ar[i + 1].s - ar[i].s));
-        int nmi = max(1ll, di - ma);
-        int nma = di - mi;
-        if(nma <= 0)
+    auto procesar = [&](){
+        fore(i, 0, n - 1)
         {
-            cout<<-1<<'\n';
-            return 0;
+            int di = max(abs(ar[i + 1].f - ar[i].f), abs(ar[i + 1].s - ar[i].s));
+            int nmi = max(1ll, di - ma);
+            int nma = di - mi;
+            if(nma <= 0)
+            {
+                cout<<-1<<'\n';
+                exit(0);
+            }
+            mi = nmi;
+            ma = nma;
+            cout<<di<<' '<<mi<<' '<<ma<<'\n';
         }
-        mi = nmi;
-        ma = nma;
-    }
+    };
+    procesar();
     reverse(all(ar));
-    fore(i, 0, n - 1)
-    {
-        int di = max(abs(ar[i + 1].f - ar[i].f), abs(ar[i + 1].s - ar[i].s));
-        int nmi = max(1ll, di - ma);
-        int nma = di - mi;
-        if(nma <= 0)
-        {
-            cout<<-1<<'\n';
-            return 0;
-        }
-        mi = nmi;
-        ma = nma;
-    }
+    procesar();
     cout<<ma<<'\n';
 	return 0;
 }

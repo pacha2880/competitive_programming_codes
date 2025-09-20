@@ -47,43 +47,38 @@ typedef vector<vector<int>> mat;
 // find_by_order kth largest  order_of_key <
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 200010;
+const int tam = 400010;
 const int MOD = 1000000007;
 const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-vii dp(1<<20);
-vi vis(1<<20);
-vi ar(20);
-int n, x;
-ii f(int mask)
-{
-    if(mask == 0) return {1, 0};
-    if(vis[mask]) return dp[mask];
-    vis[mask] = 1;
-    ii res(MOD, MOD);
-    fore(i, 0, n)
-    {
-        if(mask & (1<<i))
-        {
-            ii combo = f(mask ^ (1<<i));
-            if(combo.s + ar[i] <= x)
-                res = min(res, {combo.f, combo.s + ar[i]});
-            else
-                res = min(res, {combo.f + 1, ar[i]});
-        }
-    }
-    return dp[mask] = res;
-}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-    cin>>n>>x;
-    fore(i, 0, n) cin>>ar[i];
-    cout<<f((1<<n) - 1).f<<'\n';
+    int n, k;
+    cin>>n>>k;
+    vii ar(n);
+    fore(i, 0, n)
+        cin>>ar[i].f>>ar[i].s;
+    multiset<int> borrar;
+    int conto = 0, res = 0;
+    sort(all(ar));
+    fore(i, 0, n)
+    {
+        while(!borrar.empty() && *borrar.begin() <= ar[i].f)
+            conto--, borrar.erase(borrar.begin());
+        if(conto == k)
+        {
+            if(*--borrar.end() > ar[i].s)
+                borrar.erase(--borrar.end()), borrar.insert(ar[i].s);
+        }
+        else
+            borrar.insert(ar[i].s), conto++, res++;
+    }
+    cout<<res<<'\n';
 	return 0;
 }
 // Se vuelve más fácil,

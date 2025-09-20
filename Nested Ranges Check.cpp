@@ -53,37 +53,40 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-vii dp(1<<20);
-vi vis(1<<20);
-vi ar(20);
-int n, x;
-ii f(int mask)
-{
-    if(mask == 0) return {1, 0};
-    if(vis[mask]) return dp[mask];
-    vis[mask] = 1;
-    ii res(MOD, MOD);
-    fore(i, 0, n)
-    {
-        if(mask & (1<<i))
-        {
-            ii combo = f(mask ^ (1<<i));
-            if(combo.s + ar[i] <= x)
-                res = min(res, {combo.f, combo.s + ar[i]});
-            else
-                res = min(res, {combo.f + 1, ar[i]});
-        }
-    }
-    return dp[mask] = res;
-}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-    cin>>n>>x;
-    fore(i, 0, n) cin>>ar[i];
-    cout<<f((1<<n) - 1).f<<'\n';
+	int n;
+    cin>>n;
+    map<ii, int> ma;
+    vector<vi> ar(n, vi(3));
+    vi resin(n), resout(n);
+    fore(i, 0, n) cin>>ar[i][0]>>ar[i][1], ar[i][2] = i, ma[{ar[i][0], ar[i][1]}]++;
+    sort(all(ar), [](vi &a, vi &b){return mp(a[0], -a[1]) < mp(b[0], -b[1]);});
+    set<int> st;
+    fore(i, 0, n)
+    {
+        if(ma[{ar[i][0], ar[i][1]}] > 1)
+            resin[ar[i][2]] = resout[ar[i][2]] = 1;
+        if(st.end() != st.lower_bound(ar[i][1]))
+            resout[ar[i][2]] = 1;
+        st.insert(ar[i][1]);
+    }
+    
+    sort(all(ar), [](vi &a, vi &b){return mp(-a[0], a[1]) < mp(-b[0], b[1]);});
+    st.clear();
+    fore(i, 0, n){
+        if(st.begin() != st.upper_bound(ar[i][1]))
+            resin[ar[i][2]] = 1;
+        st.insert(ar[i][1]);
+    }
+    for(int x : resin)
+        cout<<x<<' ';
+    cout<<'\n';
+    for(int x : resout)
+        cout<<x<<' ';
 	return 0;
 }
 // Se vuelve más fácil,

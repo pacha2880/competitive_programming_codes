@@ -53,37 +53,50 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-vii dp(1<<20);
-vi vis(1<<20);
-vi ar(20);
-int n, x;
-ii f(int mask)
+vi g[tam], g1[tam];
+int vis[tam];
+vi ord;
+void dfs1(int node)
 {
-    if(mask == 0) return {1, 0};
-    if(vis[mask]) return dp[mask];
-    vis[mask] = 1;
-    ii res(MOD, MOD);
-    fore(i, 0, n)
-    {
-        if(mask & (1<<i))
-        {
-            ii combo = f(mask ^ (1<<i));
-            if(combo.s + ar[i] <= x)
-                res = min(res, {combo.f, combo.s + ar[i]});
-            else
-                res = min(res, {combo.f + 1, ar[i]});
-        }
-    }
-    return dp[mask] = res;
+    if(vis[node]) return;
+    vis[node] = 1;
+    for(int x : g1[node])
+        dfs1(x);
+    ord.pb(node);
+}
+int ide = 1;
+int res[tam];
+void dfs(int node){
+    if(vis[node] == 2) return;
+    vis[node]++;
+    for(int x : g[node])
+        dfs(x);
+    res[node] = ide;
 }
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-    cin>>n>>x;
-    fore(i, 0, n) cin>>ar[i];
-    cout<<f((1<<n) - 1).f<<'\n';
+	int n, m;
+    cin>>n>>m;
+    fore(i, 0, m)
+    {
+        int a, b;
+        cin>>a>>b;
+        a--, b--;
+        g[a].pb(b);
+        g1[b].pb(a);
+    }
+    fore(i, 0, n)
+        dfs1(i);
+    reverse(all(ord));
+    fore(i, 0, n)
+        if(vis[ord[i]] == 1)
+            dfs(ord[i]), ide++;
+    cout<<ide - 1<<'\n';
+    fore(i, 0, n)
+        cout<<res[i]<<' ';
 	return 0;
 }
 // Se vuelve más fácil,

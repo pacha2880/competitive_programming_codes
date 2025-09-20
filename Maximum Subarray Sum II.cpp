@@ -53,37 +53,59 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-vii dp(1<<20);
-vi vis(1<<20);
-vi ar(20);
-int n, x;
-ii f(int mask)
+ii t[4 * tam];
+int ar[tam];
+ii join(ii a, ii b)
 {
-    if(mask == 0) return {1, 0};
-    if(vis[mask]) return dp[mask];
-    vis[mask] = 1;
-    ii res(MOD, MOD);
-    fore(i, 0, n)
-    {
-        if(mask & (1<<i))
-        {
-            ii combo = f(mask ^ (1<<i));
-            if(combo.s + ar[i] <= x)
-                res = min(res, {combo.f, combo.s + ar[i]});
-            else
-                res = min(res, {combo.f + 1, ar[i]});
-        }
+    return {a.f + b.f, max({a.s + b.f, b.s, 0ll})};
+}
+void init(int b, int e, int node){
+    if(b == e) {
+        t[node] = {ar[b], max(0ll, ar[b])};
+        return;
     }
-    return dp[mask] = res;
+    index;
+    init(b, mid, l);
+    init(mid + 1, e, r);
+    t[node] = join(t[l], t[r]);
+}
+ii query(int b, int e, int node, int i, int j){
+    if(i <= b && j >= e)
+        return t[node];
+    index;
+    if(mid >= j)
+        return query(b, mid, l, i, j);
+    if(i > mid)
+        return query(mid + 1, e, r, i, j);
+    return join(query(b, mid, l, i, j), query(mid + 1, e, r, i, j));
 }
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-    cin>>n>>x;
+	int n, a, b;
+    cin>>n>>a>>b;
+    queue<int> nunu;
+    int res = -MOD * MOD;
+    int su = 0, sa = 0;
+    // vi ar(n);
     fore(i, 0, n) cin>>ar[i];
-    cout<<f((1<<n) - 1).f<<'\n';
+    init(0, n - 1, 0);
+    fore(i, 0, n)
+    {
+        su += ar[i];
+        if(i >= a) {
+            su -= ar[i - a];
+            // cout<<i<<' '<<su<<' '<<max(0ll, i - b + 1)<<' '<< i - a<<' '<<query(0, n - 1, 0, max(0ll, i - b + 1), i - a).s<<'\n';
+            if(a == b)
+                res = max(res, su);
+            else
+                res = max(res, su + query(0, n - 1, 0, max(0ll, i - b + 1), i - a).s);
+        }
+        if(i == a - 1) res = su;
+    }
+    cout<<res<<'\n';
 	return 0;
 }
 // Se vuelve más fácil,

@@ -52,38 +52,36 @@ const int MOD = 1000000007;
 const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
-const double PI = acos(-1); 
-vii dp(1<<20);
-vi vis(1<<20);
-vi ar(20);
-int n, x;
-ii f(int mask)
+const double PI = acos(-1);
+
+vi kmp(string s)
 {
-    if(mask == 0) return {1, 0};
-    if(vis[mask]) return dp[mask];
-    vis[mask] = 1;
-    ii res(MOD, MOD);
-    fore(i, 0, n)
+    int n = sz(s);
+    vi pi(n);
+    fore(i, 1, n)
     {
-        if(mask & (1<<i))
-        {
-            ii combo = f(mask ^ (1<<i));
-            if(combo.s + ar[i] <= x)
-                res = min(res, {combo.f, combo.s + ar[i]});
-            else
-                res = min(res, {combo.f + 1, ar[i]});
-        }
+        pi[i] = pi[i - 1];
+        while(pi[i] && s[i] != s[pi[i]])
+            pi[i] = pi[pi[i] - 1];
+        if(s[i] == s[pi[i]]) pi[i]++;
     }
-    return dp[mask] = res;
+    return pi;
 }
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-    cin>>n>>x;
-    fore(i, 0, n) cin>>ar[i];
-    cout<<f((1<<n) - 1).f<<'\n';
+	string s, p;
+    cin>>s>>p;
+    int n = sz(s), m = sz(p);
+    p += '#';
+    p += s;
+    vi pi = kmp(p);
+    int res = 0;
+    fore(i, m + 1, n + m + 1)
+        res += pi[i] == m;
+    cout<<res<<'\n';
 	return 0;
 }
 // Se vuelve más fácil,

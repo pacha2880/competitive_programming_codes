@@ -53,37 +53,60 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-vii dp(1<<20);
-vi vis(1<<20);
-vi ar(20);
-int n, x;
-ii f(int mask)
+int bit[tam];
+void update(int pos, int val)
 {
-    if(mask == 0) return {1, 0};
-    if(vis[mask]) return dp[mask];
-    vis[mask] = 1;
-    ii res(MOD, MOD);
-    fore(i, 0, n)
-    {
-        if(mask & (1<<i))
-        {
-            ii combo = f(mask ^ (1<<i));
-            if(combo.s + ar[i] <= x)
-                res = min(res, {combo.f, combo.s + ar[i]});
-            else
-                res = min(res, {combo.f + 1, ar[i]});
-        }
-    }
-    return dp[mask] = res;
+    while(pos < tam) bit[pos] += val, pos += pos & -pos;
+}
+int query(int pos)
+{
+    int res = 0;
+    while(pos) res += bit[pos], pos -= pos & -pos;
+    return res;
+}
+vi g[tam];
+int ar[tam], le[tam], ri[tam];
+int pos = 1;
+void dfs(int node, int pa = -1)
+{
+    le[node] = pos;
+    update(pos++, ar[node]);
+    for(int x : g[node])
+        if(x != pa)
+            dfs(x, node);   
+    ri[node] = pos - 1;
 }
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-    cin>>n>>x;
+	int n, q;
+    cin>>n>>q;
     fore(i, 0, n) cin>>ar[i];
-    cout<<f((1<<n) - 1).f<<'\n';
+    fore(i, 0, n - 1)
+    {
+        int a, b;
+        cin>>a>>b;
+        a--, b--;
+        g[a].pb(b);
+        g[b].pb(a);
+    }
+    dfs(0);
+    while(q--) {
+        int a, b;
+        cin>>a>>b;
+        b--;
+        if(a == 1)
+        {
+            int c;
+            cin>>c;
+            update(le[b], c - ar[b]);
+            ar[b] = c;
+        }
+        else
+            cout<<query(ri[b]) - query(le[b] - 1)<<'\n';
+    }
 	return 0;
 }
 // Se vuelve más fácil,
