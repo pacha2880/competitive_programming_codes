@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 // #include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
+// #include <ext/pb_ds/assoc_container.hpp>
+// #include <ext/pb_ds/tree_policy.hpp>
 // #include <ext/rope>
 #define int ll
 #define mp				make_pair
@@ -26,7 +26,7 @@
 
 
 using namespace std;
-using namespace __gnu_pbds;
+// using namespace __gnu_pbds;
 // using namespace __gnu_cxx;
 
 // #pragma GCC optimization ("O2")
@@ -43,7 +43,7 @@ typedef vector<int>     vi;
 typedef vector<ii>      vii;
 typedef vector<ll>      vll;
 typedef vector<vector<int>> mat;
-typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_node_update> ordered_set;
+// typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_update> ordered_set;
 // find_by_order kth largest  order_of_key <
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
@@ -53,36 +53,111 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
+
+	const ll inf = LLONG_MAX;
+bool Q = 0;
+struct Line {
+    mutable ll m, b, x;
+
+    // Maximo: m < ot.m
+    // Minimo: m > ot.m
+    bool operator < (const Line ot) const {
+        return Q ? x < ot.x : m < ot.m;
+    }
+};
+
+ll ceil (ll a, ll b) {
+    if (a < 0 != b < 0) return a / b;
+    return (abs(a) + abs(b) - 1) / abs(b);
+}
+
+ll intersection (const Line &p, const Line &q) {
+    return ceil(q.b - p.b, p.m - q.m);
+}
+
+struct Hull : multiset<Line> {
+    bool valid (multiset<Line>::iterator  it) {
+        if (it == begin()) {
+            auto sig = it;
+            sig++;
+            if (sig != end()) sig->x = intersection(*it, *sig);
+            return it->x = -inf;
+        }
+
+        auto ant = it, sig = it;
+        ant--, sig++;
+
+        if (sig == end()) {
+            it->x = intersection(*it, *ant);
+            return 1;
+        }
+
+        ll x = intersection(*it, *ant);
+        ll y = intersection(*it, *sig);
+
+        if (x > y) return 0;
+        it->x = x, sig->x = y;
+        return 1;
+    }
+
+    void add (ll m, ll b) {
+        auto it = lower_bound({m, b, -inf});
+
+        if (it != end() && it->m == m) {
+            //Maximo: it->b > b
+            //Minimo: it->b < b
+            if (it->b > b) return;
+            it->b = b;
+        } else {
+            it = insert({m, b, -inf});
+        }
+
+        if (!valid(it)) {
+            erase(it);
+            return;
+        }
+
+        auto ant = it;
+        while (ant != begin()) {
+            if (valid(--ant)) break;
+            erase(ant);
+            if (it == begin()) { it->x = -inf; break; }
+            ant = it;
+        }
+
+        auto sig = it;
+        sig++;
+        while (sig != end() && !valid(sig))
+            erase(sig++);
+    }
+
+    ll query (ll x) {
+        if (empty()) return 0;
+
+        Q = 1;
+        auto it = upper_bound({0, 0, x});
+        it--;
+        Q = 0;
+        return x * it->m + it->b;
+    }
+};
+
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-	int n;
-    cin>>n;
-    map<ii, int> ma;
-    vector<vi> ar(n, vi(3));
-    vi resin(n), resout(n);
-    fore(i, 0, n) cin>>ar[i][0]>>ar[i][1], ar[i][2] = i, ma[{ar[i][0], ar[i][1]}]++;
-    sort(all(ar), [](vi &a, vi &b){return mp(a[0], -a[1]) < mp(b[0], -b[1]);});
-    ordered_set st;
-    fore(i, 0, n)
-    {
-        resout[ar[i][2]] += i - st.order_of_key(ar[i][1]);
-        st.insert(ar[i][1]);
-    }
-    
-    sort(all(ar), [](vi &a, vi &b){return mp(-a[0], a[1]) < mp(-b[0], b[1]);});
-    st.clear();
+	int n, m;
+    cin>>n>>m;
+    vii lineas(n);
+    Hull micky;
     fore(i, 0, n){
-        resin[ar[i][2]] += st.order_of_key(ar[i][1] + 1);
-        st.insert(ar[i][1]);
+        int y1, y2;
+        cin>>y1>>y2;
+        micky.add((y2 - y1) / m, y1);
     }
-    for(int x : resin)
-        cout<<x<<' ';
-    cout<<'\n';
-    for(int x : resout)
-        cout<<x<<' ';
+    fore(i, 0, m + 1)
+        cout<<micky.query(i)<<' ';
 	return 0;
 }
 // Se vuelve más fácil,

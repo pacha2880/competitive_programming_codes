@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 // #include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
+// #include <ext/pb_ds/assoc_container.hpp>
+// #include <ext/pb_ds/tree_policy.hpp>
 // #include <ext/rope>
 #define int ll
 #define mp				make_pair
@@ -26,7 +26,7 @@
 
 
 using namespace std;
-using namespace __gnu_pbds;
+// using namespace __gnu_pbds;
 // using namespace __gnu_cxx;
 
 // #pragma GCC optimization ("O2")
@@ -43,7 +43,7 @@ typedef vector<int>     vi;
 typedef vector<ii>      vii;
 typedef vector<ll>      vll;
 typedef vector<vector<int>> mat;
-typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_node_update> ordered_set;
+// typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_update> ordered_set;
 // find_by_order kth largest  order_of_key <
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
@@ -53,36 +53,72 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
+vi g[tam];
+int ini[tam], fini[tam];
+int pos;
+void dfs(int node = 0, int pa = -1){
+    ini[node] = pos++;
+    for(int x : g[node])
+        if(x != pa)
+            dfs(x, node);
+    fini[node] = pos;
+}
+int t[4 * tam];
+void update(int b, int e, int node, int pos, int val){
+    if(b == e)
+    {
+        t[node] += val;
+        return;
+    }
+    index;
+    if(pos <= mid) update(b, mid, l, pos, val);
+    else update(mid + 1, e, r, pos, val);
+    t[node] = t[l] + t[r];
+}
+int query(int b, int e, int node, int i, int j){
+    if(b >= i && e <= j)
+        return t[node];
+    index;
+    if(j <= mid)
+        return query(b, mid, l, i, j);
+    if(i > mid)
+        return query(mid + 1, e, r, i, j);
+    return query(b, mid, l, i, j) + query(mid + 1, e, r, i, j);
+}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-	int n;
-    cin>>n;
-    map<ii, int> ma;
-    vector<vi> ar(n, vi(3));
-    vi resin(n), resout(n);
-    fore(i, 0, n) cin>>ar[i][0]>>ar[i][1], ar[i][2] = i, ma[{ar[i][0], ar[i][1]}]++;
-    sort(all(ar), [](vi &a, vi &b){return mp(a[0], -a[1]) < mp(b[0], -b[1]);});
-    ordered_set st;
+	int n, q;
+    cin>>n>>q;
+    vi ar(n);
+    fore(i, 0, n) cin>>ar[i];
+    fore(i, 0, n - 1){
+        int a, b;
+        cin>>a>>b;
+        a--, b--;
+        g[a].pb(b);
+        g[b].pb(a);
+    }
+    dfs();
     fore(i, 0, n)
+        update(0, n, 0, ini[i], ar[i]), update(0, n, 0, fini[i], -ar[i]);
+    while(q--)
     {
-        resout[ar[i][2]] += i - st.order_of_key(ar[i][1]);
-        st.insert(ar[i][1]);
+        int a, b;
+        cin>>a>>b;
+        if(a == 2){
+            cout<<query(0, n, 0, 0, ini[b - 1])<<'\n';
+        }
+        else{
+            int c;
+            cin>>c;
+            b--;
+            update(0, n, 0, ini[b], c - ar[b]), update(0, n, 0, fini[b], ar[b] - c);
+            ar[b] = c;
+        }
     }
-    
-    sort(all(ar), [](vi &a, vi &b){return mp(-a[0], a[1]) < mp(-b[0], b[1]);});
-    st.clear();
-    fore(i, 0, n){
-        resin[ar[i][2]] += st.order_of_key(ar[i][1] + 1);
-        st.insert(ar[i][1]);
-    }
-    for(int x : resin)
-        cout<<x<<' ';
-    cout<<'\n';
-    for(int x : resout)
-        cout<<x<<' ';
 	return 0;
 }
 // Se vuelve más fácil,

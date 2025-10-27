@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 // #include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
+// #include <ext/pb_ds/assoc_container.hpp>
+// #include <ext/pb_ds/tree_policy.hpp>
 // #include <ext/rope>
 #define int ll
 #define mp				make_pair
@@ -26,7 +26,7 @@
 
 
 using namespace std;
-using namespace __gnu_pbds;
+// using namespace __gnu_pbds;
 // using namespace __gnu_cxx;
 
 // #pragma GCC optimization ("O2")
@@ -43,7 +43,7 @@ typedef vector<int>     vi;
 typedef vector<ii>      vii;
 typedef vector<ll>      vll;
 typedef vector<vector<int>> mat;
-typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_node_update> ordered_set;
+// typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_update> ordered_set;
 // find_by_order kth largest  order_of_key <
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
@@ -53,39 +53,42 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
+int vis[tam], timi[tam], res[tam], cucu[tam];
+vi g[tam];
+void dfs(int node){
+    vis[node] = 1;
+    int x = g[node][0];
+    if(vis[x] == 1)
+        res[node] = timi[node] - timi[x] + 1, cucu[x] = 1;
+    else if (vis[x] == 2)
+        res[node] = res[x] + 1, cucu[node] = 1;
+    else{
+        timi[x] = timi[node] + 1;
+        dfs(x);
+        if(cucu[x])
+            res[node] = res[x] + 1, cucu[node] = 1;
+        else
+            res[node] = res[x];
+    }
+    vis[node] = 2;
+}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-	int n;
+    int n;
     cin>>n;
-    map<ii, int> ma;
-    vector<vi> ar(n, vi(3));
-    vi resin(n), resout(n);
-    fore(i, 0, n) cin>>ar[i][0]>>ar[i][1], ar[i][2] = i, ma[{ar[i][0], ar[i][1]}]++;
-    sort(all(ar), [](vi &a, vi &b){return mp(a[0], -a[1]) < mp(b[0], -b[1]);});
-    ordered_set st;
-    fore(i, 0, n)
-    {
-        resout[ar[i][2]] += i - st.order_of_key(ar[i][1]);
-        st.insert(ar[i][1]);
-    }
-    
-    sort(all(ar), [](vi &a, vi &b){return mp(-a[0], a[1]) < mp(-b[0], b[1]);});
-    st.clear();
     fore(i, 0, n){
-        resin[ar[i][2]] += st.order_of_key(ar[i][1] + 1);
-        st.insert(ar[i][1]);
+        int x;
+        cin>>x;
+        g[i].pb(x - 1);
     }
-    for(int x : resin)
-        cout<<x<<' ';
-    cout<<'\n';
-    for(int x : resout)
-        cout<<x<<' ';
+    fore(i, 0, n) if(!vis[i]) vis[i] = 1, dfs(i);
+    fore(i, 0, n) cout<<res[i]<<' ';
 	return 0;
 }
-// Se vuelve más fácil,
+// Se vuelve más fácil,s
 // cada día es un poco más fácil, pero tienes que hacerlo cada día,
 // es la parte difícil, pero se vuelve más fácil.
 // Crecer duele.

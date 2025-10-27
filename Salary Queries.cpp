@@ -58,31 +58,30 @@ signed main()
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-	int n;
-    cin>>n;
-    map<ii, int> ma;
-    vector<vi> ar(n, vi(3));
-    vi resin(n), resout(n);
-    fore(i, 0, n) cin>>ar[i][0]>>ar[i][1], ar[i][2] = i, ma[{ar[i][0], ar[i][1]}]++;
-    sort(all(ar), [](vi &a, vi &b){return mp(a[0], -a[1]) < mp(b[0], -b[1]);});
+	int n, q;
+    cin>>n>>q;
     ordered_set st;
-    fore(i, 0, n)
-    {
-        resout[ar[i][2]] += i - st.order_of_key(ar[i][1]);
-        st.insert(ar[i][1]);
-    }
-    
-    sort(all(ar), [](vi &a, vi &b){return mp(-a[0], a[1]) < mp(-b[0], b[1]);});
-    st.clear();
+    unordered_map<int, int> ma, mi;
+    vi ar(n);
     fore(i, 0, n){
-        resin[ar[i][2]] += st.order_of_key(ar[i][1] + 1);
-        st.insert(ar[i][1]);
+        cin>>ar[i];
+        st.insert(ar[i]);
     }
-    for(int x : resin)
-        cout<<x<<' ';
-    cout<<'\n';
-    for(int x : resout)
-        cout<<x<<' ';
+    while(q--)
+    {
+        char a;
+        int b, c;
+        cin>>a>>b>>c;
+        if(a == '?'){
+            cout<<st.order_of_key(c + 1) - st.order_of_key(b)<<'\n';
+        }
+        else{
+            b--;
+            st.erase(st.upper_bound(ar[b]));
+            st.insert(c);
+            ar[b] = c;
+        }
+    }
 	return 0;
 }
 // Se vuelve más fácil,

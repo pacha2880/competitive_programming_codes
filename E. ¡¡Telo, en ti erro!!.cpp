@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 // #include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
+// #include <ext/pb_ds/assoc_container.hpp>
+// #include <ext/pb_ds/tree_policy.hpp>
 // #include <ext/rope>
 #define int ll
 #define mp				make_pair
@@ -26,7 +26,7 @@
 
 
 using namespace std;
-using namespace __gnu_pbds;
+// using namespace __gnu_pbds;
 // using namespace __gnu_cxx;
 
 // #pragma GCC optimization ("O2")
@@ -43,16 +43,65 @@ typedef vector<int>     vi;
 typedef vector<ii>      vii;
 typedef vector<ll>      vll;
 typedef vector<vector<int>> mat;
-typedef tree<int,null_type,less_equal<int>,rb_tree_tag,tree_order_statistics_node_update> ordered_set;
+// typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_update> ordered_set;
 // find_by_order kth largest  order_of_key <
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 200010;
+const int tam = 1000010;
 const int MOD = 1000000007;
 const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
+int ar[tam], t[4 * tam];
+void init(int b, int e, int node)
+{
+    if(b == e){
+        t[node] = ar[b];
+        return;
+    }
+    index;
+    init(b, mid, l);
+    init(mid + 1, e, r);
+    t[node] = min(t[l], t[r]);
+}
+int query(int b, int e, int node, int pos, int val)
+{
+    if(e <= pos || t[node] >= val) return -1;
+    if(b == e) return b;
+    index;
+    int x = query(b, mid, l, pos, val);
+    if(x != -1)
+        return x;
+    return query(mid + 1, e, r, pos, val);
+}
+// primero contando desde la izq, yendo hacia la derecha
+// if(t[0] < val)
+//     query(0, n - 1, 0, val);
+int query(int b, int e, int node, int val)
+{
+    if(b == e) return b;
+    index;
+    int x = query(b, mid, l, val);
+    if(t[l] < val)
+        return query(b, mid, l, val);
+    return query(mid + 1, e, r, val);
+}
+// primero contando desde la der, yendo hacia la der
+// if(t[0] < val)
+//     query(0, n - 1, 0, val);
+int query(int b, int e, int node, int val)
+{
+    if(b == e) return b;
+    index;
+    int x = query(b, mid, l, val);
+    if(t[r] < val)
+        return query(mid + 1, e, r, val);
+    return query(b, mid, l, val);
+}
+// se puede igual BIT ???? cuenta la leyenda
+// pero usualmente es barato el BIT así que es 
+// raro que necesites eso para el BIT
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
@@ -60,28 +109,19 @@ signed main()
 	// freopen("qwe.txt", "w", stdout); 
 	int n;
     cin>>n;
-    map<ii, int> ma;
-    vector<vi> ar(n, vi(3));
-    vi resin(n), resout(n);
-    fore(i, 0, n) cin>>ar[i][0]>>ar[i][1], ar[i][2] = i, ma[{ar[i][0], ar[i][1]}]++;
-    sort(all(ar), [](vi &a, vi &b){return mp(a[0], -a[1]) < mp(b[0], -b[1]);});
-    ordered_set st;
+    vi energia(n);
+    fore(i, 0, n) cin>>ar[i];
+    fore(i, 0, n) cin>>energia[i];
+    init(0, n - 1, 0);
+    vi res;
     fore(i, 0, n)
     {
-        resout[ar[i][2]] += i - st.order_of_key(ar[i][1]);
-        st.insert(ar[i][1]);
+        int pos = query(0, n - 1, 0, i, ar[i]);
+        if(pos == -1 || energia[pos] < energia[i])
+            res.pb(i + 1);
     }
-    
-    sort(all(ar), [](vi &a, vi &b){return mp(-a[0], a[1]) < mp(-b[0], b[1]);});
-    st.clear();
-    fore(i, 0, n){
-        resin[ar[i][2]] += st.order_of_key(ar[i][1] + 1);
-        st.insert(ar[i][1]);
-    }
-    for(int x : resin)
-        cout<<x<<' ';
-    cout<<'\n';
-    for(int x : resout)
+    cout<<sz(res)<<'\n';
+    for(int x : res)
         cout<<x<<' ';
 	return 0;
 }
