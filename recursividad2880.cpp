@@ -140,20 +140,15 @@ int d(int n)
 int e(int n, int k)
 {
     if(n == 0) return 1;
-    if(n == 1) return 1;
-    if(n < k) return 0;
+    if(n < 0) return 0;
     return e(n-1, k) + e(n-k, k);
 }
 
 int f(int n, int k, int l)
 {
     if(n == 0) return 1;
-    int res = 0;
-    if(n >= k)
-        res += f(n - k, k, l);
-    if(n >= l)
-        res += f(n - l, k, l);
-    return res;
+    if(n < 0) return 0;
+    return f(n - l, k, l) + f(n - k, k, l);
 }
 
 ll potmod(int b, int e, int m)
@@ -244,7 +239,7 @@ signed main()
     int n = 5;
     opcion.assign(n, true);
     permutar(n, 0);
-	return 0;
+        return 0;
 }
 
 // Se vuelve más fácil,

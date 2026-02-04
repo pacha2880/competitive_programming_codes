@@ -54,6 +54,7 @@ struct item
 {
 	vi hijos;
 	int can;
+	bool terminal;
 	item()
 	{
 		can = 0;
@@ -72,10 +73,12 @@ void insertar(string s)
 		{
 			trie[pos].hijos[ch] = trie.size();
 			trie.pb(item());
+			// trie.emplace_back();
 		}
 		pos = trie[pos].hijos[ch];
 		trie[pos].can++;
 	}
+	trie[pos].terminal = true;
 }
 int esta(string s)
 {
