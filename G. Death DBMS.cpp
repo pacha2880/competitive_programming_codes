@@ -47,73 +47,96 @@ typedef vector<vector<int>> mat;
 // find_by_order kth largest  order_of_key <
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
-const int tam = 200010;
+const int tam = 300010;
 const int MOD = 1000000007;
+const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-namespace sat2{
-  set<int> G[tam],  Ginv[tam];
-  int N,  mark[tam],  mark_comp[tam], valor[tam];
-  int neg(const int& x) { return (x>=N)? x - N : x + N;}
-  void add_(const int& x,const int& y) {G[x].insert(y);Ginv[y].insert(x);}
-  void addor(const int x,const int y) {add_(neg(x),y);add_(neg(y),x);}
-  void dfs0(int u, vector<int>& orden) {  mark[u] = 1;
-    for(auto& v: G[u]) {
-      if (!mark[v])   dfs0(v,orden);
-    }   orden.push_back(u);
+
+struct vertex {
+  int go[26], pch, par, link = -1, super = -1, leaf = 0;
+  multiset<int> val;
+  vertex(): link(0), super(0) { mem(go, -1); }
+  vertex(int ch, int from): pch(ch), par(from) { mem(go, -1); }
+};
+vector<vertex> t(1);
+vi mapis(tam);
+vi val(tam);
+void add(string &s, int pos) {
+  int node = 0;
+  for(char ch : s) {
+    ch -= 'a';
+    if(t[node].go[ch] == -1)
+      t[node].go[ch] = t.size(), t.emplace_back(ch, node);
+    node = t[node].go[ch];
   }
-  void dfs1(int u, const int& cmp) {  mark_comp[u] = cmp;
-    for(auto& v: Ginv[u]) {
-      if (!mark_comp[v])  dfs1(v,cmp);
-    }
-  }
-  bool check() {  bool impos = false;
-    for(int i = 0; i < N; i++) {
-      impos |= (mark_comp[i] == mark_comp[neg(i)]);
-       valor[i] =  (mark_comp[i] > mark_comp[neg(i)]) ;}
-    return !impos;
-  }
+  t[node].leaf = 1;
+  t[node].val.insert(0);
+  val[pos] = 0;
+  mapis[pos] = node;
 }
+int go(int node, char c);
+int suff(int node) {
+  if(t[node].link == -1)
+    t[node].link = t[node].par == 0 ? 0 : go(suff(t[node].par), t[node].pch);
+  return t[node].link;
+}
+int go(int node, char ch) {
+  if(t[node].go[ch] == -1)
+    t[node].go[ch] = node == 0 ? 0 : go(suff(node), ch);
+  return t[node].go[ch];
+}
+int super(int v) {
+  if(t[v].super == -1)
+    t[v].super = t[suff(v)].leaf ? suff(v) : super(suff(v));
+  return t[v].super;
+}
+
 
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-    int n;
-    cin>>n>>sat2::N;
-    while(n--){
-        char ch1, ch2;
-        int a, b;
-        cin>>ch1>>a>>ch2>>b;
-        a--, b--;
-        if(ch1 == '-')
-            a += sat2::N;
-        if(ch2 == '-')
-            b += sat2::N;
-        sat2::addor(a, b);
+	int n, m;
+    cin>>n>>m;
+    fore(i, 0, n){
+        string s;
+        cin>>s;
+        add(s, i + 1);
     }
-    vi orden;
-    fore(i, 0, 2 * sat2::N)
-        if(!sat2::mark[i])
-            sat2::dfs0(i, orden);
-    int cmp = 1;
-    reverse(all(orden));
-    for(int x : orden){
-        if(!sat2::mark_comp[x])
-            sat2::dfs1(x, cmp++);
+    while(m--)
+    {
+        int x;
+        cin>>x;
+        if(x == 2){
+            string s;
+            cin>>s;
+            int node = 0;
+            int res = -1;
+            for(char ch : s) {
+                ch -= 'a';
+                node = go(node, ch);
+                int cu = node;
+                while(cu != 0){
+                    if(!t[cu].val.empty())
+                        res = max(res, *--t[cu].val.end());
+                    cu = super(cu);
+                }
+            }
+            // cout<<"asdf\n";
+            cout<<res<<'\n';
+        }
+        else {
+            int pos, x;
+            cin>>pos>>x;
+            // cout<<'@'<<mapis[pos]<<'\n';
+            t[mapis[pos]].val.erase(t[mapis[pos]].val.find(val[pos]));
+            t[mapis[pos]].val.insert(x);
+            val[pos] = x;
+        }
     }
-    if(sat2::check()){
-        fore(i, 0, sat2::N)
-            if(sat2::valor[i])
-                cout<<'+'<<' ';
-            else
-                cout<<'-'<<' ';
-        cout<<'\n';
-    }
-    else
-        cout<<"IMPOSSIBLE\n";
 	return 0;
 }
 // Se vuelve más fácil,

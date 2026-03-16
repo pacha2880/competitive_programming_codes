@@ -49,71 +49,88 @@ typedef vector<vector<int>> mat;
 // rng
 const int tam = 200010;
 const int MOD = 1000000007;
+const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-namespace sat2{
-  set<int> G[tam],  Ginv[tam];
-  int N,  mark[tam],  mark_comp[tam], valor[tam];
-  int neg(const int& x) { return (x>=N)? x - N : x + N;}
-  void add_(const int& x,const int& y) {G[x].insert(y);Ginv[y].insert(x);}
-  void addor(const int x,const int y) {add_(neg(x),y);add_(neg(y),x);}
-  void dfs0(int u, vector<int>& orden) {  mark[u] = 1;
-    for(auto& v: G[u]) {
-      if (!mark[v])   dfs0(v,orden);
-    }   orden.push_back(u);
-  }
-  void dfs1(int u, const int& cmp) {  mark_comp[u] = cmp;
-    for(auto& v: Ginv[u]) {
-      if (!mark_comp[v])  dfs1(v,cmp);
-    }
-  }
-  bool check() {  bool impos = false;
-    for(int i = 0; i < N; i++) {
-      impos |= (mark_comp[i] == mark_comp[neg(i)]);
-       valor[i] =  (mark_comp[i] > mark_comp[neg(i)]) ;}
-    return !impos;
-  }
-}
-
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-    int n;
-    cin>>n>>sat2::N;
-    while(n--){
-        char ch1, ch2;
-        int a, b;
-        cin>>ch1>>a>>ch2>>b;
-        a--, b--;
-        if(ch1 == '-')
-            a += sat2::N;
-        if(ch2 == '-')
-            b += sat2::N;
-        sat2::addor(a, b);
-    }
-    vi orden;
-    fore(i, 0, 2 * sat2::N)
-        if(!sat2::mark[i])
-            sat2::dfs0(i, orden);
-    int cmp = 1;
-    reverse(all(orden));
-    for(int x : orden){
-        if(!sat2::mark_comp[x])
-            sat2::dfs1(x, cmp++);
-    }
-    if(sat2::check()){
-        fore(i, 0, sat2::N)
-            if(sat2::valor[i])
-                cout<<'+'<<' ';
-            else
-                cout<<'-'<<' ';
-        cout<<'\n';
-    }
-    else
-        cout<<"IMPOSSIBLE\n";
+	vector<vi> tab(4, vi(4));
+	int n;
+	cin>>n;
+	vi cont(4);
+	vi ar(n);
+	fore(i, 0, n){
+		cin>>ar[i];
+		ar[i]--;
+		cont[ar[i]]++;
+	}
+	vi er = ar;
+	sort(all(er));
+	fore(i, 0, n){
+		tab[er[i]][ar[i]]++;
+	}
+	int res = 0;
+	// cout<<res<<'\n';
+	// return 0;
+	fore(i, 0, 4)
+		fore(j, 0, 4){
+			if(i != j && tab[i][j] && tab[j][i]){
+				int mimi = min(tab[i][j], tab[j][i]);
+				res += mimi;
+				tab[i][j] -= mimi;
+				tab[j][i] -= mimi;
+
+			}
+		}
+	fore(i, 1, 4){
+		while(tab[i][0]){
+			fore(j, 0, 4)
+				if(tab[0][j] && tab[i][0]){
+					tab[i][0]--;
+					tab[0][j]--;
+					tab[i][j]++;
+					res++;
+				}
+		}
+	}
+	fore(i, 0, 4)
+		fore(j, 0, 4){
+			if(i != j && tab[i][j] && tab[j][i]){
+				int mimi = min(tab[i][j], tab[j][i]);
+				res += mimi;
+				tab[i][j] -= mimi;
+				tab[j][i] -= mimi;
+
+			}
+		}
+
+	fore(i, 0, 4){
+		if(i == 1) continue;
+		while(tab[i][1]){
+			fore(j, 0, 4)
+				if(tab[1][j] && tab[i][1]){
+					tab[i][1]--;
+					tab[1][j]--;
+					tab[i][j]++;
+					res++;
+				}
+		}
+	}
+	fore(i, 0, 4)
+		fore(j, 0, 4){
+			if(i != j && tab[i][j] && tab[j][i]){
+				int mimi = min(tab[i][j], tab[j][i]);
+				res += mimi;
+				tab[i][j] -= mimi;
+				tab[j][i] -= mimi;
+
+			}
+		}
+	cout<<res<<'\n';
 	return 0;
 }
 // Se vuelve más fácil,

@@ -148,8 +148,12 @@ void test_case() {
         
         timer++;
         if(try_kuhn(r,try_kuhn)) f++;
-        pre[r] = f;
+        // pre[r] = f;
 
+    }
+    FOR(i, 0, n2){
+        if(i > 0) pre[i] = pre[i - 1];
+       if(matchR[i] != -1) pre[i]++; 
     }
     vi sub(n2 + 1);
     vector<vi> subs(n2 + 1);

@@ -49,71 +49,68 @@ typedef vector<vector<int>> mat;
 // rng
 const int tam = 200010;
 const int MOD = 1000000007;
+const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-namespace sat2{
-  set<int> G[tam],  Ginv[tam];
-  int N,  mark[tam],  mark_comp[tam], valor[tam];
-  int neg(const int& x) { return (x>=N)? x - N : x + N;}
-  void add_(const int& x,const int& y) {G[x].insert(y);Ginv[y].insert(x);}
-  void addor(const int x,const int y) {add_(neg(x),y);add_(neg(y),x);}
-  void dfs0(int u, vector<int>& orden) {  mark[u] = 1;
-    for(auto& v: G[u]) {
-      if (!mark[v])   dfs0(v,orden);
-    }   orden.push_back(u);
-  }
-  void dfs1(int u, const int& cmp) {  mark_comp[u] = cmp;
-    for(auto& v: Ginv[u]) {
-      if (!mark_comp[v])  dfs1(v,cmp);
-    }
-  }
-  bool check() {  bool impos = false;
-    for(int i = 0; i < N; i++) {
-      impos |= (mark_comp[i] == mark_comp[neg(i)]);
-       valor[i] =  (mark_comp[i] > mark_comp[neg(i)]) ;}
-    return !impos;
-  }
-}
-
 signed main()
 {
-	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+	// ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-    int n;
-    cin>>n>>sat2::N;
-    while(n--){
-        char ch1, ch2;
-        int a, b;
-        cin>>ch1>>a>>ch2>>b;
-        a--, b--;
-        if(ch1 == '-')
-            a += sat2::N;
-        if(ch2 == '-')
-            b += sat2::N;
-        sat2::addor(a, b);
-    }
-    vi orden;
-    fore(i, 0, 2 * sat2::N)
-        if(!sat2::mark[i])
-            sat2::dfs0(i, orden);
-    int cmp = 1;
-    reverse(all(orden));
-    for(int x : orden){
-        if(!sat2::mark_comp[x])
-            sat2::dfs1(x, cmp++);
-    }
-    if(sat2::check()){
-        fore(i, 0, sat2::N)
-            if(sat2::valor[i])
-                cout<<'+'<<' ';
-            else
-                cout<<'-'<<' ';
-        cout<<'\n';
-    }
-    else
-        cout<<"IMPOSSIBLE\n";
+	int t;
+	cin>>t;
+	while(t--){
+		int n;
+		cin>>n;
+		vi alex(n+1);
+		vi visalex(n+1);
+		vector<set<int>> g(n + 1);
+		int nunu = 2;
+		vi ulti({1});
+		alex[1] = 1;
+		while(true){
+			cout<<'?'<<' '<<nunu<<endl;
+			int k;
+			cin>>k;
+			if(k == -1) return 0;
+			if(k == 0) break;
+			vi pato(k);
+			fore(i, 0, k){
+				cin>>pato[i];
+				if(i > 0)
+					g[pato[i - 1]].insert(pato[i]);
+			}
+			int l = sz(ulti);
+			fore(i, 0, min(l, k)){
+				// cout<<ulti[i]<<' '<<pato[i]<<'\n';
+				if(ulti[i] != pato[i]){
+					fore(j, i, l)
+						visalex[ulti[j]] = 1;
+				}
+			}
+			fore(i, k - 1, l)
+				visalex[ulti[i]] = 1;				
+			int ahumado = 1;
+			for(int i = k - 1; i > -1; i--){
+				if(visalex[pato[i]])
+					ahumado = alex[pato[i]];
+				else
+					alex[pato[i]] += ahumado;
+			}
+			// fore(i, 0, n + 1)
+			// 	cout<<i<<' '<<visalex[i]<<' '<<alex[i]<<'\n';
+			nunu += ahumado;
+		swap(ulti, pato);
+		}
+		int cana = 0;
+		fore(i, 1, n + 1) cana += sz(g[i]);
+		cout<<"! "<<cana<<'\n';
+		fore(i, 1, n + 1)
+			for(int x : g[i])
+				cout<<i<<' '<<x<<'\n';
+		cout<<endl;
+	}
 	return 0;
 }
 // Se vuelve más fácil,

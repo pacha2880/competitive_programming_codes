@@ -49,71 +49,103 @@ typedef vector<vector<int>> mat;
 // rng
 const int tam = 200010;
 const int MOD = 1000000007;
+const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-namespace sat2{
-  set<int> G[tam],  Ginv[tam];
-  int N,  mark[tam],  mark_comp[tam], valor[tam];
-  int neg(const int& x) { return (x>=N)? x - N : x + N;}
-  void add_(const int& x,const int& y) {G[x].insert(y);Ginv[y].insert(x);}
-  void addor(const int x,const int y) {add_(neg(x),y);add_(neg(y),x);}
-  void dfs0(int u, vector<int>& orden) {  mark[u] = 1;
-    for(auto& v: G[u]) {
-      if (!mark[v])   dfs0(v,orden);
-    }   orden.push_back(u);
-  }
-  void dfs1(int u, const int& cmp) {  mark_comp[u] = cmp;
-    for(auto& v: Ginv[u]) {
-      if (!mark_comp[v])  dfs1(v,cmp);
-    }
-  }
-  bool check() {  bool impos = false;
-    for(int i = 0; i < N; i++) {
-      impos |= (mark_comp[i] == mark_comp[neg(i)]);
-       valor[i] =  (mark_comp[i] > mark_comp[neg(i)]) ;}
-    return !impos;
-  }
-}
+struct Dinitz{
+    const int INF = MOD * MOD;
+    Dinitz(){}
+    Dinitz(int n, int s, int t) {init(n, s, t);}
 
+    void init(int n, int s, int t)
+    {
+        S = s, T = t;
+        nodes = n;
+        G.clear(), G.resize(n);
+        Q.resize(n);
+    }
+    struct flowEdge
+    {
+        int to, rev, f, cap;
+    };
+
+    vector<vector<flowEdge> > G;
+
+    // Añade arista (st -> en) con su capacidad
+    void addEdge(int st, int en, int cap) {
+        flowEdge A = {en, (int)G[en].size(), 0, cap};
+        flowEdge B = {st, (int)G[st].size(), 0, 0};
+        G[st].pb(A);
+        G[en].pb(B);
+    }
+
+    int nodes, S, T; // asignar estos valores al armar el grafo G
+                    // nodes = nodos en red de flujo. Hacer G.clear(); G.resize(nodes);
+    vi work, lvl;
+    vi Q;
+
+    bool bfs() {
+        int qt = 0;
+        Q[qt++] = S;
+        lvl.assign(nodes, -1);
+        lvl[S] = 0;
+        for (int qh = 0; qh < qt; qh++) {
+            int v = Q[qh];
+            for (flowEdge &e : G[v]) {
+                int u = e.to;
+                if (e.cap <= e.f || lvl[u] != -1) continue;
+                lvl[u] = lvl[v] + 1;
+                Q[qt++] = u;
+            }
+        }
+        return lvl[T] != -1;
+    }
+
+    int dfs(int v, int f) {
+        if (v == T || f == 0) return f;
+        for (int &i = work[v]; i < G[v].size(); i++) {
+            flowEdge &e = G[v][i];
+            int u = e.to;
+            if (e.cap <= e.f || lvl[u] != lvl[v] + 1) continue;
+            int df = dfs(u, min(f, e.cap - e.f));
+            if (df) {
+                e.f += df;
+                G[u][e.rev].f -= df;
+                return df;
+            }
+        }
+        return 0;
+    }
+
+    int maxFlow() {
+        int flow = 0;
+        while (bfs()) {
+            work.assign(nodes, 0);
+            while (true) {
+                int df = dfs(S, INF);
+                if (df == 0) break;
+                flow += df;
+            }
+        }
+        return flow;
+    }
+};
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-    int n;
-    cin>>n>>sat2::N;
-    while(n--){
-        char ch1, ch2;
-        int a, b;
-        cin>>ch1>>a>>ch2>>b;
-        a--, b--;
-        if(ch1 == '-')
-            a += sat2::N;
-        if(ch2 == '-')
-            b += sat2::N;
-        sat2::addor(a, b);
-    }
-    vi orden;
-    fore(i, 0, 2 * sat2::N)
-        if(!sat2::mark[i])
-            sat2::dfs0(i, orden);
-    int cmp = 1;
-    reverse(all(orden));
-    for(int x : orden){
-        if(!sat2::mark_comp[x])
-            sat2::dfs1(x, cmp++);
-    }
-    if(sat2::check()){
-        fore(i, 0, sat2::N)
-            if(sat2::valor[i])
-                cout<<'+'<<' ';
-            else
-                cout<<'-'<<' ';
-        cout<<'\n';
-    }
-    else
-        cout<<"IMPOSSIBLE\n";
+	int n, m;
+	cin>>n>>m;
+	Dinitz dinic(n, 0, n - 1);
+	while(m--){
+		int a, b, c;
+		cin>>a>>b>>c;
+		dinic.addEdge(a - 1, b - 1, c);
+	}
+	cout<<dinic.maxFlow()<<'\n';
+
 	return 0;
 }
 // Se vuelve más fácil,

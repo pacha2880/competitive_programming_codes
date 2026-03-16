@@ -48,72 +48,73 @@ typedef vector<vector<int>> mat;
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
 // rng
 const int tam = 200010;
-const int MOD = 1000000007;
+const int MOD12 = 1000000007;
+const int MOD = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-namespace sat2{
-  set<int> G[tam],  Ginv[tam];
-  int N,  mark[tam],  mark_comp[tam], valor[tam];
-  int neg(const int& x) { return (x>=N)? x - N : x + N;}
-  void add_(const int& x,const int& y) {G[x].insert(y);Ginv[y].insert(x);}
-  void addor(const int x,const int y) {add_(neg(x),y);add_(neg(y),x);}
-  void dfs0(int u, vector<int>& orden) {  mark[u] = 1;
-    for(auto& v: G[u]) {
-      if (!mark[v])   dfs0(v,orden);
-    }   orden.push_back(u);
-  }
-  void dfs1(int u, const int& cmp) {  mark_comp[u] = cmp;
-    for(auto& v: Ginv[u]) {
-      if (!mark_comp[v])  dfs1(v,cmp);
-    }
-  }
-  bool check() {  bool impos = false;
-    for(int i = 0; i < N; i++) {
-      impos |= (mark_comp[i] == mark_comp[neg(i)]);
-       valor[i] =  (mark_comp[i] > mark_comp[neg(i)]) ;}
-    return !impos;
-  }
-}
-
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-    int n;
-    cin>>n>>sat2::N;
-    while(n--){
-        char ch1, ch2;
-        int a, b;
-        cin>>ch1>>a>>ch2>>b;
-        a--, b--;
-        if(ch1 == '-')
-            a += sat2::N;
-        if(ch2 == '-')
-            b += sat2::N;
-        sat2::addor(a, b);
-    }
-    vi orden;
-    fore(i, 0, 2 * sat2::N)
-        if(!sat2::mark[i])
-            sat2::dfs0(i, orden);
-    int cmp = 1;
-    reverse(all(orden));
-    for(int x : orden){
-        if(!sat2::mark_comp[x])
-            sat2::dfs1(x, cmp++);
-    }
-    if(sat2::check()){
-        fore(i, 0, sat2::N)
-            if(sat2::valor[i])
-                cout<<'+'<<' ';
-            else
-                cout<<'-'<<' ';
-        cout<<'\n';
-    }
-    else
-        cout<<"IMPOSSIBLE\n";
+	int t;
+	cin>>t;
+	while(t--){
+		int n;
+		cin>>n;
+		string s;
+		cin>>s;
+		vi puta(n);
+		puta[0] = s[0] == ')' ? 2 : 1;
+		fore(i, 1, n){
+			puta[i] = puta[i - 1];
+			if(s[i] == ')')
+				puta[i] = 2 * puta[i] % MOD;
+		}
+		int sumi = 0;
+		int res = 0;
+		vi bala(n);
+		fore(i, 0, n){
+			if(i > 0) bala[i] = bala[i - 1];
+			if(s[i] == '(') bala[i]++;
+			else bala[i]--;
+		}
+		// fore(i, 0, n) cout<<bala[i]<<' ';
+		// cout<<'\n';
+		vi pot(n);
+		pot[0] = 1;
+		fore(i, 1, n) pot[i] = pot[i - 1] * 2 % MOD;
+		vi sumis(n);
+		for(int i = n - 2; i > -1; i--){
+			sumis[i] = sumi;
+			if(s[i] == '(' && bala[i] < 2){
+				res = (res + sumi * (i > 0 ? puta[i - 1] : 1)) % MOD;
+				cout<<'!'<<i<<' '<<sumi<<' '<<(i > 0 ? puta[i - 1] : 1)<<'\n';
+			}
+			sumi = 2 * sumi % MOD; 
+			if(s[i] == ')')
+				sumi++;
+		}
+		cout<<'$'<<res<<'\n';
+		res *= 2;
+		int susu = 0;
+		int po = 1;
+		int total = 0;
+		int resta = 0;
+		fore(i, 0, n){
+			if(s[i] == '('){
+				res = (res + po) % MOD;
+			total += po;
+			cout<<i<<' '<<total<<' '<<resta<<'\n';
+			}
+			po = po * 2 % MOD;
+		}
+		int poti = 1;
+		fore(i, 0, n) poti = 2 * poti % MOD;
+		cout<<res<<' '<<poti<<'\n';
+		cout<<(poti + MOD - res - 1) % MOD<<'\n';
+	}
 	return 0;
 }
 // Se vuelve más fácil,
