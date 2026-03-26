@@ -29,7 +29,7 @@ using namespace std;
 // using namespace __gnu_pbds;
 // using namespace __gnu_cxx;
 
-#pragma GCC optimization ("O2")
+// #pragma GCC optimization ("O2")
 // #pragma GCC optimize("Ofast") si el O3 no da
 // #pragma GCC optimize("O3,unroll-loops")
 // #pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
@@ -42,6 +42,7 @@ typedef pair<pair<int, int>, int> iii;
 typedef vector<int>     vi;
 typedef vector<ii>      vii;
 typedef vector<ll>      vll;
+typedef vector<vector<int>> mat;
 // typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_update> ordered_set;
 // find_by_order kth largest  order_of_key <
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
@@ -52,59 +53,74 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-
-struct point
-{
-	ll x, y;
-	point() {}
-	point(ll x, ll y): x(x), y(y) {}
-	point operator -(point p) {return point(x - p.x, y - p.y);}
-	point operator +(point p) {return point(x + p.x, y + p.y);}
-	ll sq() {return x * x + y * y;}
-	double abs() {return sqrt(sq());}
-	ll operator ^(point p) {return x * p.y - y * p.x;}
-  	ll operator *(point p) {return x * p.x + y * p.y;}
-  	point operator *(ll a) {return point(x * a, y * a);}
-	bool operator <(const point& p) const {return x == p.x ? y < p.y : x < p.x;}
-	bool left(point a, point b) {return ((b - a) ^ (*this - a)) >= 0;}
-	ostream& operator<<(ostream& os) {
-		return os << "("<< x << "," << y << ")";
+int ar[tam], t[4 * tam];
+ii laz[4 * tam];
+void init(int b, int e, int node){
+	if(b == e){
+		t[node] = ar[b];
+		return;
 	}
-
-};
+	index;
+	init(b, mid, l);
+	init(mid + 1, e, r);
+	t[node] = t[l] + t[r];
+}
+void push(int b, int e, int node) {
+	if(laz[node].f){
+		t[node] += (laz[node].f + laz[node].s) * (e - b + 1) / 2;
+		if(b < e){
+			index;
+			int fac = (laz[node].s - laz[node].f) / (e - b);
+			laz[l].f += laz[node].f;
+			laz[l].s += laz[node].f + (mid - b) * fac;
+			laz[r].f += laz[node].f + (mid - b + 1) * fac;
+			laz[r].s += laz[node].s;
+		}
+		laz[node] = {0, 0};
+	}
+}
+void update(int b, int e, int node, int i, int j){
+	if(b > e) return;
+	push(b, e, node);
+	if(b > j || e < i) return;
+	if(b >= i && e <= j){
+		laz[node] = {b - i + 1, e - i + 1};
+		push(b, e, node);
+		return;
+	}
+	index;
+	update(b, mid, l, i, j);
+	update(mid + 1, e, r, i, j);
+	t[node] = t[l] + t[r];
+}
+int query(int b, int e, int node, int i, int j){
+	push(b, e, node);
+	if(b >= i && e <= j)
+		return t[node];
+	index;
+	if(j <= mid)
+		return query(b, mid, l, i, j);
+	if(i > mid)
+		return query(mid + 1, e, r, i, j);
+	return query(b, mid, l, i, j) + query(mid + 1, e, r, i, j);
+}
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-    int t;
-    cin>>t;
-    while(t--)
-    {
-        point a, b, c, d;
-        cin>>a.x>>a.y>>b.x>>b.y>>c.x>>c.y>>d.x>>d.y;
-        auto cro = [&](point a, point b, point c, point d){
-            point o = a;
-            a = a - o;
-            b = b - o;
-            c = c - o;
-            d = d - o;
-            int uwu = b ^ c, owo = b ^ d;
-            if(uwu > 0) uwu = 1;
-            if(uwu < 0) uwu = -1;
-            if(uwu * owo < 0)
-                return true;
-            return false;
-        };
-        auto med = [&](point a, point b, point c){
-            return ((a - b) ^ (c - b)) == 0 && a.x >= min(b.x, c.x) && a.x <= max(b.x, c.x) && 
-                a.y >= min(b.y, c.y) && a.y <= max(b.y, c.y);
-        };
-        if(cro(a, b, c, d) && cro(c, d, a, b) || med(a, c, d) || med(b, c, d) || med(c, a, b) || med(d, a, b))
-            cout<<"YES\n";
-        else
-            cout<<"NO\n";
-    }
+	int n, q;
+	cin>>n>>q;
+	fore(i, 0, n) cin>>ar[i];
+	init(0, n - 1, 0);
+	while(q--){
+		int a, b, c;
+		cin>>a>>b>>c;
+		if(a == 1)
+			update(0, n - 1, 0, b - 1, c - 1);
+		else
+			cout<<query(0, n - 1, 0, b - 1, c - 1)<<'\n';
+	}
 	return 0;
 }
 // Se vuelve más fácil,
@@ -115,4 +131,5 @@ signed main()
 // No sirve de nada hacer sacrificios si no tienes disciplina.
 // Cae 7 veces, levántate 8.
 // LA DISCIPLINA es el puente entre tus metas y tus logros.
+// Las indisciplinadas son mi debilidad
 // Take a sad song and make it better
