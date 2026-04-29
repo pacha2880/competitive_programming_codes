@@ -69,12 +69,6 @@ int edit_distance(string text1, string text2) {
 			lcs[i][j] = min(lcs[i][j], lcs[i - 1][j - 1]);
         }
 	}
-    // fore(i, 0, n + 1)
-    // {
-    //     fore(j, 0, m + 1)
-    //         cout<<lcs[i][j]<<' ';
-    //     cout<<'\n';
-    // }
 	return lcs[n][m];
 }
 signed main()
@@ -84,7 +78,7 @@ signed main()
 	// freopen("qwe.txt", "w", stdout); 
     string a, b;
     cin>>a>>b;
-    cout<<longestCommonSubsequence(a, b);
+    cout<<edit_distance(a, b);
 	return 0;
 }
 // Se vuelve más fácil,

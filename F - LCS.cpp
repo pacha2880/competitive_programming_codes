@@ -54,27 +54,27 @@ const double EPS = 1e-9;
 const double PI = acos(-1); 
 
 string longestCommonSubsequence(string text1, string text2) {
- int n = text1.size(), m = text2.size();
- vector<vector<int>> lcs(n+1, vector<int>(m+1));
- for(int i = 1; i <= n; i++)
- for(int j = 1; j <= m; j++)
- {
- lcs[i][j] = max(lcs[i - 1][j], lcs[i][j - 1]);
- if(text1[i - 1] == text2[j - 1])
- lcs[i][j] = max(lcs[i][j], lcs[i - 1][j - 1] + 1);
- }
- string longest;
- while(n > 0 && m > 0)
- {
-    if(lcs[n - 1][m] == lcs[n][m])
-        n--;
-    else if(lcs[n][m - 1] == lcs[n][m])
-        m--;
-    else
-        longest += text1[n - 1], n--, m--;
- }
- reverse(all(longest));
- return longest;
+    int n = text1.size(), m = text2.size();
+    vector<vector<int>> lcs(n+1, vector<int>(m+1));
+    for(int i = 1; i <= n; i++)
+        for(int j = 1; j <= m; j++)
+        {
+            lcs[i][j] = max(lcs[i - 1][j], lcs[i][j - 1]);
+            if(text1[i - 1] == text2[j - 1])
+                lcs[i][j] = max(lcs[i][j], lcs[i - 1][j - 1] + 1);
+        }
+    string longest;
+    while(n > 0 && m > 0)
+    {
+        if(lcs[n - 1][m] == lcs[n][m])
+            n--;
+        else if(lcs[n][m - 1] == lcs[n][m])
+            m--;
+        else
+            longest += text1[n - 1], n--, m--;
+    }
+    reverse(all(longest));
+    return longest;
 }
 signed main()
 {

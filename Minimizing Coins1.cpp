@@ -59,8 +59,6 @@ int f(int dinero)
 {
     if(dinero < 0) return tam;
     if(dinero == 0) return 0;
-    // antes llenar de menos unos
-    // if(dp[dinero] != -1) return dp[dinero];
     if(vis[dinero]) return dp[dinero];
     vis[dinero] = 1;
     dp[dinero] = tam;

@@ -52,41 +52,40 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-pair<int, vi> res(MOD, {});
+// pair<int, vi> res(MOD, {});
+int res;
+vi ras;
 int ar[30];
-void go(int po, int lim, vi &cd)
+int n, limite;
+void go(int po, int sum, vi &cd)
 {
-	if(lim < 0) return;
-	if(po == -1)
+	if(sum > limite) return;
+	if(po == n)
 	{
-		res = min(res, {lim, vi(cd)});
+		if(res < sum)
+			res = sum, ras = vi(cd);
 		return;
 	}
 	cd.pb(ar[po]);
-	go(po - 1, lim - ar[po], cd);
+	go(po + 1, sum + ar[po], cd);
 	cd.pop_back();
-	go(po - 1, lim, cd);
+	go(po + 1, sum, cd);
 }
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
 	// freopen("qwe.txt", "w", stdout); 
-	string s;
-	while(getline(cin, s))
+	while(cin>>limite)
 	{
-		stringstream sc;
-		sc << s;
-		int lim, n;
-		sc >> lim >> n;
-		fore(i, 0, n) sc >>ar[i];
-		res.f = MOD;
+		cin >> n;
+		fore(i, 0, n) cin >>ar[i];
+		res = 0;
 		vi cd;
-		go(n - 1, lim, cd);
-		reverse(all(res.s));
-		for(int x : res.s)
+		go(0, 0, cd);
+		for(int x : ras)
 			cout<<x<<' ';
-		cout<<"sum:"<<lim - res.f<<'\n';
+		cout<<"sum:"<<res<<'\n';
 	}
 	return 0;
 }
