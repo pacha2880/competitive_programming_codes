@@ -18,6 +18,7 @@
 #define s 				second
 #define forn(i, n)			for(int i = 0; i < n; i++)
 #define fore(i, b, e)	for(int i = b; i < e; i++)
+#define forev(i, b, e)	for(int i = b; i > e; i--)
 #define forg(i, b, e, m)	for(int i = b; i < e; i+=m)
 #define index	int mid = (b + e) / 2, l = node * 2 + 1, r = l + 1;
 #define DBG(x) cerr<<#x<<" = "<<(x)<<endl
@@ -52,7 +53,7 @@ const int MOD = 1000000007;
 const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
-const double PI = acos(-1); 
+const double PI = acos(-1);
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);

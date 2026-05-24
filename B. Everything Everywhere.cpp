@@ -29,9 +29,10 @@ using namespace std;
 // using namespace __gnu_pbds;
 // using namespace __gnu_cxx;
 
-// #pragma GCC target ("avx2")
-// #pragma GCC optimization ("O3")
-// #pragma GCC optimization ("unroll-loops")
+// #pragma GCC optimization ("O2")
+// #pragma GCC optimize("Ofast") si el O3 no da
+// #pragma GCC optimize("O3,unroll-loops")
+// #pragma GCC target("avx2,bmi,bmi2,lzcnt,popcnt")
 
 typedef long long 		ll;
 typedef long double ld;	
@@ -41,6 +42,7 @@ typedef pair<pair<int, int>, int> iii;
 typedef vector<int>     vi;
 typedef vector<ii>      vii;
 typedef vector<ll>      vll;
+typedef vector<vector<int>> mat;
 // typedef tree<int,null_type,less<int>,rb_tree_tag,tree_order_statistics_node_update> ordered_set;
 // find_by_order kth largest  order_of_key <
 // mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());
@@ -51,39 +53,31 @@ const int MOD1 = 998244353;
 const double DINF=1e100;
 const double EPS = 1e-9;
 const double PI = acos(-1); 
-
 signed main()
 {
 	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
 	// freopen("asd.txt", "r", stdin);
-	// freopen("qwe.txt", "w", stdout);
-	int n, y;
-	cin>>n>>y;
-	unordered_map<int, int> ma;
-	fore(i, 1, n + 1)
-	{
-		int x;
-		cin>>x;
-		auto it = ma.find(y - x);
-		if(it != ma.end())
-		{
-			cout<<it->s<<' '<<i<<'\n';
-			return 0;
-		}
-		ma[x] = i;
-	}
-	cout<<"IMPOSSIBLE\n";
+	// freopen("qwe.txt", "w", stdout); 
+	int t;
+    cin>>t;
+    while(t--){
+        int n;
+        cin>>n;
+        vi ar(n);
+        fore(i, 0, n) cin>>ar[i];
+        int res = 0;
+        fore(i, 1, n) res += abs(ar[i] - ar[i - 1]) == abs(__gcd(ar[i], ar[i - 1]));
+        cout<<res<<'\n';
+    }
 	return 0;
 }
-// 30067266499541040
 // Se vuelve más fácil,
 // cada día es un poco más fácil, pero tienes que hacerlo cada día,
 // es la parte difícil, pero se vuelve más fácil.
 // Crecer duele.
 // La única manera de pasar esa barrera es pasandola.
-// efe no más.
-// Si no vá por todo, andá pa' allá bobo.
 // No sirve de nada hacer sacrificios si no tienes disciplina.
 // Cae 7 veces, levántate 8.
-// Ale perdóname por favor :,v
 // LA DISCIPLINA es el puente entre tus metas y tus logros.
+// Las indisciplinadas son mi debilidad
+// Take a sad song and make it better

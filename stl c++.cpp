@@ -78,14 +78,24 @@ int main()
     v.pb(10);
     v.pop_back();
     for(int i = 0; i < (int)v.size(); i++)
-        cout<<v[i]<<'\n';
+        cout<<v[i]<<' ';
+    cout<<'\n';
     // for each
     for(int &x : v)
-        cout<<++x<<'\n';
+        cout<<++x<<' ';
+    cout<<'\n';
     for(int x : v)
-        cout<<++x<<'\n';
+        cout<<++x<<' ';
+    cout<<'\n';
     for(int x : v)
-        cout<<x<<'\n';
+        cout<<x<<' ';
+    cout<<'\n';
+    for(int &x : v)
+        cout<<x++<<' ';
+    cout<<'\n';
+    for(int x : v)
+        cout<<x<<' ';
+    cout<<'\n';
  
     cout<<"tamanioo "<<v.size()<<' ';
     v.pop_back();
@@ -213,7 +223,7 @@ int main()
         cout<<x<<',';
     cout<<'\n';
     cout<<st1.count(23)<<'\n';
-    // cout<<st1.find(23) != st1.end()<<'\n';
+    cout<<(st1.find(23) != st1.end())<<'\n';
     cout<<st1.count(0)<<'\n';
     st1.erase(4);
     // borrar en multiset
